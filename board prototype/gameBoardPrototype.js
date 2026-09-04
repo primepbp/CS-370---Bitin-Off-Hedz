@@ -14,7 +14,6 @@ class Player {
         //rolls d6
         return (Math.floor(Math.random() * 6) + 1);
     }
-
 }
 
 class Director {
@@ -78,7 +77,7 @@ Board
 Spaces
 spaces seperate thing?
 */
-
+//change
 
 // canvas setup
 const canvas = document.getElementById("gameBoard");
