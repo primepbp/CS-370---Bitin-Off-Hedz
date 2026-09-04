@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Get to the Guillotine</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+    <main class="game-container">
+
+
+        <!-- =========================================
+             TITLE
+        ========================================== -->
+
+        <section class="title-section">
+
+            <div class="small-title">
+                A RACE TO THE END
+            </div>
+
+            <h1>
+                GET TO THE<br>
+                GUILLOTINE
+            </h1>
+
+            <p class="subtitle">
+                Be the first to meet your fate.
+            </p>
+
+        </section>
+
+
+        <!-- =========================================
+             CHARACTER SELECTION
+        ========================================== -->
+
+        <section class="selection-section">
+
+            <h2>
+                SELECT YOUR CHARACTER
+            </h2>
+
+            <p class="instruction">
+                Choose the historical figure you will guide
+                to the guillotine.
+            </p>
+
+
+            <div class="character-grid">
+
+
+                <!-- CHARACTER 1 -->
+
+                <button
+                    class="character-card"
+                    data-character="1"
+                >
+
+                    <div class="character-number">
+                        I
+                    </div>
+
+                    <div class="character-name">
+                        CHARACTER 1
+                    </div>
+
+                    <div class="select-text">
+                        SELECT
+                    </div>
+
+                </button>
+
+
+                <!-- CHARACTER 2 -->
+
+                <button
+                    class="character-card"
+                    data-character="2"
+                >
+
+                    <div class="character-number">
+                        II
+                    </div>
+
+                    <div class="character-name">
+                        CHARACTER 2
+                    </div>
+
+                    <div class="select-text">
+                        SELECT
+                    </div>
+
+                </button>
+
+
+                <!-- CHARACTER 3 -->
+
+                <button
+                    class="character-card"
+                    data-character="3"
+                >
+
+                    <div class="character-number">
+                        III
+                    </div>
+
+                    <div class="character-name">
+                        CHARACTER 3
+                    </div>
+
+                    <div class="select-text">
+                        SELECT
+                    </div>
+
+                </button>
+
+
+                <!-- CHARACTER 4 -->
+
+                <button
+                    class="character-card"
+                    data-character="4"
+                >
+
+                    <div class="character-number">
+                        IV
+                    </div>
+
+                    <div class="character-name">
+                        CHARACTER 4
+                    </div>
+
+                    <div class="select-text">
+                        SELECT
+                    </div>
+
+                </button>
+
+
+                <!-- CHARACTER 5 -->
+
+                <button
+                    class="character-card"
+                    data-character="5"
+                >
+
+                    <div class="character-number">
+                        V
+                    </div>
+
+                    <div class="character-name">
+                        CHARACTER 5
+                    </div>
+
+                    <div class="select-text">
+                        SELECT
+                    </div>
+
+                </button>
+
+
+                <!-- CHARACTER 6 -->
+
+                <button
+                    class="character-card"
+                    data-character="6"
+                >
+
+                    <div class="character-number">
+                        VI
+                    </div>
+
+                    <div class="character-name">
+                        CHARACTER 6
+                    </div>
+
+                    <div class="select-text">
+                        SELECT
+                    </div>
+
+                </button>
+
+
+                <!-- CHARACTER 7 -->
+
+                <button
+                    class="character-card"
+                    data-character="7"
+                >
+
+                    <div class="character-number">
+                        VII
+                    </div>
+
+                    <div class="character-name">
+                        CHARACTER 7
+                    </div>
+
+                    <div class="select-text">
+                        SELECT
+                    </div>
+
+                </button>
+
+
+                <!-- CHARACTER 8 -->
+
+                <button
+                    class="character-card"
+                    data-character="8"
+                >
+
+                    <div class="character-number">
+                        VIII
+                    </div>
+
+                    <div class="character-name">
+                        CHARACTER 8
+                    </div>
+
+                    <div class="select-text">
+                        SELECT
+                    </div>
+
+                </button>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             CONTROLS
+        ========================================== -->
+
+        <section class="controls">
+
+            <div class="selected-display">
+
+                Selected:
+
+                <span id="selectedCharacter">
+                    None
+                </span>
+
+            </div>
+
+
+            <button
+                id="startButton"
+                disabled
+            >
+                ENTER THE GAME
+            </button>
+
+        </section>
+
+
+        <!-- =========================================
+             NETWORK STATUS
+        ========================================== -->
+
+        <div class="network-status">
+
+            <span id="statusIndicator"></span>
+
+            <span id="networkStatus">
+                Connecting...
+            </span>
+
+        </div>
+
+
+    </main>
+
+
+    <!-- Socket.IO client library -->
+
+    <script src="/socket.io/socket.io.js"></script>
+
+
+    <!-- Our JavaScript -->
+
+    <script src="game.js"></script>
+
+</body>
+
+</html>
