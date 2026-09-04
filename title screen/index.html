@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Bitin' Off Hedz</title>
+
+    <!-- Gaming fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================================
+         TITLE SCREEN
+    ================================= -->
+
+    <div id="titleScreen" class="screen">
+
+        <!-- Animated background -->
+        <div class="sky"></div>
+
+        <div class="stars"></div>
+
+        <div class="moon">🌙</div>
+
+        <!-- Floating particles -->
+        <div class="particle p1">✦</div>
+        <div class="particle p2">✧</div>
+        <div class="particle p3">✦</div>
+        <div class="particle p4">•</div>
+        <div class="particle p5">✧</div>
+
+        <!-- Adventure map -->
+        <div class="map">
+
+            <div class="map-label">
+                THE LOST WILDS
+            </div>
+
+            <div class="map-path"></div>
+
+            <div class="map-space s1">1</div>
+            <div class="map-space s2">2</div>
+            <div class="map-space s3">3</div>
+            <div class="map-space s4">4</div>
+            <div class="map-space s5">5</div>
+            <div class="map-space s6">6</div>
+
+            <div class="map-volcano">🌋</div>
+            <div class="map-treasure">💎</div>
+
+        </div>
+
+
+        <!-- Decorative objects -->
+
+        <div class="dice-floating">
+            🎲
+        </div>
+
+        <div class="compass">
+            🧭
+        </div>
+
+        <div class="coin">
+            🪙
+        </div>
+
+
+        <!-- Title -->
+
+        <div class="title-container">
+
+            <div class="tiny-title">
+                ⚔ AN EPIC ADVENTURE ⚔
+            </div>
+
+            <h1>
+                BITIN'
+                <span>OFF HEDZ</span>
+            </h1>
+
+            <div class="ornament">
+                <span></span>
+                ✦
+                <span></span>
+            </div>
+
+            <p class="tagline">
+                ROLL • RACE • BITE • SURVIVE
+            </p>
+
+
+            <!-- Game buttons -->
+
+            <div class="main-buttons">
+
+                <button id="playButton" class="game-button play-button">
+                    <span class="button-icon">▶</span>
+                    PLAY GAME
+                </button>
+
+                <button id="howButton" class="game-button">
+                    <span class="button-icon">?</span>
+                    HOW TO PLAY
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Sound -->
+
+        <button id="soundButton" class="sound-button">
+            🔊
+        </button>
+
+
+        <div class="bottom-text">
+            <span>EXPLORE</span>
+            <b>◆</b>
+            <span>FIGHT</span>
+            <b>◆</b>
+            <span>SURVIVE</span>
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================
+         CHARACTER SCREEN
+    ================================= -->
+
+    <div id="characterScreen" class="screen hidden">
+
+        <div class="character-background"></div>
+
+        <header class="character-header">
+
+            <div class="tiny-title">
+                CHOOSE YOUR CHAMPION
+            </div>
+
+            <h2>WHO WILL SURVIVE?</h2>
+
+            <p>
+                Choose wisely. Every character has a unique power.
+            </p>
+
+        </header>
+
+
+        <!-- Characters -->
+
+        <div class="characters">
+
+
+            <!-- QUINCY -->
+
+            <div class="character-card" data-character="Quincy">
+
+                <div class="card-glow"></div>
+
+                <div class="character-number">
+                    01
+                </div>
+
+                <div class="character-avatar quincy">
+                    🦖
+                </div>
+
+                <h3>QUINCY</h3>
+
+                <div class="role">
+                    THE STRATEGIST
+                </div>
+
+                <div class="power">
+                    ⚡ CLEVER MIND
+                </div>
+
+                <p>
+                    Think ahead and gain an advantage during movement.
+                </p>
+
+                <button class="select-button">
+                    SELECT
+                </button>
+
+            </div>
+
+
+            <!-- CAILYN -->
+
+            <div class="character-card" data-character="Cailyn">
+
+                <div class="card-glow"></div>
+
+                <div class="character-number">
+                    02
+                </div>
+
+                <div class="character-avatar cailyn">
+                    🐺
+                </div>
+
+                <h3>CAILYN</h3>
+
+                <div class="role">
+                    THE HUNTER
+                </div>
+
+                <div class="power">
+                    🏹 QUICK SHOT
+                </div>
+
+                <p>
+                    Move quickly and escape one dangerous situation.
+                </p>
+
+                <button class="select-button">
+                    SELECT
+                </button>
+
+            </div>
+
+
+            <!-- JUNE -->
+
+            <div class="character-card" data-character="June">
+
+                <div class="card-glow"></div>
+
+                <div class="character-number">
+                    03
+                </div>
+
+                <div class="character-avatar june">
+                    🐉
+                </div>
+
+                <h3>JUNE</h3>
+
+                <div class="role">
+                    THE DEFENDER
+                </div>
+
+                <div class="power">
+                    🛡 IRON GUARD
+                </div>
+
+                <p>
+                    Protect yourself when danger strikes.
+                </p>
+
+                <button class="select-button">
+                    SELECT
+                </button>
+
+            </div>
+
+
+            <!-- FLORENCE -->
+
+            <div class="character-card" data-character="Florence">
+
+                <div class="card-glow"></div>
+
+                <div class="character-number">
+                    04
+                </div>
+
+                <div class="character-avatar florence">
+                    🦊
+                </div>
+
+                <h3>FLORENCE</h3>
+
+                <div class="role">
+                    THE WARRIOR
+                </div>
+
+                <div class="power">
+                    🎲 LUCKY ROLL
+                </div>
+
+                <p>
+                    Reroll the dice once when luck turns against you.
+                </p>
+
+                <button class="select-button">
+                    SELECT
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Selected player -->
+
+        <div id="selectedMessage" class="selected-message">
+            SELECT A CHARACTER
+        </div>
+
+
+        <button id="continueButton" class="continue-button" disabled>
+            ENTER THE WILDS
+            <span>→</span>
+        </button>
+
+
+        <button id="backButton" class="back-button">
+            ← BACK
+        </button>
+
+    </div>
+
+
+
+    <!-- ================================
+         HOW TO PLAY POPUP
+    ================================= -->
+
+    <div id="howModal" class="modal hidden">
+
+        <div class="how-box">
+
+            <button id="closeHow" class="close-button">
+                ×
+            </button>
+
+            <div class="tiny-title">
+                ADVENTURER'S GUIDE
+            </div>
+
+            <h2>HOW TO PLAY</h2>
+
+            <div class="rule">
+
+                <div class="rule-icon">🎲</div>
+
+                <div>
+                    <h3>ROLL</h3>
+                    <p>
+                        Roll the dice to determine how many spaces you move.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="rule">
+
+                <div class="rule-icon">🗺️</div>
+
+                <div>
+                    <h3>EXPLORE</h3>
+                    <p>
+                        Travel across the map and discover special spaces.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="rule">
+
+                <div class="rule-icon">⚔️</div>
+
+                <div>
+                    <h3>SURVIVE</h3>
+                    <p>
+                        Avoid danger and use your character's special power.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="rule">
+
+                <div class="rule-icon">🏆</div>
+
+                <div>
+                    <h3>WIN</h3>
+                    <p>
+                        Reach the final destination and become the winner.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
