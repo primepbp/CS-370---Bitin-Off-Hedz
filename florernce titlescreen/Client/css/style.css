@@ -1,0 +1,459 @@
+/*
+    GET TO THE GUILLOTINE
+    Main menu styling
+
+    CSS controls:
+    - Colors
+    - Sizes
+    - Positioning
+    - Animations
+    - Buttons
+    - Background
+*/
+
+
+/* ------------------------------
+   BASIC PAGE SETTINGS
+--------------------------------*/
+
+* {
+    /* Makes sizing easier to control */
+    box-sizing: border-box;
+}
+
+body {
+    /* Remove browser default spacing */
+    margin: 0;
+
+    /* Make the game fill the screen */
+    min-height: 100vh;
+
+    /* Prevent scrolling on the main menu */
+    overflow: hidden;
+
+    /* Medieval-style dark background */
+    background:
+        radial-gradient(circle at center, #40251b 0%, #160d0a 55%, #080504 100%);
+
+    /* Main text color */
+    color: #e8c77b;
+
+    /* Classic-looking font */
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+
+/* ------------------------------
+   MAIN MENU
+--------------------------------*/
+
+#main-menu {
+    /* Fill the entire browser */
+    min-height: 100vh;
+
+    /* Put content in the center */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* Allows decorative elements to stay inside */
+    position: relative;
+
+    /* Keep content above background decorations */
+    z-index: 1;
+}
+
+
+/* ------------------------------
+   SUBTITLE
+--------------------------------*/
+
+.subtitle {
+    /* Small text above the title */
+    font-size: 13px;
+
+    /* Space between letters */
+    letter-spacing: 5px;
+
+    /* Slight transparency */
+    opacity: 0.75;
+
+    /* Animate the text */
+    animation: fadeIn 1.5s ease;
+}
+
+
+/* ------------------------------
+   MAIN TITLE
+--------------------------------*/
+
+h1 {
+    /* Large game title */
+    font-size: clamp(42px, 7vw, 90px);
+
+    /* Prevent title from touching edges */
+    text-align: center;
+
+    /* Space between letters */
+    letter-spacing: 7px;
+
+    /* Remove default margin */
+    margin: 20px 20px 8px;
+
+    /* Shadow makes the title feel more dramatic */
+    text-shadow:
+        0 0 10px #000,
+        0 0 25px #6e3f21;
+
+    /* Slowly animate the title */
+    animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+
+/* ------------------------------
+   DECORATIVE TITLE LINE
+--------------------------------*/
+
+.title-line {
+    font-size: 18px;
+    opacity: 0.7;
+    margin-bottom: 35px;
+}
+
+
+/* ------------------------------
+   BUTTON AREA
+--------------------------------*/
+
+.menu-buttons {
+    /* Put buttons vertically */
+    display: flex;
+    flex-direction: column;
+
+    /* Space between buttons */
+    gap: 15px;
+
+    /* Make sure buttons don't become too wide */
+    width: min(330px, 80vw);
+}
+
+
+/* ------------------------------
+   GAME BUTTONS
+--------------------------------*/
+
+.game-button {
+    /* Button size */
+    width: 100%;
+    padding: 16px 20px;
+
+    /* Medieval-style shape */
+    border: 2px solid #a77a3b;
+    border-radius: 6px;
+
+    /* Dark button */
+    background:
+        linear-gradient(
+            180deg,
+            #4a2b1d,
+            #24130e
+        );
+
+    /* Gold text */
+    color: #f0d58c;
+
+    /* Font */
+    font-family: Georgia, serif;
+    font-size: 17px;
+    font-weight: bold;
+
+    /* Letter spacing */
+    letter-spacing: 2px;
+
+    /* Makes buttons feel clickable */
+    cursor: pointer;
+
+    /* Smooth animation */
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+/* Button icon */
+.game-button span {
+    margin-right: 10px;
+}
+
+
+/* Button hover effect */
+.game-button:hover {
+    /* Move button slightly upward */
+    transform: translateY(-3px);
+
+    /* Make the button brighter */
+    background:
+        linear-gradient(
+            180deg,
+            #69412a,
+            #321a11
+        );
+
+    /* Add glow */
+    box-shadow:
+        0 0 10px #a77a3b,
+        0 6px 15px rgba(0, 0, 0, 0.5);
+}
+
+
+/* Button click effect */
+.game-button:active {
+    transform: translateY(1px);
+}
+
+
+/* ------------------------------
+   VERSION TEXT
+--------------------------------*/
+
+.version {
+    position: absolute;
+    bottom: 20px;
+
+    font-size: 11px;
+    letter-spacing: 2px;
+
+    opacity: 0.45;
+}
+
+
+/* ------------------------------
+   OTHER SCREENS
+--------------------------------*/
+
+.game-screen {
+    /* Put the screen over the menu */
+    position: fixed;
+
+    inset: 0;
+
+    /* Center the panel */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Dark overlay */
+    background: rgba(5, 3, 2, 0.9);
+
+    /* Put it above everything */
+    z-index: 10;
+}
+
+
+/* Hidden screens */
+.hidden {
+    display: none;
+}
+
+
+/* ------------------------------
+   POP-UP PANEL
+--------------------------------*/
+
+.panel {
+    width: min(500px, 90vw);
+
+    padding: 40px;
+
+    text-align: center;
+
+    /* Panel background */
+    background:
+        linear-gradient(
+            145deg,
+            #3a2118,
+            #170c08
+        );
+
+    /* Gold border */
+    border: 2px solid #a77a3b;
+
+    /* Shadow around panel */
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.8);
+
+    border-radius: 8px;
+}
+
+
+.panel h2 {
+    font-size: 32px;
+    letter-spacing: 4px;
+}
+
+
+/* ------------------------------
+   GAME CODE
+--------------------------------*/
+
+#game-code {
+    margin: 25px 0;
+
+    font-size: 48px;
+
+    letter-spacing: 12px;
+
+    font-weight: bold;
+
+    color: #f4d98b;
+
+    text-shadow: 0 0 15px #8c5c27;
+}
+
+
+/* ------------------------------
+   JOIN INPUT
+--------------------------------*/
+
+#game-code-input {
+    width: 100%;
+
+    padding: 15px;
+
+    margin: 20px 0;
+
+    text-align: center;
+
+    font-size: 30px;
+
+    letter-spacing: 8px;
+
+    background: #0e0806;
+
+    color: #f4d98b;
+
+    border: 2px solid #a77a3b;
+
+    border-radius: 5px;
+
+    outline: none;
+}
+
+
+/* Input focus effect */
+#game-code-input:focus {
+    box-shadow: 0 0 12px #a77a3b;
+}
+
+
+/* ------------------------------
+   BACK BUTTON
+--------------------------------*/
+
+.back-button {
+    margin-top: 15px;
+
+    padding: 10px 25px;
+
+    background: transparent;
+
+    color: #c8a86a;
+
+    border: 1px solid #76552c;
+
+    cursor: pointer;
+
+    border-radius: 4px;
+}
+
+
+.back-button:hover {
+    background: #2d1810;
+}
+
+
+/* ------------------------------
+   ANIMATIONS
+--------------------------------*/
+
+/* Fade-in animation */
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Title glowing animation */
+@keyframes titleGlow {
+
+    from {
+        text-shadow:
+            0 0 10px #000,
+            0 0 15px #6e3f21;
+    }
+
+    to {
+        text-shadow:
+            0 0 10px #000,
+            0 0 30px #a77a3b;
+    }
+}
+
+
+/* ------------------------------
+   DECORATIVE FOG
+--------------------------------*/
+
+.fog {
+    position: absolute;
+
+    width: 400px;
+    height: 150px;
+
+    background: rgba(180, 160, 140, 0.04);
+
+    filter: blur(30px);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+.fog-one {
+    left: 5%;
+    bottom: 15%;
+
+    animation: fogMove 8s ease-in-out infinite alternate;
+}
+
+
+.fog-two {
+    right: 5%;
+    top: 20%;
+
+    animation: fogMove 10s ease-in-out infinite alternate-reverse;
+}
+
+
+/* Fog movement */
+@keyframes fogMove {
+
+    from {
+        transform: translateX(-30px);
+    }
+
+    to {
+        transform: translateX(30px);
+    }
+}
