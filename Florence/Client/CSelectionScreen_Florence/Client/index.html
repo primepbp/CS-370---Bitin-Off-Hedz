@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Makes the game work properly on phones and smaller screens -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Get To The Guillotine</title>
+
+    <!-- Our game's CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         MAIN MENU
+         ===================================================== -->
+
+    <div id="main-menu" class="screen">
+
+        <div class="main-menu-content">
+
+            <p class="small-title">A GAME OF REVOLUTION</p>
+
+            <h1>GET TO THE<br>GUILLOTINE</h1>
+
+            <p class="menu-subtitle">
+                Race your rivals. Survive the mob.
+            </p>
+
+            <div class="main-buttons">
+
+                <!-- Host creates a new game -->
+                <button id="hostButton" class="main-button">
+                    HOST GAME
+                </button>
+
+                <!-- Join enters an existing game code -->
+                <button id="joinButton" class="main-button">
+                    JOIN GAME
+                </button>
+
+                <!-- Rules -->
+                <button id="rulesButton" class="main-button secondary-button">
+                    RULES
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         HOST SCREEN
+         ===================================================== -->
+
+    <div id="host-screen" class="screen hidden">
+
+        <div class="room-box">
+
+            <p class="small-title">GAME CREATED</p>
+
+            <h1>YOUR GAME CODE</h1>
+
+            <!-- The server puts the room code here -->
+            <div id="gameCodeDisplay" class="game-code">
+                ----
+            </div>
+
+            <p>
+                Give this code to the other players.
+            </p>
+
+            <button id="copyCodeButton" class="main-button">
+                COPY CODE
+            </button>
+
+            <button id="hostContinueButton" class="main-button">
+                CONTINUE
+            </button>
+
+            <button id="hostBackButton" class="text-button">
+                ← BACK
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         JOIN SCREEN
+         ===================================================== -->
+
+    <div id="join-screen" class="screen hidden">
+
+        <div class="room-box">
+
+            <p class="small-title">JOIN A GAME</p>
+
+            <h1>ENTER GAME CODE</h1>
+
+            <input
+                id="gameCodeInput"
+                type="text"
+                maxlength="4"
+                placeholder="0000"
+                inputmode="numeric"
+                autocomplete="off"
+            >
+
+            <button id="joinConfirmButton" class="main-button">
+                JOIN GAME
+            </button>
+
+            <button id="joinBackButton" class="text-button">
+                ← BACK
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RULES SCREEN
+         ===================================================== -->
+
+    <div id="rules-screen" class="screen hidden">
+
+        <div class="rules-box">
+
+            <p class="small-title">HOW TO PLAY</p>
+
+            <h1>RULES</h1>
+
+            <div class="rules-content">
+
+                <p>
+                    <strong>Goal:</strong>
+                    Be the first player to reach the Guillotine.
+                </p>
+
+                <p>
+                    Roll the dice and move across the board.
+                    You need the exact roll to reach the Guillotine.
+                </p>
+
+                <p>
+                    <strong>Angry Mob:</strong>
+                    Roll only one die unless you spend two coins.
+                </p>
+
+                <p>
+                    <strong>Dark Alleyway:</strong>
+                    Risk a shortcut, but failing to cross it
+                    sends you back to the start.
+                </p>
+
+                <p>
+                    <strong>Coins:</strong>
+                    Use coins for special actions and abilities.
+                </p>
+
+                <p>
+                    Choose your character carefully.
+                    Every character has a unique power.
+                </p>
+
+            </div>
+
+            <button id="rulesBackButton" class="main-button">
+                ← BACK
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CHARACTER SELECTION SCREEN
+         ===================================================== -->
+
+    <div id="character-screen" class="screen hidden">
+
+        <!-- Decorative background -->
+        <div class="blood-moon"></div>
+
+        <!-- Top title -->
+        <header class="character-header">
+
+            <p class="small-title">
+                THE REVOLUTION BEGINS
+            </p>
+
+            <h1>GET TO THE GUILLOTINE</h1>
+
+            <h2>CHOOSE YOUR CHARACTER</h2>
+
+            <!-- Room information -->
+            <div class="room-info">
+                GAME CODE:
+                <span id="characterGameCode">----</span>
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             LEFT MENU
+             ================================================= -->
+
+        <div class="character-menu">
+
+            <button id="menuButton">
+                ☰ MENU
+            </button>
+
+            <button id="chatButton">
+                💬 CHAT ROOM
+            </button>
+
+            <button id="rulesButton2">
+                📜 RULES
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             MAIN CHARACTER DISPLAY
+             ================================================= -->
+
+        <main class="character-display">
+
+            <!-- Previous character -->
+            <button
+                id="previousCharacter"
+                class="character-arrow"
+                aria-label="Previous character"
+            >
+                ◀
+            </button>
+
+
+            <!-- Selected character -->
+            <section class="selected-character">
+
+                <div class="character-image-container">
+
+                    <img
+                        id="selectedCharacterImage"
+                        src="characters/Marie Antoinette.gif"
+                        alt="Marie Antoinette"
+                    >
+
+                    <!-- Used for characters without artwork yet -->
+                    <div
+                        id="characterPlaceholder"
+                        class="character-placeholder hidden"
+                    >
+                        👑
+                    </div>
+
+                </div>
+
+
+                <h2 id="selectedCharacterName">
+                    Marie Antoinette
+                </h2>
+
+
+                <p id="selectedCharacterQuote" class="character-quote">
+                    "Let them eat cake."
+                </p>
+
+
+                <div class="power-box">
+
+                    <h3>⚔ SPECIAL POWER</h3>
+
+                    <p id="selectedCharacterPower">
+                        Power coming soon.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- Next character -->
+            <button
+                id="nextCharacter"
+                class="character-arrow"
+                aria-label="Next character"
+            >
+                ▶
+            </button>
+
+        </main>
+
+
+        <!-- =================================================
+             SIX CHARACTER OPTIONS
+             ================================================= -->
+
+        <div class="character-list">
+
+            <!-- Marie Antoinette -->
+            <button
+                class="character-option active"
+                data-character="0"
+            >
+
+                <img
+                    src="characters/Marie Antoinette.gif"
+                    alt="Marie Antoinette"
+                >
+
+                <span>Marie</span>
+
+            </button>
+
+
+            <!-- Robespierre -->
+            <button
+                class="character-option"
+                data-character="1"
+            >
+
+                <img
+                    src="characters/Robespierre.gif"
+                    alt="Robespierre"
+                >
+
+                <span>Robespierre</span>
+
+            </button>
+
+
+            <!-- Anne Boleyn -->
+            <button
+                class="character-option"
+                data-character="2"
+            >
+
+                <img
+                    src="characters/Anne Bolyne.gif"
+                    alt="Anne Boleyn"
+                >
+
+                <span>Anne</span>
+
+            </button>
+
+
+            <!-- King Louis XVI -->
+            <button
+                class="character-option"
+                data-character="3"
+            >
+
+                <img
+                    src="characters/King Louis XVI.gif"
+                    alt="King Louis XVI"
+                >
+
+                <span>Louis XVI</span>
+
+            </button>
+
+
+            <!-- Headless Horseman -->
+            <button
+                class="character-option placeholder-option"
+                data-character="4"
+            >
+
+                <div class="placeholder-icon">
+                    🐎
+                </div>
+
+                <span>Horseman</span>
+
+            </button>
+
+
+            <!-- Queen of Hearts -->
+            <button
+                class="character-option placeholder-option"
+                data-character="5"
+            >
+
+                <div class="placeholder-icon">
+                    ♥
+                </div>
+
+                <span>Queen</span>
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             BOTTOM CONTROLS
+             ================================================= -->
+
+        <div class="character-bottom">
+
+            <button
+                id="characterBackButton"
+                class="game-button"
+            >
+                ← BACK
+            </button>
+
+
+            <div class="player-status">
+
+                <span id="playerCount">
+                    Waiting for players...
+                </span>
+
+            </div>
+
+
+            <button
+                id="startGameButton"
+                class="game-button start-button"
+            >
+                START
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SOCKET.IO
+         ===================================================== -->
+
+    <!-- Socket.IO client library -->
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+
+    <!-- Our game's JavaScript -->
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>

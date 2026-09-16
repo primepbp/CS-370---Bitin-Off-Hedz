@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Allows the browser to correctly understand special characters -->
+    <meta charset="UTF-8">
+
+    <!-- Makes the game fit different screen sizes -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Name shown on the browser tab -->
+    <title>Get To The Guillotine</title>
+
+    <!-- Connect this HTML file to our CSS design -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!--
+        MAIN MENU
+        This is the first screen players see.
+    -->
+    <main id="main-menu">
+
+        <!-- Decorative background elements -->
+        <div class="fog fog-one"></div>
+        <div class="fog fog-two"></div>
+
+        <!-- Small text above the title -->
+        <p class="subtitle">A GAME OF FATE • STRATEGY • SURVIVAL</p>
+
+        <!-- Main game title -->
+        <h1>GET TO THE GUILLOTINE</h1>
+
+        <!-- Decorative line -->
+        <div class="title-line">
+            ⚔ ━━━━━━━━━ ⚔
+        </div>
+
+        <!-- Main menu buttons -->
+        <section class="menu-buttons">
+
+            <!-- Host button -->
+            <button id="host-button" class="game-button">
+                <span>♛</span>
+                HOST GAME
+            </button>
+
+            <!-- Join button -->
+            <button id="join-button" class="game-button">
+                <span>⚔</span>
+                JOIN GAME
+            </button>
+
+            <!-- How to play button -->
+            <button id="rules-button" class="game-button">
+                <span>📜</span>
+                HOW TO PLAY
+            </button>
+
+        </section>
+
+        <!-- Small information at bottom -->
+        <p class="version">GET TO THE GUILLOTINE • v0.1</p>
+
+    </main>
+
+    <!--
+        HOST SCREEN
+
+        It starts hidden.
+        JavaScript will show it when the player clicks HOST GAME.
+    -->
+    <section id="host-screen" class="game-screen hidden">
+
+        <div class="panel">
+
+            <h2>HOST A GAME</h2>
+
+            <p>Share this code with your friends.</p>
+
+            <!-- JavaScript will generate the actual code here -->
+            <div id="game-code">----</div>
+
+            <button id="copy-code-button" class="game-button">
+                📋 COPY CODE
+            </button>
+
+            <button id="host-back-button" class="back-button">
+                ← BACK
+            </button>
+
+        </div>
+
+    </section>
+
+    <!--
+        JOIN SCREEN
+
+        Players will eventually enter the host's game code here.
+    -->
+    <section id="join-screen" class="game-screen hidden">
+
+        <div class="panel">
+
+            <h2>JOIN A GAME</h2>
+
+            <p>Enter your friend's game code.</p>
+
+            <input
+                id="game-code-input"
+                type="text"
+                maxlength="4"
+                placeholder="0000"
+            >
+
+            <button id="join-confirm-button" class="game-button">
+                JOIN GAME
+            </button>
+
+            <button id="join-back-button" class="back-button">
+                ← BACK
+            </button>
+
+        </div>
+
+    </section>
+
+    <!--
+        HOW TO PLAY SCREEN
+
+        We'll add the complete rules later.
+    -->
+    <section id="rules-screen" class="game-screen hidden">
+
+        <div class="panel">
+
+            <h2>HOW TO PLAY</h2>
+
+            <p>Race your opponents and reach the Guillotine first!</p>
+
+            <p>More rules will be added here.</p>
+
+            <button id="rules-back-button" class="back-button">
+                ← BACK
+            </button>
+
+        </div>
+
+    </section>
+    <!-- ============================= -->
+<!-- CHARACTER SELECTION SCREEN   -->
+<!-- ============================= -->
+<div id="character-screen" class="screen hidden">
+
+    <!-- Left-side menu -->
+    <div class="character-menu">
+        <button id="menuButton">☰ MENU</button>
+        <button id="chatButton">💬 CHAT ROOM</button>
+        <button id="rulesButton2">📜 RULES</button>
+    </div>
+
+    <!-- Game title -->
+    <h1 class="character-title">GET TO THE GUILLOTINE</h1>
+
+    <h2 class="choose-title">CHOOSE YOUR CHARACTER</h2>
+
+    <!-- Main character display -->
+    <div class="character-display">
+
+        <!-- Previous character -->
+        <button id="previousCharacter" class="character-arrow">
+            ◀
+        </button>
+
+        <!-- Character card -->
+        <div class="selected-character">
+
+            <div class="character-image-container">
+                <img
+                    id="selectedCharacterImage"
+                    src="characters/Marie Antoinette.gif"
+                    alt="Selected Character"
+                >
+            </div>
+
+            <h2 id="selectedCharacterName">
+                Marie Antoinette
+            </h2>
+
+            <p id="selectedCharacterQuote">
+                "Let them eat cake."
+            </p>
+
+            <div class="power-box">
+                <h3>POWER</h3>
+                <p id="selectedCharacterPower">
+                    Character power coming soon.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Next character -->
+        <button id="nextCharacter" class="character-arrow">
+            ▶
+        </button>
+
+    </div>
+
+    <!-- Six character choices -->
+    <div class="character-list">
+
+        <button class="character-option active" data-character="0">
+            <img src="characters/Marie Antoinette.gif">
+            <span>Marie</span>
+        </button>
+
+        <button class="character-option" data-character="1">
+            <img src="characters/Robespierre.gif">
+            <span>Robespierre</span>
+        </button>
+
+        <button class="character-option" data-character="2">
+            <img src="characters/Anne Bolyne.gif">
+            <span>Anne</span>
+        </button>
+
+        <button class="character-option" data-character="3">
+            <img src="characters/King Louis XVI.gif">
+            <span>Louis XVI</span>
+        </button>
+
+        <button class="character-option placeholder-character" data-character="4">
+            <div>🐎</div>
+            <span>Horseman</span>
+        </button>
+
+        <button class="character-option placeholder-character" data-character="5">
+            <div>♥️</div>
+            <span>Queen</span>
+        </button>
+
+    </div>
+
+    <!-- Bottom controls -->
+    <div class="character-bottom">
+
+        <button id="characterBackButton" class="game-button">
+            ← BACK
+        </button>
+
+        <div class="player-status">
+            <span id="playerCount">Waiting for players...</span>
+        </div>
+
+        <button id="startGameButton" class="game-button start-button">
+            START
+        </button>
+
+    </div>
+
+</div>
+    <!-- Socket.IO client library -->
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <!-- Our game's JavaScript -->
+    <script src="js/script.js"></script>
+</body>
+
+</html>
