@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -13,267 +10,367 @@
     <title>Get to the Guillotine</title>
 
     <link rel="stylesheet" href="style.css">
-
 </head>
-
 
 <body>
 
     <main class="game-container">
 
+        <!-- ========================================= -->
+        <!-- CONNECTION / HOME SCREEN -->
+        <!-- ========================================= -->
 
-        <!-- =========================================
-             TITLE
-        ========================================== -->
+        <section id="connectionScreen" class="screen">
 
-        <section class="title-section">
+            <div class="title-section">
 
-            <div class="small-title">
-                A RACE TO THE END
+                <div class="small-title">
+                    A RACE TO THE END
+                </div>
+
+                <h1>
+                    GET TO THE<br>
+                    GUILLOTINE
+                </h1>
+
+                <p class="subtitle">
+                    Be the first to meet your fate.
+                </p>
+
             </div>
 
-            <h1>
-                GET TO THE<br>
-                GUILLOTINE
-            </h1>
 
-            <p class="subtitle">
-                Be the first to meet your fate.
-            </p>
+            <div class="host-join-container">
 
-        </section>
+                <!-- USERNAME -->
 
+                <div class="username-section">
 
-        <!-- =========================================
-             CHARACTER SELECTION
-        ========================================== -->
+                    <label for="usernameInput">
+                        ENTER YOUR NAME
+                    </label>
 
-        <section class="selection-section">
+                    <input
+                        id="usernameInput"
+                        type="text"
+                        maxlength="16"
+                        placeholder="Username"
+                        autocomplete="off"
+                    >
 
-            <h2>
-                SELECT YOUR CHARACTER
-            </h2>
-
-            <p class="instruction">
-                Choose the historical figure you will guide
-                to the guillotine.
-            </p>
+                </div>
 
 
-            <div class="character-grid">
+                <!-- HOST / JOIN -->
 
+                <div class="host-join-options">
 
-                <!-- CHARACTER 1 -->
+                    <div class="host-join-box">
 
-                <button
-                    class="character-card"
-                    data-character="1"
-                >
+                        <h2>
+                            HOST A GAME
+                        </h2>
 
-                    <div class="character-number">
-                        I
+                        <p>
+                            Create a new game and invite
+                            your friends with a game code.
+                        </p>
+
+                        <button
+                            id="hostButton"
+                            class="main-button"
+                        >
+                            HOST GAME
+                        </button>
+
                     </div>
 
-                    <div class="character-name">
-                        CHARACTER 1
+
+                    <div class="divider">
+
+                        <span>OR</span>
+
                     </div>
 
-                    <div class="select-text">
-                        SELECT
+
+                    <div class="host-join-box">
+
+                        <h2>
+                            JOIN A GAME
+                        </h2>
+
+                        <p>
+                            Enter a friend's game code
+                            to join their lobby.
+                        </p>
+
+                        <input
+                            id="roomCodeInput"
+                            type="text"
+                            maxlength="6"
+                            placeholder="GAME CODE"
+                            autocomplete="off"
+                        >
+
+                        <button
+                            id="joinButton"
+                            class="main-button"
+                        >
+                            JOIN GAME
+                        </button>
+
                     </div>
 
-                </button>
+                </div>
 
 
-                <!-- CHARACTER 2 -->
-
-                <button
-                    class="character-card"
-                    data-character="2"
-                >
-
-                    <div class="character-number">
-                        II
-                    </div>
-
-                    <div class="character-name">
-                        CHARACTER 2
-                    </div>
-
-                    <div class="select-text">
-                        SELECT
-                    </div>
-
-                </button>
-
-
-                <!-- CHARACTER 3 -->
-
-                <button
-                    class="character-card"
-                    data-character="3"
-                >
-
-                    <div class="character-number">
-                        III
-                    </div>
-
-                    <div class="character-name">
-                        CHARACTER 3
-                    </div>
-
-                    <div class="select-text">
-                        SELECT
-                    </div>
-
-                </button>
-
-
-                <!-- CHARACTER 4 -->
-
-                <button
-                    class="character-card"
-                    data-character="4"
-                >
-
-                    <div class="character-number">
-                        IV
-                    </div>
-
-                    <div class="character-name">
-                        CHARACTER 4
-                    </div>
-
-                    <div class="select-text">
-                        SELECT
-                    </div>
-
-                </button>
-
-
-                <!-- CHARACTER 5 -->
-
-                <button
-                    class="character-card"
-                    data-character="5"
-                >
-
-                    <div class="character-number">
-                        V
-                    </div>
-
-                    <div class="character-name">
-                        CHARACTER 5
-                    </div>
-
-                    <div class="select-text">
-                        SELECT
-                    </div>
-
-                </button>
-
-
-                <!-- CHARACTER 6 -->
-
-                <button
-                    class="character-card"
-                    data-character="6"
-                >
-
-                    <div class="character-number">
-                        VI
-                    </div>
-
-                    <div class="character-name">
-                        CHARACTER 6
-                    </div>
-
-                    <div class="select-text">
-                        SELECT
-                    </div>
-
-                </button>
-
-
-                <!-- CHARACTER 7 -->
-
-                <button
-                    class="character-card"
-                    data-character="7"
-                >
-
-                    <div class="character-number">
-                        VII
-                    </div>
-
-                    <div class="character-name">
-                        CHARACTER 7
-                    </div>
-
-                    <div class="select-text">
-                        SELECT
-                    </div>
-
-                </button>
-
-
-                <!-- CHARACTER 8 -->
-
-                <button
-                    class="character-card"
-                    data-character="8"
-                >
-
-                    <div class="character-number">
-                        VIII
-                    </div>
-
-                    <div class="character-name">
-                        CHARACTER 8
-                    </div>
-
-                    <div class="select-text">
-                        SELECT
-                    </div>
-
-                </button>
-
+                <div
+                    id="connectionError"
+                    class="error-message"
+                ></div>
 
             </div>
 
         </section>
 
 
-        <!-- =========================================
-             CONTROLS
-        ========================================== -->
+        <!-- ========================================= -->
+        <!-- LOBBY SCREEN -->
+        <!-- ========================================= -->
 
-        <section class="controls">
+        <section
+            id="lobbyScreen"
+            class="screen hidden"
+        >
 
-            <div class="selected-display">
+            <div class="lobby-header">
 
-                Selected:
+                <div class="small-title">
+                    GAME LOBBY
+                </div>
 
-                <span id="selectedCharacter">
-                    None
-                </span>
+                <h1>
+                    GET TO THE<br>
+                    GUILLOTINE
+                </h1>
 
             </div>
 
 
-            <button
-                id="startButton"
-                disabled
+            <!-- ROOM CODE -->
+
+            <div class="room-info">
+
+                <div class="room-label">
+                    GAME CODE
+                </div>
+
+                <div
+                    id="roomCodeDisplay"
+                    class="room-code"
+                >
+                    ------
+                </div>
+
+                <div class="room-instruction">
+                    Share this code with the other players.
+                </div>
+
+            </div>
+
+
+            <!-- PLAYERS -->
+
+            <div class="players-section">
+
+                <div class="section-heading">
+                    PLAYERS
+                </div>
+
+                <div id="playersList">
+                    <!-- Players appear here -->
+                </div>
+
+            </div>
+
+
+            <!-- CHARACTER SELECTION -->
+
+            <div class="selection-section">
+
+                <h2>
+                    SELECT YOUR CHARACTER
+                </h2>
+
+                <p class="instruction">
+                    Choose the historical figure you will
+                    guide to the guillotine.
+                </p>
+
+
+                <div class="character-grid">
+
+                    <button
+                        class="character-card"
+                        data-character="1"
+                    >
+                        <span class="character-number">I</span>
+                        <span class="character-name">CHARACTER 1</span>
+                        <span class="select-text">SELECT</span>
+                    </button>
+
+
+                    <button
+                        class="character-card"
+                        data-character="2"
+                    >
+                        <span class="character-number">II</span>
+                        <span class="character-name">CHARACTER 2</span>
+                        <span class="select-text">SELECT</span>
+                    </button>
+
+
+                    <button
+                        class="character-card"
+                        data-character="3"
+                    >
+                        <span class="character-number">III</span>
+                        <span class="character-name">CHARACTER 3</span>
+                        <span class="select-text">SELECT</span>
+                    </button>
+
+
+                    <button
+                        class="character-card"
+                        data-character="4"
+                    >
+                        <span class="character-number">IV</span>
+                        <span class="character-name">CHARACTER 4</span>
+                        <span class="select-text">SELECT</span>
+                    </button>
+
+
+                    <button
+                        class="character-card"
+                        data-character="5"
+                    >
+                        <span class="character-number">V</span>
+                        <span class="character-name">CHARACTER 5</span>
+                        <span class="select-text">SELECT</span>
+                    </button>
+
+
+                    <button
+                        class="character-card"
+                        data-character="6"
+                    >
+                        <span class="character-number">VI</span>
+                        <span class="character-name">CHARACTER 6</span>
+                        <span class="select-text">SELECT</span>
+                    </button>
+
+
+                    <button
+                        class="character-card"
+                        data-character="7"
+                    >
+                        <span class="character-number">VII</span>
+                        <span class="character-name">CHARACTER 7</span>
+                        <span class="select-text">SELECT</span>
+                    </button>
+
+
+                    <button
+                        class="character-card"
+                        data-character="8"
+                    >
+                        <span class="character-number">VIII</span>
+                        <span class="character-name">CHARACTER 8</span>
+                        <span class="select-text">SELECT</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- LOBBY CONTROLS -->
+
+            <div class="controls">
+
+                <div class="selected-display">
+                    Selected:
+                    <span id="selectedCharacter">
+                        None
+                    </span>
+                </div>
+
+                <button
+                    id="startButton"
+                    class="main-button start-button"
+                    disabled
+                >
+                    START GAME
+                </button>
+
+            </div>
+
+
+            <div
+                id="lobbyMessage"
+                class="lobby-message"
             >
-                ENTER THE GAME
-            </button>
+                Choose your character.
+            </div>
 
         </section>
 
 
-        <!-- =========================================
-             NETWORK STATUS
-        ========================================== -->
+        <!-- ========================================= -->
+        <!-- GAME SCREEN -->
+        <!-- ========================================= -->
+
+        <section
+            id="gameScreen"
+            class="screen hidden"
+        >
+
+            <div class="game-header">
+
+                <div class="small-title">
+                    THE GAME BEGINS
+                </div>
+
+                <h1>
+                    GET TO THE<br>
+                    GUILLOTINE
+                </h1>
+
+                <p>
+                    Game board coming soon.
+                </p>
+
+            </div>
+
+
+            <div class="game-placeholder">
+
+                <h2>
+                    YOUR GAME STARTED!
+                </h2>
+
+                <p>
+                    The actual board will go here.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- NETWORK STATUS -->
+        <!-- ========================================= -->
 
         <div class="network-status">
 
@@ -285,19 +382,11 @@
 
         </div>
 
-
     </main>
 
 
-    <!-- Socket.IO client library -->
-
     <script src="/socket.io/socket.io.js"></script>
-
-
-    <!-- Our JavaScript -->
-
     <script src="game.js"></script>
 
 </body>
-
 </html>

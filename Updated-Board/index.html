@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Get to the Guillotine</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         MAIN GAME
+    ========================================== -->
+
+    <main class="game">
+
+
+        <!-- =====================================
+             TITLE
+        ====================================== -->
+
+        <header class="title-card">
+
+            <p class="eyebrow">
+                A Revolutionary Board Game
+            </p>
+
+            <h1>
+                Get to the Guillotine
+            </h1>
+
+            <p>
+                Cross revolutionary France, gather coins,
+                survive the angry mob, and reach the Guillotine!
+            </p>
+
+        </header>
+
+
+
+        <!-- =====================================
+             MAIN GAME AREA
+        ====================================== -->
+
+        <section class="layout">
+
+
+            <!-- =================================
+                 GAME WORLD / CAMERA
+            ================================== -->
+
+            <div class="game-area">
+
+
+                <!--
+                    This is the visible portion
+                    of the enormous board.
+
+                    The camera moves inside this
+                    window and follows the player.
+                -->
+
+                <div
+                    id="game-viewport"
+                    class="game-viewport"
+                >
+
+
+                    <!--
+                        The world is larger than
+                        the viewport.
+                    -->
+
+                    <div
+                        id="game-world"
+                        class="game-world"
+                    >
+
+
+                        <!--
+                            JavaScript creates
+                            the board here.
+                        -->
+
+                        <div
+                            id="board"
+                            class="board"
+                        >
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================
+                     MINI MAP
+                ================================== -->
+
+                <div
+                    id="mini-map"
+                    class="mini-map"
+                >
+
+                    <div class="mini-map-title">
+                        MAP
+                    </div>
+
+                    <div
+                        id="mini-map-world"
+                        class="mini-map-world"
+                    >
+
+                        <!--
+                            JavaScript creates
+                            the mini-map here.
+                        -->
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =====================================
+                 SIDEBAR
+            ====================================== -->
+
+            <aside class="sidebar">
+
+
+                <!-- =================================
+                     PLAYER INFORMATION
+                ================================== -->
+
+                <section class="panel">
+
+                    <h2>
+                        Citizen
+                    </h2>
+
+
+                    <div class="stat-row">
+
+                        <span>
+                            📍 Position
+                        </span>
+
+                        <strong id="position">
+                            START
+                        </strong>
+
+                    </div>
+
+
+                    <div class="stat-row">
+
+                        <span>
+                            🪙 Coins
+                        </span>
+
+                        <strong id="coins">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="stat-row">
+
+                        <span>
+                            😡 Mob turns
+                        </span>
+
+                        <strong id="crowd-status">
+                            0
+                        </strong>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =================================
+                     DICE
+                ================================== -->
+
+                <section class="panel dice-panel">
+
+                    <h2>
+                        Dice
+                    </h2>
+
+
+                    <div class="dice">
+
+                        <div
+                            id="die1"
+                            class="die"
+                        >
+                            ⚀
+                        </div>
+
+
+                        <div
+                            id="die2"
+                            class="die"
+                        >
+                            ⚀
+                        </div>
+
+                    </div>
+
+
+                    <p id="dice-mode">
+                        Roll 2 dice
+                    </p>
+
+
+                    <button
+                        id="roll-button"
+                    >
+                        Roll Dice
+                    </button>
+
+
+                    <p
+                        id="message"
+                        class="message"
+                    >
+                        Your journey begins at the START.
+                    </p>
+
+                </section>
+
+
+
+                <!-- =================================
+                     COIN SHOP
+                ================================== -->
+
+                <section class="panel">
+
+                    <h2>
+                        Coin Pouch
+                    </h2>
+
+
+                    <p class="small">
+                        Spend coins on useful advantages.
+                    </p>
+
+
+                    <!-- Extra Roll -->
+
+                    <div class="shop-item">
+
+                        <div>
+
+                            <strong>
+                                🎲 Extra Roll
+                            </strong>
+
+                            <span>
+                                5 coins
+                            </span>
+
+                        </div>
+
+
+                        <button
+                            class="shop-button"
+                            id="extra-roll-button"
+                        >
+                            Buy
+                        </button>
+
+                    </div>
+
+
+
+                    <!-- Crowd Pass -->
+
+                    <div class="shop-item">
+
+                        <div>
+
+                            <strong>
+                                🛡️ Crowd Pass
+                            </strong>
+
+                            <span>
+                                8 coins
+                            </span>
+
+                        </div>
+
+
+                        <button
+                            class="shop-button"
+                            id="crowd-pass-button"
+                        >
+                            Buy
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =================================
+                     FUTURE MULTIPLAYER INFO
+                ================================== -->
+
+                <section class="panel multiplayer-panel">
+
+                    <h2>
+                        Players
+                    </h2>
+
+
+                    <div
+                        id="player-list"
+                        class="player-list"
+                    >
+
+                        <div class="player-list-item">
+
+                            <span>
+                                🧑 You
+                            </span>
+
+                            <strong>
+                                Playing
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <p class="small">
+                        The map is prepared for additional
+                        players to be added later.
+                    </p>
+
+                </section>
+
+
+
+                <!-- =================================
+                     RESTART
+                ================================== -->
+
+                <button
+                    id="restart-button"
+                    class="restart-button"
+                >
+                    Start Over
+                </button>
+
+
+            </aside>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>
