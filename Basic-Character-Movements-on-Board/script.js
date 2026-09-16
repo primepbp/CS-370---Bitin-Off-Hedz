@@ -3,10 +3,38 @@
 // Main Game JavaScript
 // =========================================
 
+/*
+credits:
+initial code: Caylin
+updated code: June
+*/
+
+/*
+to do list:
+Player:
+- turn player into player class (June)
+  - able to create multiple players, houses variables for their gamestate.
+- two players running locally (June)
+  - ideally will be built to slot in networking
+- refactor functions (June)
+  - functions that modify a players state must be refactored to
+    handle modifying multiple players. 
+
+Board:
+- class for spaces. different space classes can be children of spaces (open)
+- new board spaces from design doc (open)
+- shortcuts (as described in design doc) (open)
+
+*/
+
 
 // =========================================
 // GET HTML ELEMENTS
 // =========================================
+
+
+
+
 
 const board = document.getElementById("board");
 
