@@ -159,6 +159,7 @@ class Player() {
         playerEl.textContent = icon;
     }
 }
+/*
 let playerPosition = 0;
 
 let coins = 0;
@@ -172,7 +173,7 @@ let isMoving = false;
 let extraRolls = 0;
 
 let crowdPasses = 0;
-
+*/
 
 // =========================================
 // COLLECTED COINS
@@ -1029,12 +1030,12 @@ function createBoardLabels() {
 // =========================================
 // MOVE PLAYER INSTANTLY
 // =========================================
-// edit
-function movePlayerInstant() {
+// edit  done
+function movePlayerInstant(player) {
 
     const target =
         spacePositions[
-            playerPosition
+            player.playerPosition
         ];
 
 
@@ -1045,11 +1046,11 @@ function movePlayerInstant() {
     }
 
 
-    playerEl.style.left =
+    player.playerEl.style.left =
         `${target.x}px`;
 
 
-    playerEl.style.top =
+    player.playerEl.style.top =
         `${target.y}px`;
 
 
@@ -1063,12 +1064,12 @@ function movePlayerInstant() {
 // =========================================
 // CENTER CAMERA ON PLAYER
 // =========================================
-// edit
-function centerCameraOnPlayer() {
+// edit  done
+function centerCameraOnPlayer(player) {
 
     const target =
         spacePositions[
-            playerPosition
+            player.playerPosition
         ];
 
 
@@ -1203,11 +1204,11 @@ function setDice(
 // UPDATE UI
 // =========================================
 
-// edit
-function updateUI() {
+// edit done
+function updateUI(player) {
 
     if (
-        playerPosition === 0
+        player.playerPosition === 0
     ) {
 
         positionEl.textContent =
@@ -1218,21 +1219,21 @@ function updateUI() {
     else {
 
         positionEl.textContent =
-            `${playerPosition} / ${totalSpaces}`;
+            `${player.playerPosition} / ${totalSpaces}`;
 
     }
 
 
     coinsEl.textContent =
-        coins;
+        player.coins;
 
 
     crowdStatusEl.textContent =
-        crowdTurns;
+        player.crowdTurns;
 
 
     if (
-        crowdTurns > 0
+        player.crowdTurns > 0
     ) {
 
         diceModeEl.textContent =
@@ -1249,14 +1250,14 @@ function updateUI() {
 
 
     extraRollButton.disabled =
-        coins < 5 ||
-        gameOver;
+        player.coins < 5 ||
+        player.gameOver;
 
 
     crowdPassButton.disabled =
-        coins < 8 ||
-        gameOver ||
-        crowdTurns === 0;
+        player.coins < 8 ||
+        player.gameOver ||
+        player.crowdTurns === 0;
 
 }
 
@@ -1265,30 +1266,28 @@ function updateUI() {
 // MOVE ONE SPACE
 // =========================================
 
-// edit
-function movePlayerStep(
-    step
-) {
+// edit  done
+function movePlayerStep(step, player) {
 
     return new Promise(
         resolve => {
 
-            playerPosition +=
+            player.playerPosition +=
                 step;
 
 
             movePlayerInstant();
 
 
-            playerEl.classList.remove(
+            player.playerEl.classList.remove(
                 "moving"
             );
 
 
-            void playerEl.offsetWidth;
+            void player.playerEl.offsetWidth;
 
 
-            playerEl.classList.add(
+            player.playerEl.classList.add(
                 "moving"
             );
 
@@ -1308,12 +1307,10 @@ function movePlayerStep(
 // MOVE MULTIPLE SPACES
 // =========================================
 
-// edit
-async function movePlayer(
-    steps
-) {
+// edit done
+async function movePlayer(steps, player) {
 
-    isMoving = true;
+    player.isMoving = true;
 
     rollButton.disabled = true;
 
@@ -1325,7 +1322,7 @@ async function movePlayer(
     ) {
 
         if (
-            playerPosition >=
+            player.playerPosition >=
             totalSpaces
         ) {
 
@@ -1339,12 +1336,12 @@ async function movePlayer(
     }
 
 
-    playerEl.classList.remove(
+    player.playerEl.classList.remove(
         "moving"
     );
 
 
-    isMoving = false;
+    player.isMoving = false;
 
 
     updateUI();
@@ -1359,12 +1356,12 @@ async function movePlayer(
 // COINS
 // =========================================
 
-// edit
+// edit  done
 function collectCoinSpace() {
 
     if (
         collectedCoins.has(
-            playerPosition
+            player.playerPosition
         )
     ) {
 
@@ -1382,22 +1379,21 @@ function collectCoinSpace() {
         ) + 1;
 
 
-    coins +=
-        amount;
+    player.coins += amount;
 
 
     collectedCoins.add(
-        playerPosition
+        player.playerPosition
     );
 
 
     spaceElements[
-        playerPosition
+        player.playerPosition
     ].innerHTML = `
 
         <span class="number">
 
-            ${playerPosition}
+            ${player.playerPosition}
 
         </span>
 
@@ -1417,7 +1413,7 @@ function collectCoinSpace() {
 
         `coin${amount === 1 ? "" : "s"}! ` +
 
-        `You now have ${coins}.`;
+        `You now have ${player.coins}.`;
 
 }
 
@@ -1426,8 +1422,8 @@ function collectCoinSpace() {
 // RANDOM EVENTS
 // =========================================
 
-// edit
-function resolveEvent() {
+// edit done
+function resolveEvent(player) {
 
     const events = [
 
@@ -1502,17 +1498,12 @@ function resolveEvent() {
         event.coins
     ) {
 
-        coins +=
-            event.coins;
+        player.coins += event.coins;
 
     }
 
 
-    if (
-        event.move &&
-        playerPosition <
-            totalSpaces
-    ) {
+    if (event.move && player.playerPosition < totalSpaces) {
 
         const available =
             Math.min(
@@ -1520,25 +1511,23 @@ function resolveEvent() {
                 event.move,
 
                 totalSpaces -
-                playerPosition
+                player.playerPosition
 
             );
 
 
         setTimeout(
-            () => movePlayer(
-                available
-            ),
+            () => movePlayer(available),
             500
         );
 
 
-        return true;
+        return true; // Bad
 
     }
 
 
-    return false;
+    return false; // What are these booleans bro
 
 }
 
@@ -1547,15 +1536,15 @@ function resolveEvent() {
 // LANDING SPACE
 // =========================================
 
-// edit
-function resolveLandingSpace() {
+// edit done
+function resolveLandingSpace(player) {
 
     // =====================================
     // FINISH
     // =====================================
 
     if (
-        playerPosition >=
+        player.playerPosition >=
         totalSpaces
     ) {
 
@@ -1568,7 +1557,7 @@ function resolveLandingSpace() {
 
     const landed =
         spaces[
-            playerPosition
+            player.playerPosition
         ];
 
 
@@ -1607,10 +1596,10 @@ function resolveLandingSpace() {
             */
 
             if (
-                crowdPasses > 0
+                player.crowdPasses > 0
             ) {
 
-                crowdPasses--;
+                player.crowdPasses--;
 
 
                 messageEl.textContent =
@@ -1623,11 +1612,11 @@ function resolveLandingSpace() {
 
             else {
 
-                crowdTurns = 2;
+                player.crowdTurns = 2;
 
 
                 if (
-                    playerPosition >= 57
+                    player.playerPosition >= 57
                 ) {
 
                     messageEl.textContent =
@@ -1708,10 +1697,10 @@ function resolveLandingSpace() {
 // WIN
 // =========================================
 
-// edit
-function finishGame() {
+// edit done
+function finishGame(player) {
 
-    gameOver = true;
+    player.gameOver = true;
 
 
     rollButton.disabled =
@@ -1724,7 +1713,7 @@ function finishGame() {
 
         `You survived the final mob ` +
 
-        `with ${coins} coins! ` +
+        `with ${player.coins} coins! ` +
 
         `Congratulations!`;
 
@@ -1737,12 +1726,12 @@ function finishGame() {
 // =========================================
 // ROLL DICE
 // =========================================
-// edit
-async function rollDice() {
+// edit   done
+async function rollDice(player) {
 
     if (
-        isMoving ||
-        gameOver
+        player.isMoving ||
+        player.gameOver
     ) {
 
         return;
@@ -1766,7 +1755,7 @@ async function rollDice() {
     // =====================================
 
     if (
-        crowdTurns > 0
+        player.crowdTurns > 0
     ) {
 
         roll1 =
@@ -1791,7 +1780,7 @@ async function rollDice() {
             `You rolled ${roll1}.`;
 
 
-        crowdTurns--;
+        player.crowdTurns--;
 
     }
 
@@ -1842,7 +1831,7 @@ async function rollDice() {
     const spacesRemaining =
 
         totalSpaces -
-        playerPosition;
+        player.playerPosition;
 
 
     const actualMovement =
@@ -1867,11 +1856,11 @@ async function rollDice() {
     // =====================================
 
     if (
-        extraRolls > 0 &&
-        !gameOver
+        player.extraRolls > 0 &&
+        !player.gameOver
     ) {
 
-        extraRolls--;
+        player.extraRolls--;
 
 
         messageEl.textContent =
@@ -1895,12 +1884,12 @@ async function rollDice() {
 // =========================================
 // BUY EXTRA ROLL
 // =========================================
-// edit
-function buyExtraRoll() {
+// edit done
+function buyExtraRoll(player) {
 
     if (
-        coins < 5 ||
-        gameOver
+        player.coins < 5 ||
+        player.gameOver
     ) {
 
         return;
@@ -1908,11 +1897,10 @@ function buyExtraRoll() {
     }
 
 
-    coins -=
-        5;
+    player.coins -= 5;
 
 
-    extraRolls++;
+    player.extraRolls++;
 
 
     messageEl.textContent =
@@ -1930,25 +1918,19 @@ function buyExtraRoll() {
 // =========================================
 // BUY CROWD PASS
 // =========================================
-// edit
-function buyCrowdPass() {
+// edit done
+function buyCrowdPass(player) {
 
-    if (
-        coins < 8 ||
-        crowdTurns === 0 ||
-        gameOver
-    ) {
-
+    if (player.coins < 8 || player.crowdTurns === 0 || 
+        player.gameOver) {
         return;
-
     }
 
 
-    coins -=
-        8;
+    player.coins -= 8;
 
 
-    crowdPasses++;
+    player.crowdPasses++;
 
 
     messageEl.textContent =
@@ -2074,7 +2056,8 @@ function createMiniMap() {
 // =========================================
 // UPDATE MINI MAP
 // =========================================
-// edit
+// edit  might not have to?   done
+// if theres problems with drawing players, prolly this func
 function updateMiniMap() {
 
     // Remove old player markers.
@@ -2102,7 +2085,7 @@ function updateMiniMap() {
                 ];
 
 
-            if (!position) {
+            if (!player.position) {
 
                 return;
 
@@ -2165,49 +2148,38 @@ function updateMiniMap() {
 // =========================================
 // RESTART
 // =========================================
-// edit
-function restartGame() {
+// edit  done
+// use foreach when calling this func
+function restartGame(player) {
 
-    playerPosition =
-        0;
-
-
-    players[0].position =
-        0;
+    player.playerPosition = 0;
 
 
-    coins =
-        0;
+    //players[0].position = 0;
 
 
-    crowdTurns =
-        0;
+    player.coins = 0;
 
 
-    gameOver =
-        false;
+    player.crowdTurns = 0;
 
 
-    isMoving =
-        false;
+    player.gameOver = false;
 
 
-    extraRolls =
-        0;
+    player.isMoving = false;
 
 
-    crowdPasses =
-        0;
+    player.extraRolls = 0;
 
 
-    collectedCoins =
-        new Set();
+    player.crowdPasses = 0;
 
 
-    setDice(
-        1,
-        1
-    );
+    collectedCoins = new Set(); // ?
+
+
+    setDice( 1, 1);
 
 
     messageEl.textContent =
