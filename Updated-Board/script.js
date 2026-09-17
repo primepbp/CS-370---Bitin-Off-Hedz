@@ -140,7 +140,25 @@ const WORLD_HEIGHT = 1350;
 // =========================================
 // PLAYER DATA
 // =========================================
-
+class Player() {
+    constructor(id, name, icon, isLocalPlayer) {
+        this.playerPosition = 0;
+        this.coins = 0;
+        this.crowdTurns = 0;
+        this.gameOver = false;
+        this.isMoving = false;
+        this.extraRolls = 0;
+        this.crowdPasses = 0;
+        this.id = id;
+        this.name = name;
+        this.icon = icon;
+        this.isLocalPlayer = isLocalPlayer;
+        // player el
+        this.playerEl = document.createElement("div");
+        playerEl.className = id;
+        playerEl.textContent = icon;
+    }
+}
 let playerPosition = 0;
 
 let coins = 0;
@@ -192,7 +210,8 @@ const spacePositions = [];
 // etc.
 // =========================================
 
-const players = [
+
+/*const players = [
 
     {
 
@@ -207,14 +226,16 @@ const players = [
         isLocalPlayer: true
 
     }
-
-];
+]; 
+*/
+const players = [];
+players.push(new Player("player1", "You", "🧑", true));
 
 
 // =========================================
 // CREATE LOCAL PLAYER
 // =========================================
-
+/*
 const playerEl =
     document.createElement("div");
 
@@ -225,11 +246,15 @@ playerEl.className =
 
 playerEl.textContent =
     "🧑";
+*/
 
+players.forEach(addPlayerToboard);
 
-board.appendChild(
-    playerEl
-);
+function addPlayerToBoard(player) {
+    // called for every player in the players array
+    // adds them to the board
+    board.appendChild(player.playerEl);
+}
 
 
 // =========================================
@@ -813,6 +838,7 @@ function createConnection(
 //
 // Later the attack system can use
 // these same connections.
+// 
 // =========================================
 
 function createSightLines() {
@@ -1003,7 +1029,7 @@ function createBoardLabels() {
 // =========================================
 // MOVE PLAYER INSTANTLY
 // =========================================
-
+// edit
 function movePlayerInstant() {
 
     const target =
@@ -1037,7 +1063,7 @@ function movePlayerInstant() {
 // =========================================
 // CENTER CAMERA ON PLAYER
 // =========================================
-
+// edit
 function centerCameraOnPlayer() {
 
     const target =
@@ -1177,6 +1203,7 @@ function setDice(
 // UPDATE UI
 // =========================================
 
+// edit
 function updateUI() {
 
     if (
@@ -1238,6 +1265,7 @@ function updateUI() {
 // MOVE ONE SPACE
 // =========================================
 
+// edit
 function movePlayerStep(
     step
 ) {
@@ -1280,6 +1308,7 @@ function movePlayerStep(
 // MOVE MULTIPLE SPACES
 // =========================================
 
+// edit
 async function movePlayer(
     steps
 ) {
@@ -1330,6 +1359,7 @@ async function movePlayer(
 // COINS
 // =========================================
 
+// edit
 function collectCoinSpace() {
 
     if (
@@ -1396,6 +1426,7 @@ function collectCoinSpace() {
 // RANDOM EVENTS
 // =========================================
 
+// edit
 function resolveEvent() {
 
     const events = [
@@ -1516,6 +1547,7 @@ function resolveEvent() {
 // LANDING SPACE
 // =========================================
 
+// edit
 function resolveLandingSpace() {
 
     // =====================================
@@ -1676,6 +1708,7 @@ function resolveLandingSpace() {
 // WIN
 // =========================================
 
+// edit
 function finishGame() {
 
     gameOver = true;
@@ -1704,7 +1737,7 @@ function finishGame() {
 // =========================================
 // ROLL DICE
 // =========================================
-
+// edit
 async function rollDice() {
 
     if (
@@ -1862,7 +1895,7 @@ async function rollDice() {
 // =========================================
 // BUY EXTRA ROLL
 // =========================================
-
+// edit
 function buyExtraRoll() {
 
     if (
@@ -1897,7 +1930,7 @@ function buyExtraRoll() {
 // =========================================
 // BUY CROWD PASS
 // =========================================
-
+// edit
 function buyCrowdPass() {
 
     if (
@@ -2041,7 +2074,7 @@ function createMiniMap() {
 // =========================================
 // UPDATE MINI MAP
 // =========================================
-
+// edit
 function updateMiniMap() {
 
     // Remove old player markers.
@@ -2132,7 +2165,7 @@ function updateMiniMap() {
 // =========================================
 // RESTART
 // =========================================
-
+// edit
 function restartGame() {
 
     playerPosition =
