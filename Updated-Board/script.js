@@ -746,7 +746,7 @@ function createBoard() {
     // MOVE PLAYER
     // =====================================
 
-    movePlayerInstant();
+    movePlayerInstant(players[0]);
 
 
     // =====================================
@@ -1054,7 +1054,7 @@ function movePlayerInstant(player) {
         `${target.y}px`;
 
 
-    centerCameraOnPlayer();
+    centerCameraOnPlayer(player);
 
     updateMiniMap();
 
@@ -1276,7 +1276,7 @@ function movePlayerStep(step, player) {
                 step;
 
 
-            movePlayerInstant();
+            movePlayerInstant(player);
 
 
             player.playerEl.classList.remove(
@@ -1331,7 +1331,7 @@ async function movePlayer(steps, player) {
         }
 
 
-        await movePlayerStep(1);
+        await movePlayerStep(1, player);
 
     }
 
@@ -1344,10 +1344,10 @@ async function movePlayer(steps, player) {
     player.isMoving = false;
 
 
-    updateUI();
+    updateUI(player);
 
 
-    resolveLandingSpace();
+    resolveLandingSpace(player);
 
 }
 
@@ -1357,7 +1357,7 @@ async function movePlayer(steps, player) {
 // =========================================
 
 // edit  done
-function collectCoinSpace() {
+function collectCoinSpace(player) {
 
     if (
         collectedCoins.has(
@@ -1548,7 +1548,7 @@ function resolveLandingSpace(player) {
         totalSpaces
     ) {
 
-        finishGame();
+        finishGame(player);
 
         return;
 
@@ -1576,7 +1576,7 @@ function resolveLandingSpace(player) {
 
         case "coin":
 
-            collectCoinSpace();
+            collectCoinSpace(player);
 
             break;
 
@@ -1657,7 +1657,7 @@ function resolveLandingSpace(player) {
         case "event":
 
             if (
-                resolveEvent()
+                resolveEvent(player)
             ) {
 
                 return;
@@ -1684,7 +1684,7 @@ function resolveLandingSpace(player) {
     }
 
 
-    updateUI();
+    updateUI(player);
 
 
     rollButton.disabled =
@@ -1718,7 +1718,7 @@ function finishGame(player) {
         `Congratulations!`;
 
 
-    updateUI();
+    updateUI(player);
 
 }
 
@@ -1821,7 +1821,7 @@ async function rollDice(player) {
     }
 
 
-    updateUI();
+    updateUI(player);
 
 
     // =====================================
@@ -1870,7 +1870,7 @@ async function rollDice(player) {
             "Roll again.";
 
 
-        updateUI();
+        updateUI(player);
 
 
         rollButton.disabled =
@@ -1910,7 +1910,7 @@ function buyExtraRoll(player) {
         "It will activate after your next turn.";
 
 
-    updateUI();
+    updateUI(player);
 
 }
 
@@ -1940,7 +1940,7 @@ function buyCrowdPass(player) {
         "It will protect you from the next mob.";
 
     
-    updateUI();
+    updateUI(player);
 
 }
 
@@ -2150,6 +2150,7 @@ function updateMiniMap() {
 // =========================================
 // edit  done
 // use foreach when calling this func
+// potentially another problem func
 function restartGame(player) {
 
     player.playerPosition = 0;
@@ -2175,7 +2176,8 @@ function restartGame(player) {
 
     player.crowdPasses = 0;
 
-
+// im lazy, but probably should have seperate func for resetting player state
+// and have a seperate func for stuff below?
     collectedCoins = new Set(); // ?
 
 
@@ -2190,7 +2192,7 @@ function restartGame(player) {
     createBoard();
 
 
-    updateUI();
+    updateUI(player);
 
 
     rollButton.disabled =
@@ -2203,27 +2205,34 @@ function restartGame(player) {
 // BUTTON EVENTS
 // =========================================
 
+// functions called by buttons require parameters.
+// anonymous functions are used to call these functions with parameters
+
 rollButton.addEventListener(
-    "click",
-    rollDice
+    "click", function () {
+        rollDice(players[turnOrder]);
+    }
 );
 
 
 restartButton.addEventListener(
-    "click",
-    restartGame
+    "click", function() {
+        players.forEach(restartGame);
+    }
 );
 
 
 extraRollButton.addEventListener(
-    "click",
-    buyExtraRoll
+    "click", function () {
+        buyExtraRoll(players[turnOrder]);
+    }
 );
 
 
 crowdPassButton.addEventListener(
-    "click",
-    buyCrowdPass
+    "click", function () {
+        buyCrowdPass(players[turnOrder]);
+    }
 );
 
 
@@ -2237,7 +2246,7 @@ window.addEventListener(
 
         createBoard();
 
-        centerCameraOnPlayer();
+        centerCameraOnPlayer(player);
 
     }
 );
@@ -2249,6 +2258,6 @@ window.addEventListener(
 
 createBoard();
 
-updateUI();
+updateUI(players[0]); // Prolly always start on the first player
 
-centerCameraOnPlayer();
+centerCameraOnPlayer(players[0]); // always center on first player
