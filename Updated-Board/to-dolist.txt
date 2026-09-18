@@ -1,0 +1,42 @@
+below are things that need to be done for the gameboard. if anyone is able to tackle
+any of these, it'd help us a lot. 
+
+BUGS:
+  - text content (the players icon) for the playerEl div does not move.
+    the div's style.left and style.top is being updated, the camera follows
+    the playerEl div, but the text content does not follow it. 
+    i am not sure why this happens. 
+
+
+FEATURES:
+  - different html elements that display each players stats, and another that displays
+    who's turn it is. 
+    essentially, duplicate the "Citizen" html element, have one track player1's stats
+    the other tracks player2's stats. the stats being the players position, coins, and
+    mob turns. js code that updates these html elements to display their updated stats
+    will have to be edited to account for multiple players. 
+    
+    in the first 100 lines of the js file, variables are declared that point to a html
+    element to update (positionEl, coinsEl, crowdStatusEl). new ones will have to be made
+    for each player. these _El variables can be moved to the player class, where one is made
+    for each instance of player. it'll have to be implemented where each player instance points 
+    to their own _El html element; in other words, when the _El uses document.getElementByID(), 
+    it must point to that players html stat element.
+    
+    for example, in the updateUI function:
+    coinsEl.textcontent = player.coins;
+    would be edited to:
+    player.coinsEl.textContent = player.coins;
+    same concept updating the players position and angry mob status.
+    
+  - write a function that: At the end of a players turn, a .json object is made containing its 
+    updated gamestate info.
+    the info includes the players new position, amount of coins, and angry mob turns left. 
+    when we integrate networking, this json object will be sent to the server, then sent to the
+    other game clients; in order to update the gamestate after a players turn.
+    the format of the .json file is outlined in the playerTurn.json file.
+    
+  - write a function that: creates a player instance using information from a .json file.
+    the .json file will contain the players username, and what character they're using.
+    the format of the .json file is outlined in the playerInfo.json file.
+    

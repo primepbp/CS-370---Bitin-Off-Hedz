@@ -7,9 +7,9 @@
 credits:
 initial code: Caylin
 updated code: June
-              - Edited functions to handle players as objects from a class
-              - additional functions to handle players as objects and for local multiplayer
-              - minor code refactoring
+                - Edited functions to handle players as objects from a class
+                - additional functions to handle players as objects and for local multiplayer
+                - minor code refactoring
 */
 
 /*
