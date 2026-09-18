@@ -140,7 +140,7 @@ const WORLD_HEIGHT = 1350;
 // =========================================
 // PLAYER DATA
 // =========================================
-class Player() {
+class Player {
     constructor(id, name, icon, isLocalPlayer) {
         this.playerPosition = 0;
         this.coins = 0;
@@ -155,10 +155,11 @@ class Player() {
         this.isLocalPlayer = isLocalPlayer;
         // player el
         this.playerEl = document.createElement("div");
-        playerEl.className = id;
-        playerEl.textContent = icon;
+        this.playerEl.className = id;
+        this.playerEl.textContent = icon;
     }
 }
+var turnOrder = 0;
 /*
 let playerPosition = 0;
 
@@ -249,7 +250,7 @@ playerEl.textContent =
     "🧑";
 */
 
-players.forEach(addPlayerToboard);
+players.forEach(addPlayerToBoard);
 
 function addPlayerToBoard(player) {
     // called for every player in the players array
@@ -1045,13 +1046,23 @@ function movePlayerInstant(player) {
 
     }
 
+    console.log("Inside movePlayerInstant func");
+    console.log("target.x: " + target.x);
+    console.log("target.y: " + target.y);
+    console.log("playerEl.style.left before: " + player.playerEl.style.left);
+    console.log("playerEl.style.top before: " + player.playerEl.style.top);
 
-    player.playerEl.style.left =
-        `${target.x}px`;
 
 
-    player.playerEl.style.top =
-        `${target.y}px`;
+    player.playerEl.style.left = `${target.x}px`;
+
+    // potential problem code VV  ^^
+
+    player.playerEl.style.top = `${target.y}px`;
+
+    console.log("playerEl.style.left after: " + player.playerEl.style.left);
+    console.log("playerEl.style.top after: " + player.playerEl.style.top);
+
 
 
     centerCameraOnPlayer(player);
@@ -1517,7 +1528,7 @@ function resolveEvent(player) {
 
 
         setTimeout(
-            () => movePlayer(available),
+            () => movePlayer(available, player),
             500
         );
 
@@ -1846,9 +1857,7 @@ async function rollDice(player) {
     // MOVE PLAYER
     // =====================================
 
-    await movePlayer(
-        actualMovement
-    );
+    await movePlayer(actualMovement, player);
 
 
     // =====================================
@@ -2246,7 +2255,7 @@ window.addEventListener(
 
         createBoard();
 
-        centerCameraOnPlayer(player);
+        centerCameraOnPlayer(players[turnOrder]);
 
     }
 );
