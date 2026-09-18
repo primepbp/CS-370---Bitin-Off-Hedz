@@ -51,6 +51,8 @@ const miniMapWorld =
 const positionEl =
     document.getElementById("position");
 
+const turnOrderEl = document.getElementById("turnOrder");
+
 const coinsEl =
     document.getElementById("coins");
 
@@ -232,6 +234,7 @@ const spacePositions = [];
 */
 const players = [];
 players.push(new Player("player1", "You", "🧑", true));
+players.push(new Player("player2", "John", "🏁", true));
 
 
 // =========================================
@@ -251,6 +254,7 @@ playerEl.textContent =
 */
 
 players.forEach(addPlayerToBoard);
+
 
 function addPlayerToBoard(player) {
     // called for every player in the players array
@@ -1539,6 +1543,7 @@ function resolveEvent(player) {
 
 
     return false; // What are these booleans bro
+    // simply returning true and false is bad practice
 
 }
 
@@ -1886,7 +1891,7 @@ async function rollDice(player) {
             false;
 
     }
-
+    switchTurnOrder();
 }
 
 
@@ -2208,6 +2213,20 @@ function restartGame(player) {
         false;
 
 }
+
+// switch turn order
+function switchTurnOrder() {
+    // increment turn order
+    // if turnorder === players.length
+    // reset it back to 0
+    turnOrder++;
+    if (turnOrder == players.length) {
+        turnOrder = 0;
+    }
+    turnOrderEl.textContent = players[turnOrder].id;
+}
+
+
 
 
 // =========================================
