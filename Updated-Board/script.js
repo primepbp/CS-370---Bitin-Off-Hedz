@@ -7,6 +7,9 @@
 credits:
 initial code: Caylin
 updated code: June
+              - Edited functions to handle players as objects from a class
+              - additional functions to handle players as objects and for local multiplayer
+              - minor code refactoring
 */
 
 /*
@@ -25,7 +28,14 @@ Board:
 - new board spaces from design doc (open)
 - shortcuts (as described in design doc) (open)
 
+Networking:
+- Add it LOL
+- change logic to handle multiple players
+  - cant roll dice or buy items if it isnt your turn
+
+
 */
+
 
 
 // =========================================
@@ -93,6 +103,11 @@ const crowdPassButton =
     );
 
 
+
+// networking stuff VV
+
+
+
 // =========================================
 // DICE FACES
 // =========================================
@@ -107,6 +122,7 @@ const diceFaces = [
     "⚅"
 
 ];
+
 
 
 // =========================================
@@ -128,6 +144,7 @@ const totalSpaces = 59;
 //
 // = 60 total spaces.
 // =========================================
+
 
 
 // =========================================
