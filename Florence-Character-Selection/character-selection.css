@@ -1,0 +1,695 @@
+
+/* =========================================================
+   GET TO THE GUILLOTINE
+   CHARACTER SELECTION STYLES
+   ========================================================= */
+
+
+/* =========================================================
+   BASIC PAGE SETTINGS
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    min-height: 100%;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    background: #080606;
+    color: #f1dfbd;
+}
+
+body {
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   SCREEN
+   ========================================================= */
+
+#character-screen {
+    width: 100%;
+    min-height: 100vh;
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    padding: 20px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            #4b1515 0%,
+            #210909 38%,
+            #080303 80%
+        );
+}
+
+#character-screen::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent 0,
+            transparent 80px,
+            rgba(255, 255, 255, 0.015) 81px
+        );
+}
+
+
+/* =========================================================
+   HIDDEN ELEMENT
+   ========================================================= */
+
+#character-screen .hidden {
+    display: none !important;
+}
+
+
+/* =========================================================
+   SMALL TITLE
+   ========================================================= */
+
+#character-screen .small-title {
+    margin: 0 0 10px;
+
+    color: #b9914e;
+
+    font-size: 13px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.character-header {
+    position: relative;
+    z-index: 2;
+
+    text-align: center;
+
+    margin-bottom: 5px;
+}
+
+.character-header h1 {
+    margin: 0;
+
+    color: #dfbc76;
+
+    font-size: clamp(28px, 4vw, 48px);
+
+    letter-spacing: 5px;
+
+    text-shadow:
+        0 0 15px rgba(223, 188, 118, 0.35);
+}
+
+.character-header h2 {
+    margin: 7px 0;
+
+    color: #c8c0b5;
+
+    font-size: 15px;
+
+    letter-spacing: 4px;
+}
+
+
+/* =========================================================
+   GAME CODE
+   ========================================================= */
+
+.room-info {
+    color: #8e8375;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+}
+
+#characterGameCode {
+    color: #d5ad67;
+
+    font-weight: bold;
+
+    letter-spacing: 3px;
+}
+
+
+/* =========================================================
+   LEFT MENU
+   ========================================================= */
+
+.character-menu {
+    position: absolute;
+
+    left: 20px;
+    top: 25px;
+
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.character-menu button {
+    padding: 8px 12px;
+
+    background: rgba(0, 0, 0, 0.6);
+
+    border: 1px solid #65502d;
+
+    color: #c9a45d;
+
+    font-family: Georgia, serif;
+
+    font-size: 10px;
+
+    letter-spacing: 1px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.character-menu button:hover {
+    background: #681414;
+
+    transform: translateX(4px);
+}
+
+
+/* =========================================================
+   CHARACTER DISPLAY
+   ========================================================= */
+
+.character-display {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 25px;
+
+    width: 100%;
+
+    min-height: 410px;
+}
+
+
+/* =========================================================
+   CHARACTER ARROWS
+   ========================================================= */
+
+.character-arrow {
+    width: 55px;
+    height: 75px;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    border: 2px solid #80643a;
+
+    color: #d7ae64;
+
+    font-size: 25px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    z-index: 3;
+}
+
+.character-arrow:hover {
+    background: #701717;
+
+    transform: scale(1.1);
+
+    box-shadow:
+        0 0 15px rgba(180, 40, 40, 0.4);
+}
+
+
+/* =========================================================
+   SELECTED CHARACTER CARD
+   ========================================================= */
+
+.selected-character {
+    width: 320px;
+    min-height: 400px;
+
+    padding: 15px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(54, 10, 10, 0.97),
+            rgba(8, 7, 7, 0.99)
+        );
+
+    border: 2px solid #9a763c;
+
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.8),
+        inset 0 0 30px rgba(180, 30, 30, 0.12);
+
+    animation: characterCardAppear 0.35s ease;
+}
+
+@keyframes characterCardAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* =========================================================
+   CHARACTER IMAGE
+   ========================================================= */
+
+.character-image-container {
+    height: 220px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-bottom: 1px solid #66502d;
+}
+
+.character-image-container img {
+    max-width: 100%;
+    max-height: 210px;
+
+    object-fit: contain;
+
+    transition: transform 0.3s;
+}
+
+.character-image-container img:hover {
+    transform: scale(1.06);
+}
+
+
+/* Temporary placeholder */
+
+.character-placeholder {
+    font-size: 100px;
+
+    filter: drop-shadow(
+        0 0 15px rgba(210, 170, 80, 0.3)
+    );
+}
+
+
+/* =========================================================
+   CHARACTER INFORMATION
+   ========================================================= */
+
+#selectedCharacterName {
+    margin: 10px 0 5px;
+
+    color: #dfbc76;
+
+    font-size: 22px;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+.character-quote {
+    min-height: 35px;
+
+    margin: 0 auto 8px;
+
+    max-width: 280px;
+
+    color: #c1b8aa;
+
+    font-size: 12px;
+
+    font-style: italic;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   POWER BOX
+   ========================================================= */
+
+.power-box {
+    padding: 9px;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    border: 1px solid #614a29;
+}
+
+.power-box h3 {
+    margin: 0 0 5px;
+
+    color: #b63131;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+}
+
+.power-box p {
+    margin: 0;
+
+    color: #d2cbc0;
+
+    font-size: 12px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   SIX CHARACTER OPTIONS
+   ========================================================= */
+
+.character-list {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 12px;
+
+    width: 100%;
+
+    margin-top: 5px;
+}
+
+.character-option {
+    width: 100px;
+    height: 95px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 5px;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    border: 1px solid #604c2c;
+
+    color: #d0c7ba;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.character-option img {
+    width: 70px;
+    height: 58px;
+
+    object-fit: contain;
+}
+
+.character-option span {
+    margin-top: 4px;
+
+    font-size: 10px;
+
+    letter-spacing: 0.5px;
+}
+
+.character-option:hover {
+    border-color: #c29a51;
+
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 0 15px rgba(194, 154, 81, 0.3);
+}
+
+.character-option.active {
+    border: 2px solid #c29a51;
+
+    background: rgba(100, 18, 18, 0.75);
+
+    transform: translateY(-8px);
+
+    box-shadow:
+        0 0 18px rgba(194, 154, 81, 0.4);
+}
+
+
+/* =========================================================
+   PLACEHOLDER CHARACTERS
+   ========================================================= */
+
+.placeholder-option .placeholder-icon {
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 35px;
+}
+
+
+/* =========================================================
+   BOTTOM CONTROLS
+   ========================================================= */
+
+.character-bottom {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    width: 100%;
+    max-width: 800px;
+
+    margin-top: 20px;
+}
+
+.game-button {
+    border: 1px solid #a88448;
+
+    background: #180707;
+
+    color: #e2bf79;
+
+    padding: 13px 24px;
+
+    font-family: Georgia, serif;
+
+    font-size: 14px;
+
+    letter-spacing: 2px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s,
+        background 0.2s,
+        box-shadow 0.2s;
+}
+
+.game-button:hover {
+    background: #721919;
+
+    transform: scale(1.04);
+
+    box-shadow:
+        0 0 15px rgba(190, 50, 50, 0.35);
+}
+
+.start-button {
+    border-color: #9e2929;
+
+    color: #e4b66a;
+}
+
+.player-status {
+    color: #a99a84;
+
+    font-size: 12px;
+
+    letter-spacing: 1px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    #character-screen {
+        padding: 15px 8px;
+    }
+
+    .character-menu {
+        position: relative;
+
+        top: auto;
+        left: auto;
+
+        flex-direction: row;
+
+        justify-content: center;
+
+        margin: 10px 0;
+    }
+
+    .character-display {
+        gap: 8px;
+
+        min-height: 360px;
+    }
+
+    .selected-character {
+        width: min(320px, 72vw);
+
+        min-height: 360px;
+
+        padding: 10px;
+    }
+
+    .character-image-container {
+        height: 180px;
+    }
+
+    .character-image-container img {
+        max-height: 170px;
+    }
+
+    .character-arrow {
+        width: 35px;
+        height: 60px;
+
+        font-size: 18px;
+    }
+
+    .character-list {
+        flex-wrap: wrap;
+
+        gap: 8px;
+    }
+
+    .character-option {
+        width: 82px;
+        height: 85px;
+    }
+
+    .character-option img {
+        width: 58px;
+        height: 50px;
+    }
+
+    .character-bottom {
+        flex-wrap: wrap;
+
+        justify-content: center;
+
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 400px) {
+
+    .character-header h1 {
+        font-size: 23px;
+        letter-spacing: 2px;
+    }
+
+    .character-header h2 {
+        font-size: 12px;
+        letter-spacing: 2px;
+    }
+
+    .character-menu {
+        gap: 4px;
+    }
+
+    .character-menu button {
+        padding: 7px 6px;
+
+        font-size: 9px;
+    }
+
+    .character-option {
+        width: 70px;
+        height: 75px;
+    }
+
+    .character-option img {
+        width: 48px;
+        height: 42px;
+    }
+
+    .character-option span {
+        font-size: 9px;
+    }
+
+    .game-button {
+        padding: 10px 14px;
+
+        font-size: 12px;
+    }
+}

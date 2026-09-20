@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Get To The Guillotine - Choose Character</title>
+
+    <link rel="stylesheet" href="character-selection.css">
+</head>
+
+<body>
+
+    <!-- CHARACTER SELECTION SCREEN -->
+    <div id="character-screen" class="screen">
+
+        <!-- Decorative background -->
+        <div class="blood-moon"></div>
+
+        <!-- TOP TITLE -->
+        <header class="character-header">
+
+            <p class="small-title">
+                THE REVOLUTION BEGINS
+            </p>
+
+            <h1>GET TO THE GUILLOTINE</h1>
+
+            <h2>CHOOSE YOUR CHARACTER</h2>
+
+            <div class="room-info">
+                GAME CODE:
+                <span id="characterGameCode">----</span>
+            </div>
+
+        </header>
+
+
+        <!-- LEFT MENU -->
+        <div class="character-menu">
+
+            <button id="menuButton">
+                ☰ MENU
+            </button>
+
+            <button id="chatButton">
+                💬 CHAT ROOM
+            </button>
+
+            <button id="rulesButton2">
+                📜 RULES
+            </button>
+
+        </div>
+
+
+        <!-- MAIN CHARACTER DISPLAY -->
+        <main class="character-display">
+
+            <!-- Previous character -->
+            <button
+                id="previousCharacter"
+                class="character-arrow"
+                aria-label="Previous character">
+
+                ◀
+
+            </button>
+
+
+            <!-- Selected character card -->
+            <section class="selected-character">
+
+                <div class="character-image-container">
+
+                    <img
+                        id="selectedCharacterImage"
+                        src="characters/Marie Antoinette.gif"
+                        alt="Marie Antoinette">
+
+                    <!-- Used when character has no image -->
+                    <div
+                        id="characterPlaceholder"
+                        class="character-placeholder hidden">
+
+                        🐎
+
+                    </div>
+
+                </div>
+
+
+                <h2 id="selectedCharacterName">
+                    Marie Antoinette
+                </h2>
+
+
+                <p
+                    id="selectedCharacterQuote"
+                    class="character-quote">
+
+                    "Let them eat cake."
+
+                </p>
+
+
+                <div class="power-box">
+
+                    <h3>⚔ SPECIAL POWER</h3>
+
+                    <p id="selectedCharacterPower">
+                        Power coming soon.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- Next character -->
+            <button
+                id="nextCharacter"
+                class="character-arrow"
+                aria-label="Next character">
+
+                ▶
+
+            </button>
+
+        </main>
+
+
+        <!-- SIX CHARACTER OPTIONS -->
+        <div class="character-list">
+
+            <!-- Marie Antoinette -->
+            <button
+                class="character-option active"
+                data-character="0">
+
+                <img
+                    src="characters/Marie Antoinette.gif"
+                    alt="Marie Antoinette">
+
+                <span>Marie</span>
+
+            </button>
+
+
+            <!-- Maximilien Robespierre -->
+            <button
+                class="character-option"
+                data-character="1">
+
+                <img
+                    src="characters/Robespierre.gif"
+                    alt="Robespierre">
+
+                <span>Robespierre</span>
+
+            </button>
+
+
+            <!-- Anne Boleyn -->
+            <button
+                class="character-option"
+                data-character="2">
+
+                <img
+                    src="characters/Anne Bolyne.gif"
+                    alt="Anne Boleyn">
+
+                <span>Anne</span>
+
+            </button>
+
+
+            <!-- King Louis XVI -->
+            <button
+                class="character-option"
+                data-character="3">
+
+                <img
+                    src="characters/King Louis XVI.gif"
+                    alt="King Louis XVI">
+
+                <span>Louis XVI</span>
+
+            </button>
+
+
+            <!-- Headless Horseman -->
+            <button
+                class="character-option placeholder-option"
+                data-character="4">
+
+                <div class="placeholder-icon">
+                    🐎
+                </div>
+
+                <span>Horseman</span>
+
+            </button>
+
+
+            <!-- Queen of Hearts -->
+            <button
+                class="character-option"
+                data-character="5">
+
+                <img
+                    src="characters/Queen of Hearts.gif"
+                    alt="Queen of Hearts">
+
+                <span>Queen</span>
+
+            </button>
+
+        </div>
+
+
+        <!-- BOTTOM CONTROLS -->
+        <div class="character-bottom">
+
+            <button
+                id="characterBackButton"
+                class="game-button">
+
+                ← BACK
+
+            </button>
+
+
+            <div class="player-status">
+
+                <span id="playerCount">
+                    Waiting for players...
+                </span>
+
+            </div>
+
+
+            <button
+                id="startGameButton"
+                class="game-button start-button">
+
+                START
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Character selection JavaScript -->
+    <script src="character-selection.js"></script>
+
+</body>
+</html>
