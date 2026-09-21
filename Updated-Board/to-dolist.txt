@@ -21,7 +21,7 @@ BUGS:
 FEATURES:
 
     
-  - write a function that: At the end of a players turn, a .json object is made containing its 
+  - (in-progress) write a function that: At the end of a players turn, a .json object is made containing its 
     updated gamestate info.
     the info includes the players new position, amount of coins, and angry mob turns left. 
     when we integrate networking, this json object will be sent to the server, then sent to the

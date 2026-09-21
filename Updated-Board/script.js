@@ -2249,6 +2249,19 @@ function switchTurnOrder() {
     turnOrderEl.textContent = players[turnOrder].id;
 }
 
+function sendPlayerTurnInfo(player) {
+    // at the end of a players turn, a json file is made that
+    // updates their playerstate vars
+    var info = {position: player.playerPosition,
+                coins: player.coins,
+                crowdTurns: player.crowdTurns,
+                nextTurnOrder: turnOrder
+    };
+    var jsonText = JSON.stringify(info);
+    // send json file out to server
+}
+
+
 
 
 
