@@ -16,6 +16,7 @@ BUGS:
     the div's style.left and style.top is being updated, the camera follows
     the playerEl div, but the text content does not follow it. 
     i am not sure why this happens. 
+    maybe if the divs content was an image?
 
 
 FEATURES:
@@ -31,7 +32,11 @@ FEATURES:
   - write a function that: creates a player instance using information from a .json file.
     the .json file will contain the players username, and what character they're using.
     the format of the .json file is outlined in the playerInfo.json file.
-    
+  
+  
+  - replace coin emoji with the coin.gif asset
+    go through possibleSpaces array and replace the coin emoji with the pathway to the
+    coin.gif asset. have fun doing that for nearly every entry LOL
     
     
  

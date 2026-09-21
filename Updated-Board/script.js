@@ -58,15 +58,15 @@ const miniMapWorld =
     document.getElementById("mini-map-world");
 
 
-const positionEl =
+//const positionEl =
     document.getElementById("position");
 
 const turnOrderEl = document.getElementById("turnOrder");
 
-const coinsEl =
+//const coinsEl =
     document.getElementById("coins");
 
-const crowdStatusEl =
+//const crowdStatusEl =
     document.getElementById("crowd-status");
 
 
@@ -161,6 +161,7 @@ const WORLD_HEIGHT = 1350;
 // =========================================
 class Player {
     constructor(id, name, icon, isLocalPlayer) {
+        // player gamestate vars
         this.playerPosition = 0;
         this.coins = 0;
         this.crowdTurns = 0;
@@ -172,10 +173,12 @@ class Player {
         this.name = name;
         this.icon = icon;
         this.isLocalPlayer = isLocalPlayer;
+
         // player el
         this.playerEl = document.createElement("div");
         this.playerEl.className = id;
         this.playerEl.textContent = icon;
+        
         // stats el
         this.positionEl = document.getElementById("position" + id);
         this.turnOrderEl = document.getElementById("turnOrder" + id);
