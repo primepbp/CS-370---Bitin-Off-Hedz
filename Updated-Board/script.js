@@ -176,6 +176,12 @@ class Player {
         this.playerEl = document.createElement("div");
         this.playerEl.className = id;
         this.playerEl.textContent = icon;
+        // stats el
+        this.positionEl = document.getElementById("position" + id);
+        this.turnOrderEl = document.getElementById("turnOrder" + id);
+        this.coinsEl = document.getElementById("coins" + id);
+        this.crowdStatusEl = document.getElementById("crowd-status" + id);
+
     }
 }
 var turnOrder = 0;
@@ -1243,24 +1249,24 @@ function updateUI(player) {
         player.playerPosition === 0
     ) {
 
-        positionEl.textContent =
+        player.positionEl.textContent =
             "START";
 
     }
 
     else {
 
-        positionEl.textContent =
+        player.positionEl.textContent =
             `${player.playerPosition} / ${totalSpaces}`;
 
     }
 
 
-    coinsEl.textContent =
+    player.coinsEl.textContent =
         player.coins;
 
 
-    crowdStatusEl.textContent =
+    player.crowdStatusEl.textContent =
         player.crowdTurns;
 
 
