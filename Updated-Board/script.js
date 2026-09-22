@@ -160,7 +160,7 @@ const WORLD_HEIGHT = 1350;
 // PLAYER DATA
 // =========================================
 class Player {
-    constructor(id, name, icon, isLocalPlayer) {
+    constructor(id, name, icon, isLocalPlayer, playerImg) {
         // player gamestate vars
         this.playerPosition = 0;
         this.coins = 0;
@@ -177,8 +177,25 @@ class Player {
         // player el
         this.playerEl = document.createElement("div");
         this.playerEl.className = id;
-        this.playerEl.textContent = icon;
+        //this.playerEl.textContent = icon;
+        this.playerEl.style.position = "absolute";
+        this.playerEl.style.fontSize = "32px";
+        this.playerEl.style.width = "50px";
+        this.playerEl.style.height = "50px";
+        this.playerEl.style.left = "110px";
+        this.playerEl.style.top = "130px";
+        this.playerEl.style.zIndex = "5";
+
         
+        // giving player an image
+        this.img = document.createElement("img");
+        this.img.src = playerImg;
+        this.img.style.width = "56px";
+        this.img.style.height = "56px";
+        this.img.style.position = "absolute";
+        this.playerEl.appendChild(this.img);
+        
+       
         // stats el
         this.positionEl = document.getElementById("position" + id);
         this.turnOrderEl = document.getElementById("turnOrder" + id);
@@ -259,8 +276,8 @@ const spacePositions = [];
 ]; 
 */
 const players = [];
-players.push(new Player("player1", "You", "🧑", true));
-players.push(new Player("player2", "John", "🏁", true));
+players.push(new Player("player1", "You", "🧑", true, "p1.gif"));
+players.push(new Player("player2", "John", "🏁", true, "p2.gif"));
 
 
 // =========================================
@@ -1085,9 +1102,6 @@ function movePlayerInstant(player) {
 
 
     player.playerEl.style.left = `${target.x}px`;
-
-    // potential problem code VV  ^^
-
     player.playerEl.style.top = `${target.y}px`;
 
     console.log("playerEl.style.left after: " + player.playerEl.style.left);
