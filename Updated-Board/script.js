@@ -7,9 +7,9 @@
 credits:
 initial code: Caylin
 updated code: June
-              - Edited functions to handle players as objects from a class
-              - additional functions to handle players as objects and for local multiplayer
-              - minor code refactoring
+                - Edited functions to handle players as objects from a class
+                - additional functions to handle players as objects and for local multiplayer
+                - minor code refactoring
 */
 
 /*
@@ -58,15 +58,15 @@ const miniMapWorld =
     document.getElementById("mini-map-world");
 
 
-const positionEl =
+//const positionEl =
     document.getElementById("position");
 
 const turnOrderEl = document.getElementById("turnOrder");
 
-const coinsEl =
+//const coinsEl =
     document.getElementById("coins");
 
-const crowdStatusEl =
+//const crowdStatusEl =
     document.getElementById("crowd-status");
 
 
@@ -160,7 +160,8 @@ const WORLD_HEIGHT = 1350;
 // PLAYER DATA
 // =========================================
 class Player {
-    constructor(id, name, icon, isLocalPlayer) {
+    constructor(id, name, icon, isLocalPlayer, playerImg) {
+        // player gamestate vars
         this.playerPosition = 0;
         this.coins = 0;
         this.crowdTurns = 0;
@@ -172,10 +173,35 @@ class Player {
         this.name = name;
         this.icon = icon;
         this.isLocalPlayer = isLocalPlayer;
+
         // player el
         this.playerEl = document.createElement("div");
         this.playerEl.className = id;
-        this.playerEl.textContent = icon;
+        //this.playerEl.textContent = icon;
+        this.playerEl.style.position = "absolute";
+        this.playerEl.style.fontSize = "32px";
+        this.playerEl.style.width = "50px";
+        this.playerEl.style.height = "50px";
+        this.playerEl.style.left = "110px";
+        this.playerEl.style.top = "130px";
+        this.playerEl.style.zIndex = "5";
+
+        
+        // giving player an image
+        this.img = document.createElement("img");
+        this.img.src = playerImg;
+        this.img.style.width = "56px";
+        this.img.style.height = "56px";
+        this.img.style.position = "absolute";
+        this.playerEl.appendChild(this.img);
+        
+       
+        // stats el
+        this.positionEl = document.getElementById("position" + id);
+        this.turnOrderEl = document.getElementById("turnOrder" + id);
+        this.coinsEl = document.getElementById("coins" + id);
+        this.crowdStatusEl = document.getElementById("crowd-status" + id);
+
     }
 }
 var turnOrder = 0;
@@ -250,8 +276,8 @@ const spacePositions = [];
 ]; 
 */
 const players = [];
-players.push(new Player("player1", "You", "🧑", true));
-players.push(new Player("player2", "John", "🏁", true));
+players.push(new Player("player1", "You", "🧑", true, "p1.gif"));
+players.push(new Player("player2", "John", "🏁", true, "p2.gif"));
 
 
 // =========================================
@@ -1076,9 +1102,6 @@ function movePlayerInstant(player) {
 
 
     player.playerEl.style.left = `${target.x}px`;
-
-    // potential problem code VV  ^^
-
     player.playerEl.style.top = `${target.y}px`;
 
     console.log("playerEl.style.left after: " + player.playerEl.style.left);
@@ -1243,24 +1266,24 @@ function updateUI(player) {
         player.playerPosition === 0
     ) {
 
-        positionEl.textContent =
+        player.positionEl.textContent =
             "START";
 
     }
 
     else {
 
-        positionEl.textContent =
+        player.positionEl.textContent =
             `${player.playerPosition} / ${totalSpaces}`;
 
     }
 
 
-    coinsEl.textContent =
+    player.coinsEl.textContent =
         player.coins;
 
 
-    crowdStatusEl.textContent =
+    player.crowdStatusEl.textContent =
         player.crowdTurns;
 
 
@@ -2242,6 +2265,19 @@ function switchTurnOrder() {
     }
     turnOrderEl.textContent = players[turnOrder].id;
 }
+
+function sendPlayerTurnInfo(player) {
+    // at the end of a players turn, a json file is made that
+    // updates their playerstate vars
+    var info = {position: player.playerPosition,
+                coins: player.coins,
+                crowdTurns: player.crowdTurns,
+                nextTurnOrder: turnOrder
+    };
+    var jsonText = JSON.stringify(info);
+    // send json file out to server
+}
+
 
 
 

@@ -235,7 +235,7 @@ h1 {
 
 .board {
 
-    position: absolute;
+    position: relative;
 
     left: 0;
 

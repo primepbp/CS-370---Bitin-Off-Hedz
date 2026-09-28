@@ -1,0 +1,42 @@
+i will be unable to work on this project during the weekend. i have outlined things that need
+to be done for the game board. i am leaving them open and outlined for anyone to tackle. 
+if you are able to, it'd help us a lot.
+
+at large, code should not need major changes to their function and structure. if a solution you make required major code revisions, let me know.
+
+once a feature is implemented or a bug is fixed, commit your changes to the git. 
+please aptly title and describe your changes/additions to the code.
+also: at the top of the script, is a commented section for credits, outlining who did what.
+Caylin is attributed with the initial code, i attributed myself with updated code, and a basic
+description of my additions/revisions.
+please follow this same formatting for anything you do. 
+
+BUGS:
+  - text content (the players icon) for the playerEl div does not move.
+    the div's style.left and style.top is being updated, the camera follows
+    the playerEl div, but the text content does not follow it. 
+    i am not sure why this happens. 
+    maybe if the divs content was an image?
+
+
+FEATURES:
+
+    
+  - (in-progress) write a function that: At the end of a players turn, a .json object is made containing its 
+    updated gamestate info.
+    the info includes the players new position, amount of coins, and angry mob turns left. 
+    when we integrate networking, this json object will be sent to the server, then sent to the
+    other game clients; in order to update the gamestate after a players turn.
+    the format of the .json file is outlined in the playerTurn.json file.
+    
+  - write a function that: creates a player instance using information from a .json file.
+    the .json file will contain the players username, and what character they're using.
+    the format of the .json file is outlined in the playerInfo.json file.
+  
+  
+  - replace coin emoji with the coin.gif asset
+    go through possibleSpaces array and replace the coin emoji with the pathway to the
+    coin.gif asset. have fun doing that for nearly every entry LOL
+    
+    
+ 
