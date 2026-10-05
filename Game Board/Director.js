@@ -5,7 +5,6 @@ rolling dice, resolving landing spaces
 */
 class Director {
     constructor(totalPlayers) {
-        // constructor shouldnt need to take in params
         this.turnOrder = 0;
         this.totalSpaces = 60;
         this.gameOver = false;
