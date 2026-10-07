@@ -1,0 +1,979 @@
+/* =========================================================
+   GET TO THE GUILLOTINE
+   NEW BOARD DESIGN
+========================================================= */
+
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #3b1015 0%,
+            #1b080b 55%,
+            #090406 100%
+        );
+
+    color: #eee5d5;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+}
+
+
+/* =========================================================
+   MAIN GAME
+========================================================= */
+
+.game {
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 10px 18px;
+
+    position: relative;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.game-header {
+    height: 75px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 2px solid #713039;
+
+    flex-shrink: 0;
+}
+
+
+.title-area {
+    text-align: left;
+}
+
+.title-area h1 {
+    margin: 0;
+
+    font-size: clamp(24px, 3vw, 40px);
+
+    letter-spacing: 4px;
+
+    color: #e8d9c0;
+
+    text-shadow:
+        2px 2px 0 #22070a,
+        0 0 12px rgba(160, 20, 30, 0.5);
+}
+
+.title-area p {
+    margin: 3px 0 0;
+
+    font-size: 14px;
+
+    letter-spacing: 4px;
+
+    text-transform: uppercase;
+
+    color: #b63b45;
+}
+
+
+/* =========================================================
+   TOP MENU
+========================================================= */
+
+.game-menu {
+    display: flex;
+    gap: 8px;
+}
+
+.game-menu button {
+    border: 1px solid #73313a;
+
+    background: #18090c;
+
+    color: #d8c9b3;
+
+    padding: 9px 13px;
+
+    font-family: Georgia, serif;
+
+    font-size: 12px;
+
+    letter-spacing: 1px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s,
+        color 0.2s,
+        border-color 0.2s;
+}
+
+.game-menu button:hover {
+    background: #721c27;
+
+    border-color: #b84b54;
+
+    color: white;
+}
+
+
+/* =========================================================
+   BOARD SECTION
+========================================================= */
+
+.board-section {
+    flex: 1;
+
+    min-height: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 8px 0;
+}
+
+
+.board-wrapper {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 0;
+}
+
+
+.game-board {
+    width: 100%;
+    height: 100%;
+
+    max-width: 1500px;
+
+    display: block;
+
+    border: 4px solid #3e171c;
+
+    box-shadow:
+        0 0 0 2px #17080a,
+        0 8px 30px rgba(0, 0, 0, 0.65);
+
+    background: #b8a887;
+}
+
+
+/* =========================================================
+   SVG BOARD
+========================================================= */
+
+.board-background {
+    fill: #b8a887;
+}
+
+
+/* Subtle paper texture effect */
+
+.game-board::after {
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   ZONES
+========================================================= */
+
+.zone-safe {
+    fill: rgba(45, 76, 66, 0.22);
+
+    stroke: #38574c;
+
+    stroke-width: 3;
+
+    stroke-dasharray: 8 5;
+}
+
+.zone-revolution {
+    fill: rgba(104, 28, 34, 0.18);
+
+    stroke: #64252d;
+
+    stroke-width: 3;
+
+    stroke-dasharray: 12 6;
+}
+
+.zone-finish {
+    fill: rgba(95, 19, 24, 0.25);
+
+    stroke: #641b21;
+
+    stroke-width: 4;
+}
+
+
+.zone-title {
+    text-anchor: middle;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    fill: #351114;
+}
+
+.zone-subtitle {
+    text-anchor: middle;
+
+    font-family: Georgia, serif;
+
+    font-size: 12px;
+
+    letter-spacing: 2px;
+
+    fill: #68242a;
+}
+
+.zone-description {
+    text-anchor: middle;
+
+    font-family: Georgia, serif;
+
+    font-size: 11px;
+
+    font-style: italic;
+
+    fill: #49322c;
+}
+
+
+/* =========================================================
+   MOVEMENT PATH
+========================================================= */
+
+.movement-line {
+    stroke: #493f36;
+
+    stroke-width: 4;
+
+    fill: none;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+}
+
+
+/* =========================================================
+   LINE OF SIGHT
+========================================================= */
+
+.line-of-sight {
+    stroke: #732f35;
+
+    stroke-width: 2;
+
+    stroke-dasharray: 5 7;
+
+    opacity: 0.65;
+}
+
+
+/* =========================================================
+   NORMAL SPACES
+========================================================= */
+
+.board-space {
+    stroke: #322b26;
+
+    stroke-width: 3;
+
+    fill: #d0c2a4;
+
+    cursor: default;
+}
+
+.board-space-number {
+    text-anchor: middle;
+
+    dominant-baseline: central;
+
+    font-family: Georgia, serif;
+
+    font-weight: bold;
+
+    font-size: 16px;
+
+    fill: #28211d;
+}
+
+
+/* =========================================================
+   COIN SPACES
+========================================================= */
+
+.coin-space {
+    fill: #c7b070;
+
+    stroke: #735b27;
+
+    stroke-width: 3;
+}
+
+.coin-symbol {
+    text-anchor: middle;
+
+    dominant-baseline: central;
+
+    font-family: Georgia, serif;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    fill: #5c4616;
+}
+
+
+/* =========================================================
+   ANGRY MOB
+========================================================= */
+
+.mob-space {
+    fill: #72232b;
+
+    stroke: #43141a;
+
+    stroke-width: 3;
+}
+
+.mob-symbol {
+    text-anchor: middle;
+
+    dominant-baseline: central;
+
+    font-family: Georgia, serif;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    fill: #f1ddd0;
+}
+
+
+/* =========================================================
+   SHORTCUT / "THINK" SPACES
+========================================================= */
+
+.shortcut-space {
+    fill: #9b7b52;
+
+    stroke: #4a3223;
+
+    stroke-width: 4;
+}
+
+.shortcut-symbol {
+    text-anchor: middle;
+
+    dominant-baseline: central;
+
+    font-family: Georgia, serif;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    fill: #241a14;
+}
+
+
+/* =========================================================
+   DARK ALLEY
+========================================================= */
+
+.dark-alley-space {
+    fill: #30262a;
+
+    stroke: #160e11;
+
+    stroke-width: 4;
+}
+
+.dark-alley-symbol {
+    text-anchor: middle;
+
+    dominant-baseline: central;
+
+    font-family: Georgia, serif;
+
+    font-size: 11px;
+
+    font-weight: bold;
+
+    fill: #d8c7b5;
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+.start-space {
+    fill: #416256;
+
+    stroke: #263e35;
+
+    stroke-width: 4;
+}
+
+.start-text {
+    text-anchor: middle;
+
+    dominant-baseline: central;
+
+    font-family: Georgia, serif;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    letter-spacing: 1px;
+
+    fill: #eee6d5;
+}
+
+
+/* =========================================================
+   FINISH
+========================================================= */
+
+.finish-space {
+    fill: #771c25;
+
+    stroke: #431018;
+
+    stroke-width: 4;
+}
+
+.finish-text {
+    text-anchor: middle;
+
+    dominant-baseline: central;
+
+    font-family: Georgia, serif;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    fill: #f4e6d2;
+}
+
+
+/* =========================================================
+   PLAYER TOKENS
+========================================================= */
+
+.player-token {
+    stroke: #160b0d;
+
+    stroke-width: 3;
+
+    cursor: pointer;
+
+    transition:
+        cx 0.35s ease,
+        cy 0.35s ease;
+}
+
+.player-token-text {
+    text-anchor: middle;
+
+    dominant-baseline: central;
+
+    font-family:
+        Georgia,
+        serif;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    fill: white;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   BOTTOM AREA
+========================================================= */
+
+.bottom-area {
+    height: 120px;
+
+    flex-shrink: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        180px
+        minmax(260px, 1fr)
+        170px
+        260px;
+
+    gap: 12px;
+
+    padding-top: 8px;
+}
+
+
+/* =========================================================
+   PANELS
+========================================================= */
+
+.player-panel,
+.players-panel,
+.dice-panel,
+.action-panel {
+    border: 2px solid #572329;
+
+    background:
+        linear-gradient(
+            145deg,
+            #211013,
+            #12080a
+        );
+
+    box-shadow:
+        inset 0 0 15px rgba(0, 0, 0, 0.5);
+
+    padding: 8px 12px;
+}
+
+
+/* =========================================================
+   CURRENT TURN
+========================================================= */
+
+.turn-heading {
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    color: #a33a43;
+}
+
+.current-player {
+    margin-top: 4px;
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    color: #e8d9c0;
+}
+
+.turn-message {
+    margin-top: 4px;
+
+    font-size: 11px;
+
+    color: #a99a86;
+}
+
+
+/* =========================================================
+   PLAYER LIST
+========================================================= */
+
+.players-title {
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    color: #a33a43;
+
+    margin-bottom: 5px;
+}
+
+.player-list {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 4px;
+}
+
+.player-entry {
+    padding: 5px;
+
+    border: 1px solid #382025;
+
+    background: #160b0d;
+
+    font-size: 11px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+}
+
+.player-entry.active {
+    border-color: #9c343e;
+
+    background: #3c1419;
+
+    box-shadow:
+        inset 0 0 8px rgba(130, 25, 35, 0.35);
+}
+
+.player-entry.dead {
+    opacity: 0.45;
+}
+
+
+/* =========================================================
+   DICE
+========================================================= */
+
+.dice-title {
+    text-align: center;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    color: #a33a43;
+}
+
+.dice-container {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 5px;
+}
+
+.die {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid #d0c2a4;
+
+    background: #e1d5bc;
+
+    color: #26191a;
+
+    font-size: 23px;
+
+    font-weight: bold;
+
+    box-shadow:
+        2px 2px 0 #5b3a3d;
+}
+
+.dice-mode {
+    text-align: center;
+
+    margin-top: 4px;
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+
+    color: #aa9383;
+}
+
+
+/* =========================================================
+   ROLL BUTTON
+========================================================= */
+
+.action-panel {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.roll-button {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 2px solid #9d343e;
+
+    background:
+        linear-gradient(
+            180deg,
+            #8d2933,
+            #58151d
+        );
+
+    color: #f2e5d1;
+
+    font-family: Georgia, serif;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s,
+        background 0.15s;
+}
+
+.roll-button:hover:not(:disabled) {
+    background:
+        linear-gradient(
+            180deg,
+            #ad3944,
+            #711c26
+        );
+
+    transform: translateY(-1px);
+}
+
+.roll-button:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+}
+
+.game-message {
+    margin-top: 5px;
+
+    font-size: 10px;
+
+    color: #a99a86;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   GAME OVER
+========================================================= */
+
+.game-over-panel {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 100;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: rgba(7, 2, 4, 0.82);
+}
+
+.game-over-box {
+    width: min(500px, 90vw);
+
+    padding: 35px;
+
+    text-align: center;
+
+    border: 3px solid #87303a;
+
+    background: #18090c;
+
+    box-shadow:
+        0 0 50px rgba(0, 0, 0, 0.8);
+}
+
+.game-over-title {
+    font-size: 22px;
+
+    letter-spacing: 3px;
+
+    color: #b63b45;
+}
+
+.winner-text {
+    margin: 20px 0;
+
+    font-size: 18px;
+
+    color: #e3d5bf;
+}
+
+.game-over-box button {
+    padding: 12px 25px;
+
+    border: 1px solid #9d343e;
+
+    background: #651923;
+
+    color: #f1e2ce;
+
+    font-family: Georgia, serif;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   HIDDEN
+========================================================= */
+
+.hidden {
+    display: none !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .game-header {
+        height: 65px;
+    }
+
+    .title-area h1 {
+        font-size: 24px;
+    }
+
+    .game-menu button {
+        padding: 7px 8px;
+
+        font-size: 10px;
+    }
+
+    .bottom-area {
+        height: 105px;
+
+        grid-template-columns:
+            150px
+            minmax(200px, 1fr)
+            140px
+            200px;
+    }
+
+    .player-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .die {
+        width: 34px;
+        height: 34px;
+
+        font-size: 18px;
+    }
+
+    .roll-button {
+        padding: 9px;
+
+        font-size: 12px;
+    }
+}
+
+
+@media (max-width: 750px) {
+
+    body {
+        overflow: auto;
+    }
+
+    .game {
+        height: auto;
+
+        min-height: 100vh;
+    }
+
+    .game-header {
+        height: auto;
+
+        padding: 8px 0;
+
+        flex-direction: column;
+
+        gap: 8px;
+    }
+
+    .title-area {
+        text-align: center;
+    }
+
+    .game-menu {
+        justify-content: center;
+
+        flex-wrap: wrap;
+    }
+
+    .board-section {
+        min-height: 450px;
+    }
+
+    .bottom-area {
+        height: auto;
+
+        grid-template-columns: 1fr 1fr;
+
+        padding-bottom: 10px;
+    }
+}

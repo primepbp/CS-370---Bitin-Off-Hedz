@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Get to the Guillotine</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="game">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <header class="game-header">
+
+            <div class="title-area">
+
+                <h1>GET TO THE GUILLOTINE</h1>
+
+                <p>A Revolutionary Game</p>
+
+            </div>
+
+
+            <nav class="game-menu">
+
+                <button id="chatButton">
+                    Chatroom
+                </button>
+
+                <button id="rulesButton">
+                    Game Rules
+                </button>
+
+                <button id="leaderboardButton">
+                    Leader Boards
+                </button>
+
+            </nav>
+
+        </header>
+
+
+        <!-- =====================================================
+             GAME BOARD
+        ====================================================== -->
+
+        <section class="board-section">
+
+            <div class="board-wrapper">
+
+                <svg
+                    id="gameBoard"
+                    class="game-board"
+                    viewBox="0 0 1200 700"
+                    preserveAspectRatio="xMidYMid meet"
+                >
+
+                    <!-- Board background -->
+                    <rect
+                        x="0"
+                        y="0"
+                        width="1200"
+                        height="700"
+                        class="board-background"
+                    ></rect>
+
+
+                    <!-- =================================================
+                         ZONES
+                    ================================================== -->
+
+                    <!-- Starting Safe Zone -->
+                    <g id="safeZone">
+
+                        <rect
+                            x="25"
+                            y="25"
+                            width="355"
+                            height="120"
+                            rx="25"
+                            class="zone-safe"
+                        ></rect>
+
+                        <text
+                            x="200"
+                            y="55"
+                            class="zone-title"
+                        >
+                            PIECE DE RÉSISTANCE
+                        </text>
+
+                        <text
+                            x="200"
+                            y="82"
+                            class="zone-subtitle"
+                        >
+                            SAFE ZONE
+                        </text>
+
+                        <text
+                            x="200"
+                            y="110"
+                            class="zone-description"
+                        >
+                            Players cannot attack here
+                        </text>
+
+                    </g>
+
+
+                    <!-- Revolutionary Square -->
+                    <g id="revolutionarySquare">
+
+                        <rect
+                            x="400"
+                            y="275"
+                            width="400"
+                            height="150"
+                            rx="30"
+                            class="zone-revolution"
+                        ></rect>
+
+                        <text
+                            x="600"
+                            y="325"
+                            class="zone-title"
+                        >
+                            REVOLUTIONARY SQUARE
+                        </text>
+
+                        <text
+                            x="600"
+                            y="355"
+                            class="zone-subtitle"
+                        >
+                            THE HEART OF THE REVOLUTION
+                        </text>
+
+                    </g>
+
+
+                    <!-- Finish Zone -->
+                    <g id="finishZone">
+
+                        <rect
+                            x="930"
+                            y="555"
+                            width="240"
+                            height="110"
+                            rx="25"
+                            class="zone-finish"
+                        ></rect>
+
+                        <text
+                            x="1050"
+                            y="590"
+                            class="zone-title"
+                        >
+                            THE GUILLOTINE
+                        </text>
+
+                        <text
+                            x="1050"
+                            y="620"
+                            class="zone-subtitle"
+                        >
+                            FINISH
+                        </text>
+
+                    </g>
+
+
+                    <!-- =================================================
+                         BOARD CONTENT CREATED BY JAVASCRIPT
+                    ================================================== -->
+
+                    <g id="lineOfSightLayer"></g>
+
+                    <g id="movementPathLayer"></g>
+
+                    <g id="spaceLayer"></g>
+
+                    <g id="playerLayer"></g>
+
+                </svg>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             BOTTOM GAME CONTROLS
+        ====================================================== -->
+
+        <section class="bottom-area">
+
+
+            <!-- PLAYER / TURN INFORMATION -->
+
+            <div class="player-panel">
+
+                <div class="turn-heading">
+                    CURRENT TURN
+                </div>
+
+                <div
+                    id="currentPlayerDisplay"
+                    class="current-player"
+                >
+                    Player 1
+                </div>
+
+                <div
+                    id="turnMessage"
+                    class="turn-message"
+                >
+                    Roll the dice!
+                </div>
+
+            </div>
+
+
+            <!-- SIX PLAYER LIST -->
+
+            <div class="players-panel">
+
+                <div class="players-title">
+                    PLAYERS
+                </div>
+
+                <div
+                    id="playerList"
+                    class="player-list"
+                >
+                    <!-- JavaScript creates players here -->
+                </div>
+
+            </div>
+
+
+            <!-- DICE -->
+
+            <div class="dice-panel">
+
+                <div class="dice-title">
+                    DICE
+                </div>
+
+                <div class="dice-container">
+
+                    <div
+                        id="die1"
+                        class="die"
+                    >
+                        -
+                    </div>
+
+                    <div
+                        id="die2"
+                        class="die"
+                    >
+                        -
+                    </div>
+
+                </div>
+
+                <div
+                    id="diceMode"
+                    class="dice-mode"
+                >
+                    TWO DICE
+                </div>
+
+            </div>
+
+
+            <!-- ROLL BUTTON -->
+
+            <div class="action-panel">
+
+                <button
+                    id="rollButton"
+                    class="roll-button"
+                >
+                    ROLL DICE
+                </button>
+
+                <div
+                    id="gameMessage"
+                    class="game-message"
+                >
+                    Your turn begins!
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             HIDDEN GAME OVER PANEL
+        ====================================================== -->
+
+        <div
+            id="gameOverPanel"
+            class="game-over-panel hidden"
+        >
+
+            <div class="game-over-box">
+
+                <div class="game-over-title">
+                    THE REVOLUTION HAS ENDED
+                </div>
+
+                <div
+                    id="winnerText"
+                    class="winner-text"
+                >
+                    Player 1 reached the Guillotine!
+                </div>
+
+                <button id="restartButton">
+                    PLAY AGAIN
+                </button>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
