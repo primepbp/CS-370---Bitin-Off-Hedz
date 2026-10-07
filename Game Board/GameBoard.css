@@ -21,7 +21,6 @@ body {
 
 body {
     overflow: hidden;
-
     background:
         radial-gradient(
             circle at center,
@@ -31,7 +30,6 @@ body {
         );
 
     color: #eee5d5;
-
     font-family:
         Georgia,
         "Times New Roman",
