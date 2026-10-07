@@ -1,31 +1,47 @@
-//import * as playerClass from "./Player.js";
-//import * as directorClass from "./Director.js";
-//import * as spaceClass from "./Spaces.js";
-
-
-// create players and director
+// create players
 const players = [];
-players.push(new Player("player1"));
-players.push(new Player("player2"));
-const director = new Director(players.length);
+players.push(new Player("player1", 0));
+players.push(new Player("player2", 1));
 
-// spaces
-const spaces = [];
-const spacesTypes = ["normal", "coin", "angryMob"];
+// create gameutils instance
+const util = new GameUtils(players.length);
 
 // create spaces
-// for now, is randomly generated
-for (i=0; i < director.totalSpaces; i++) {
-    spaces.push(new Space(spaceTypes[(i % spaceTypes.length) - 1], i));
+const spaces = [];
+
+
+createSpaces();
+
+
+gameplayLoop();
+
+console.log("game over");
+
+
+
+// gameboard funcs
+
+function gameplayLoop() {
+    while (!util.gameOver) {
+        var turnOrder = util.turnOrder; // 
+        util.updateUI(players[turnOrder].name, 
+                      players[turnOrder].position,
+                      players[turnOrder].coins);
+        players[turnOrder].rollTurn();
+        players[turnOrder].resolveLandingSpace(spaces[(players[turnOrder].position)].type);
+        util.updateUI(players[turnOrder].name, 
+                      players[turnOrder].position,
+                      players[turnOrder].coins);
+        util.switchTurnOrder();
+        util.checkForFinish(players[turnOrder].position);
+    }
 }
 
-// game loop
-while (!director.gameOver) {
-    director.updateUI(players[director.turnOrder].name, players[director.turnOrder].position, players[director.turnOrder].coins);
-    players[director.turnOrder].rollTurn();
-    director.updateUI(players[director.turnOrder].name, players[director.turnOrder].position, players[director.turnOrder].coins);
-    director.resolveLandingSpace(players[director.turnOrder]);
-    director.switchTurnOrder();
+function createSpaces() {
+    const possibleSpaces = ["normal", "angryMob", "coin"];
+    for (i=0; i < util.totalSpaces; i++) {
+        // for now, space types are randomly generated
+        spaces.push(new Space(possibleSpaces[Math.floor(Math.random() * 3)], i));
+        //console.log(possibleSpaces[Math.floor(Math.random() * 3)])
+    }
 }
-
-console.log("Game over!");
