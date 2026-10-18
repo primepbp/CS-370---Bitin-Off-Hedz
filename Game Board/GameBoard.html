@@ -182,6 +182,26 @@
 
         </section>
 
+        <div class="music-controls">
+    <button id="musicToggle" type="button">
+        ♫ Play Music
+    </button>
+
+    <label for="musicVolume">Volume</label>
+    <input
+        id="musicVolume"
+        type="range"
+        min="0"
+        max="1"
+        step="0.05"
+        value="0.25"
+    >
+    </div>
+
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="audio/tavern-music.mp3" type="audio/mpeg">
+    </audio>
+
         <!-- THINK SPACE CHOICE -->
         <section id="thinkChoicePanel" class="hidden">
             <h2 id="thinkChoiceTitle">Choose Your Route</h2>

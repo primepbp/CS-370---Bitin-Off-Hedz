@@ -1358,6 +1358,34 @@ body {
     }
 }
 
+.music-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #ead8b8;
+    font-family: Georgia, serif;
+    font-size: 14px;
+}
+
+#musicToggle {
+    background: #641e29;
+    color: #f3e4c9;
+    border: 1px solid #a64a55;
+    padding: 9px 15px;
+    font-family: Georgia, serif;
+    cursor: pointer;
+}
+
+#musicToggle:hover {
+    background: #842b38;
+}
+
+#musicVolume {
+    width: 100px;
+    accent-color: #a52a35;
+}
+
 /* =========================================
    NARROW SCREENS
    ========================================= */

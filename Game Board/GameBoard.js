@@ -1073,4 +1073,45 @@
 
     initializeGame();
 
+    // ============================================
+// BACKGROUND TAVERN MUSIC
+// ============================================
+
+const backgroundMusic =
+    document.getElementById("backgroundMusic");
+
+const musicToggle =
+    document.getElementById("musicToggle");
+
+const musicVolume =
+    document.getElementById("musicVolume");
+
+if (backgroundMusic && musicToggle && musicVolume) {
+    backgroundMusic.volume = Number(musicVolume.value);
+
+    musicToggle.addEventListener("click", async () => {
+        if (backgroundMusic.paused) {
+            try {
+                await backgroundMusic.play();
+                musicToggle.textContent = "♫ Turn Music Off";
+            } catch (error) {
+                console.error("Music could not play:", error);
+                gameMessage.textContent =
+                    "Music could not start. Check the audio file path.";
+            }
+        } else {
+            backgroundMusic.pause();
+            musicToggle.textContent = "♫ Play Music";
+        }
+    });
+
+    musicVolume.addEventListener("input", () => {
+        backgroundMusic.volume = Number(musicVolume.value);
+    });
+
+    backgroundMusic.addEventListener("ended", () => {
+        musicToggle.textContent = "♫ Play Music";
+    });
+}
+
 })();
