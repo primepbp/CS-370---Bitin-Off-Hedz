@@ -593,7 +593,6 @@
             );
         });
     }
-
     // ============================================
     // CREATE SIX PLAYERS
     // ============================================
@@ -999,7 +998,6 @@
         gameMessage.textContent =
             "Player 1 begins the revolution!";
     }
-
     // ============================================
     // MENU BUTTONS
     // ============================================
@@ -1012,14 +1010,36 @@
         }
     );
 
-    document.getElementById("rulesButton")?.addEventListener(
-        "click",
-        () => {
-            gameMessage.textContent =
-                "Reach the Guillotine first. Collect coins, " +
-                "watch out for the Angry Mob, and choose your route wisely.";
+    // ============================================
+    // GAME RULES DROPDOWN
+    // ============================================
+
+    const rulesButton = document.getElementById("rulesButton");
+    const rulesPanel = document.getElementById("rulesPanel");
+    const closeRules = document.getElementById("closeRules");
+
+    if (rulesButton && rulesPanel) {
+        rulesButton.addEventListener("click", () => {
+            rulesPanel.classList.toggle("hidden");
+        });
+    }
+
+    if (closeRules && rulesPanel) {
+        closeRules.addEventListener("click", () => {
+            rulesPanel.classList.add("hidden");
+        });
+    }
+
+    // Close the rules panel with Escape.
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && rulesPanel) {
+            rulesPanel.classList.add("hidden");
         }
-    );
+    });
+
+    // ============================================
+    // LEADERBOARD BUTTON
+    // ============================================
 
     document.getElementById("leaderboardButton")?.addEventListener(
         "click",
@@ -1074,44 +1094,44 @@
     initializeGame();
 
     // ============================================
-// BACKGROUND TAVERN MUSIC
-// ============================================
+    // BACKGROUND TAVERN MUSIC
+    // ============================================
 
-const backgroundMusic =
-    document.getElementById("backgroundMusic");
+    const backgroundMusic =
+        document.getElementById("backgroundMusic");
 
-const musicToggle =
-    document.getElementById("musicToggle");
+    const musicToggle =
+        document.getElementById("musicToggle");
 
-const musicVolume =
-    document.getElementById("musicVolume");
+    const musicVolume =
+        document.getElementById("musicVolume");
 
-if (backgroundMusic && musicToggle && musicVolume) {
-    backgroundMusic.volume = Number(musicVolume.value);
-
-    musicToggle.addEventListener("click", async () => {
-        if (backgroundMusic.paused) {
-            try {
-                await backgroundMusic.play();
-                musicToggle.textContent = "♫ Turn Music Off";
-            } catch (error) {
-                console.error("Music could not play:", error);
-                gameMessage.textContent =
-                    "Music could not start. Check the audio file path.";
-            }
-        } else {
-            backgroundMusic.pause();
-            musicToggle.textContent = "♫ Play Music";
-        }
-    });
-
-    musicVolume.addEventListener("input", () => {
+    if (backgroundMusic && musicToggle && musicVolume) {
         backgroundMusic.volume = Number(musicVolume.value);
-    });
 
-    backgroundMusic.addEventListener("ended", () => {
-        musicToggle.textContent = "♫ Play Music";
-    });
-}
+        musicToggle.addEventListener("click", async () => {
+            if (backgroundMusic.paused) {
+                try {
+                    await backgroundMusic.play();
+                    musicToggle.textContent = "♫ Turn Music Off";
+                } catch (error) {
+                    console.error("Music could not play:", error);
+                    gameMessage.textContent =
+                        "Music could not start. Check the audio file path.";
+                }
+            } else {
+                backgroundMusic.pause();
+                musicToggle.textContent = "♫ Play Music";
+            }
+        });
+
+        musicVolume.addEventListener("input", () => {
+            backgroundMusic.volume = Number(musicVolume.value);
+        });
+
+        backgroundMusic.addEventListener("ended", () => {
+            musicToggle.textContent = "♫ Play Music";
+        });
+    }
 
 })();

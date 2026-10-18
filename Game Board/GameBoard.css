@@ -1323,6 +1323,122 @@ body {
     display: none !important;
 }
 
+/* ===================================
+   GAME RULES DROPDOWN
+=================================== */
+
+.rules-panel {
+    position: absolute;
+    z-index: 1000;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(680px, calc(100% - 32px));
+    max-height: 75vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+
+    padding: 30px;
+    background: #251719;
+    color: #f3e5cc;
+    border: 2px solid #8c3945;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.65);
+
+    font-family: Georgia, serif;
+}
+
+.rules-panel.hidden {
+    display: none;
+}
+
+.rules-eyebrow {
+    color: #d8b88a;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+.rules-panel h2 {
+    margin: 12px 0;
+    color: #f3e5cc;
+    text-align: center;
+    font-size: 30px;
+    letter-spacing: 2px;
+}
+
+.rules-tagline {
+    color: #d8b88a;
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.rules-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.rule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.rule-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+    background: #5c252d;
+    border: 1px solid #8c3945;
+    border-radius: 8px;
+    font-size: 23px;
+}
+
+.rule-item h3 {
+    margin: 2px 0 6px;
+    color: #f3e5cc;
+    font-size: 17px;
+}
+
+.rule-item p {
+    margin: 0;
+    color: #dfcfb7;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.rules-footer {
+    margin: 28px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid #684047;
+    color: #e5cda8;
+    font-size: 11px;
+    line-height: 1.7;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.rules-close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    color: #f3e5cc;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.rules-close:hover {
+    color: #d8b88a;
+}
+
 /* =========================================
    SHORTER SCREENS
    ========================================= */
