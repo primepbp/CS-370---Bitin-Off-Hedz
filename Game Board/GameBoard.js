@@ -1,1911 +1,1076 @@
-/* =========================================================
-   GET TO THE GUILLOTINE
-   NEW BOARD + LOCAL MULTIPLAYER
-========================================================= */
+(() => {
+    "use strict";
 
-
-/* =========================================================
-   GAME SETTINGS
-========================================================= */
-
-const MAX_PLAYERS = 6;
+    // ============================================
+    // GET TO THE GUILLOTINE
+    // Local pass-and-play board game
+    // ============================================
 
-const SPACE_RADIUS = 25;
+    const TOTAL_SPACES = 64;
+    const MAX_PLAYERS = 6;
 
-const NORMAL_DICE = 2;
+    const BOARD_WIDTH = 3000;
+    const BOARD_HEIGHT = 900;
 
-const MOB_DICE = 1;
+    const SPACE_RADIUS = 27;
+    const START_SPACE_RADIUS = 36;
+    const FINISH_SPACE_RADIUS = 40;
 
+    const PLAYER_COLORS = [
+        "#a52a35",
+        "#315c79",
+        "#8d713c",
+        "#62447c",
+        "#39745b",
+        "#b85b30"
+    ];
 
-/* =========================================================
-   PLAYER DATA
-========================================================= */
-
-const players = [
+    // Space numbers here are zero-based.
+    // Space 0 is the start; space 63 is the finish.
+    const COIN_SPACES = new Set([
+        5, 10, 17, 23, 30, 38, 45, 52, 58
+    ]);
 
-    {
-        id: 1,
-        name: "Player 1",
-        token: "1",
-        color: "#7b1e27",
-        position: 0,
-        coins: 0
-    },
-
-    {
-        id: 2,
-        name: "Player 2",
-        token: "2",
-        color: "#263f59",
-        position: 0,
-        coins: 0
-    },
-
-    {
-        id: 3,
-        name: "Player 3",
-        token: "3",
-        color: "#68502d",
-        position: 0,
-        coins: 0
-    },
-
-    {
-        id: 4,
-        name: "Player 4",
-        token: "4",
-        color: "#4d3155",
-        position: 0,
-        coins: 0
-    },
-
-    {
-        id: 5,
-        name: "Player 5",
-        token: "5",
-        color: "#315843",
-        position: 0,
-        coins: 0
-    },
-
-    {
-        id: 6,
-        name: "Player 6",
-        token: "6",
-        color: "#8a4b27",
-        position: 0,
-        coins: 0
-    }
-
-];
-
-
-/* =========================================================
-   TURN STATE
-========================================================= */
-
-let currentPlayerIndex = 0;
-
-let gameOver = false;
-
-let isMoving = false;
-
-
-/* =========================================================
-   BOARD DATA
-=========================================================
-
-   0 = START
-
-   Types:
-
-   normal
-   coin
-   mob
-   shortcut
-   dark-alley
-   finish
-
-========================================================= */
-
-const spaces = [
-
-    /* -----------------------------------------------------
-       START
-    ----------------------------------------------------- */
-
-    {
-        id: 0,
-        x: 75,
-        y: 85,
-        type: "start",
-        name: "Piece de Resistance"
-    },
-
-
-    /* -----------------------------------------------------
-       TOP PATH
-    ----------------------------------------------------- */
-
-    {
-        id: 1,
-        x: 170,
-        y: 85,
-        type: "normal"
-    },
-
-    {
-        id: 2,
-        x: 270,
-        y: 85,
-        type: "coin"
-    },
-
-    {
-        id: 3,
-        x: 370,
-        y: 85,
-        type: "normal"
-    },
-
-    {
-        id: 4,
-        x: 470,
-        y: 85,
-        type: "mob"
-    },
-
-    {
-        id: 5,
-        x: 570,
-        y: 85,
-        type: "normal"
-    },
-
-    {
-        id: 6,
-        x: 670,
-        y: 85,
-        type: "mob"
-    },
-
-    {
-        id: 7,
-        x: 770,
-        y: 85,
-        type: "normal"
-    },
-
-    {
-        id: 8,
-        x: 870,
-        y: 85,
-        type: "normal"
-    },
-
-    {
-        id: 9,
-        x: 970,
-        y: 85,
-        type: "coin"
-    },
-
-
-    /* -----------------------------------------------------
-       FIRST SHORTCUT
-    ----------------------------------------------------- */
-
-    {
-        id: "shortcut-1",
-        x: 870,
-        y: 170,
-        type: "shortcut",
-
-        shortcutTarget: 14
-    },
-
-
-    {
-        id: "alley-1",
-        x: 1040,
-        y: 125,
-        type: "dark-alley"
-    },
-
-    {
-        id: "alley-2",
-        x: 1040,
-        y: 185,
-        type: "dark-alley"
-    },
-
-
-    /* -----------------------------------------------------
-       SECOND ROW
-    ----------------------------------------------------- */
-
-    {
-        id: 10,
-        x: 970,
-        y: 220,
-        type: "normal"
-    },
-
-    {
-        id: 11,
-        x: 870,
-        y: 220,
-        type: "mob"
-    },
-
-    {
-        id: 12,
-        x: 770,
-        y: 220,
-        type: "normal"
-    },
-
-    {
-        id: 13,
-        x: 670,
-        y: 220,
-        type: "coin"
-    },
-
-    {
-        id: 14,
-        x: 570,
-        y: 220,
-        type: "normal"
-    },
-
-    {
-        id: 15,
-        x: 470,
-        y: 220,
-        type: "mob"
-    },
-
-    {
-        id: 16,
-        x: 370,
-        y: 220,
-        type: "normal"
-    },
-
-    {
-        id: 17,
-        x: 270,
-        y: 220,
-        type: "coin"
-    },
-
-    {
-        id: 18,
-        x: 170,
-        y: 220,
-        type: "normal"
-    },
-
-
-    /* -----------------------------------------------------
-       THIRD ROW
-    ----------------------------------------------------- */
-
-    {
-        id: 19,
-        x: 170,
-        y: 340,
-        type: "mob"
-    },
-
-    {
-        id: 20,
-        x: 270,
-        y: 340,
-        type: "normal"
-    },
-
-    {
-        id: 21,
-        x: 370,
-        y: 340,
-        type: "coin"
-    },
-
-    {
-        id: 22,
-        x: 470,
-        y: 340,
-        type: "normal"
-    },
-
-    {
-        id: 23,
-        x: 570,
-        y: 340,
-        type: "mob"
-    },
-
-    {
-        id: 24,
-        x: 670,
-        y: 340,
-        type: "normal"
-    },
-
-    {
-        id: 25,
-        x: 770,
-        y: 340,
-        type: "coin"
-    },
-
-    {
-        id: 26,
-        x: 870,
-        y: 340,
-        type: "normal"
-    },
-
-    {
-        id: 27,
-        x: 970,
-        y: 340,
-        type: "mob"
-    },
-
-
-    /* -----------------------------------------------------
-       CENTRAL SHORTCUT
-    ----------------------------------------------------- */
-
-    {
-        id: "shortcut-2",
-        x: 570,
-        y: 260,
-        type: "shortcut",
-
-        shortcutTarget: 31
-    },
-
-
-    /* -----------------------------------------------------
-       REVOLUTIONARY SQUARE EXIT
-    ----------------------------------------------------- */
-
-    {
-        id: 28,
-        x: 1070,
-        y: 340,
-        type: "normal"
-    },
-
-    {
-        id: 29,
-        x: 1070,
-        y: 440,
-        type: "coin"
-    },
-
-    {
-        id: 30,
-        x: 970,
-        y: 440,
-        type: "normal"
-    },
-
-    {
-        id: 31,
-        x: 870,
-        y: 440,
-        type: "normal"
-    },
-
-    {
-        id: 32,
-        x: 770,
-        y: 440,
-        type: "mob"
-    },
-
-    {
-        id: 33,
-        x: 670,
-        y: 440,
-        type: "coin"
-    },
-
-    {
-        id: 34,
-        x: 570,
-        y: 440,
-        type: "normal"
-    },
-
-    {
-        id: 35,
-        x: 470,
-        y: 440,
-        type: "mob"
-    },
-
-    {
-        id: 36,
-        x: 370,
-        y: 440,
-        type: "normal"
-    },
-
-    {
-        id: 37,
-        x: 270,
-        y: 440,
-        type: "coin"
-    },
-
-    {
-        id: 38,
-        x: 170,
-        y: 440,
-        type: "normal"
-    },
-
-
-    /* -----------------------------------------------------
-       LOWER PATH
-    ----------------------------------------------------- */
-
-    {
-        id: 39,
-        x: 170,
-        y: 550,
-        type: "mob"
-    },
-
-    {
-        id: 40,
-        x: 270,
-        y: 550,
-        type: "normal"
-    },
-
-    {
-        id: 41,
-        x: 370,
-        y: 550,
-        type: "coin"
-    },
-
-    {
-        id: 42,
-        x: 470,
-        y: 550,
-        type: "normal"
-    },
-
-    {
-        id: 43,
-        x: 570,
-        y: 550,
-        type: "mob"
-    },
-
-    {
-        id: 44,
-        x: 670,
-        y: 550,
-        type: "normal"
-    },
-
-    {
-        id: 45,
-        x: 770,
-        y: 550,
-        type: "coin"
-    },
-
-    {
-        id: 46,
-        x: 870,
-        y: 550,
-        type: "normal"
-    },
-
-    {
-        id: 47,
-        x: 930,
-        y: 600,
-        type: "mob"
-    },
-
-    {
-        id: 48,
-        x: 1000,
-        y: 630,
-        type: "finish",
-        name: "The Guillotine"
-    }
-
-];
-
-
-/* =========================================================
-   SVG ELEMENTS
-========================================================= */
-
-const board = document.getElementById("gameBoard");
-
-const spaceLayer =
-    document.getElementById("spaceLayer");
-
-const movementPathLayer =
-    document.getElementById("movementPathLayer");
-
-const lineOfSightLayer =
-    document.getElementById("lineOfSightLayer");
-
-const playerLayer =
-    document.getElementById("playerLayer");
-
-
-/* =========================================================
-   HELPER: CREATE SVG ELEMENT
-========================================================= */
-
-function createSVGElement(type, attributes = {}) {
-
-    const element =
-        document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            type
+    const ANGRY_MOB_SPACES = new Set([
+        7, 14, 21, 28, 35, 42, 49, 55, 60
+    ]);
+
+    const THINK_SPACES = new Set([
+        12, 26, 40, 50
+    ]);
+
+    const ALLEY_LENGTH = 3;
+
+    // ============================================
+    // HTML ELEMENTS
+    // ============================================
+
+    const board = document.getElementById("gameBoard");
+
+    const lineOfSightLayer =
+        document.getElementById("lineOfSightLayer");
+
+    const movementPathLayer =
+        document.getElementById("movementPathLayer");
+
+    const darkAlleyPathLayer =
+        document.getElementById("darkAlleyPathLayer");
+
+    const spaceLayer =
+        document.getElementById("spaceLayer");
+
+    const thinkSpaceLayer =
+        document.getElementById("thinkSpaceLayer");
+
+    const darkAlleySpaceLayer =
+        document.getElementById("darkAlleySpaceLayer");
+
+    const playerLayer =
+        document.getElementById("playerLayer");
+
+    const currentPlayerDisplay =
+        document.getElementById("currentPlayerDisplay");
+
+    const turnMessage =
+        document.getElementById("turnMessage");
+
+    const playerList =
+        document.getElementById("playerList");
+
+    const die1Display =
+        document.getElementById("die1");
+
+    const die2Display =
+        document.getElementById("die2");
+
+    const diceMode =
+        document.getElementById("diceMode");
+
+    const rollButton =
+        document.getElementById("rollButton");
+
+    const gameMessage =
+        document.getElementById("gameMessage");
+
+    const thinkChoicePanel =
+        document.getElementById("thinkChoicePanel");
+
+    const thinkChoiceTitle =
+        document.getElementById("thinkChoiceTitle");
+
+    const thinkChoiceDescription =
+        document.getElementById("thinkChoiceDescription");
+
+    const safeRouteButton =
+        document.getElementById("safeRouteButton");
+
+    const darkAlleyButton =
+        document.getElementById("darkAlleyButton");
+
+    const gameOverPanel =
+        document.getElementById("gameOverPanel");
+
+    const winnerText =
+        document.getElementById("winnerText");
+
+    const restartButton =
+        document.getElementById("restartButton");
+
+    const requiredElements = [
+        board,
+        lineOfSightLayer,
+        movementPathLayer,
+        darkAlleyPathLayer,
+        spaceLayer,
+        thinkSpaceLayer,
+        darkAlleySpaceLayer,
+        playerLayer,
+        currentPlayerDisplay,
+        turnMessage,
+        playerList,
+        die1Display,
+        die2Display,
+        diceMode,
+        rollButton,
+        gameMessage
+    ];
+
+    if (requiredElements.some(element => !element)) {
+        console.error(
+            "GameBoard.js: Required HTML elements are missing. " +
+            "Check the IDs in GameBoard.html."
         );
+        return;
+    }
 
-    Object.entries(attributes).forEach(
-        ([key, value]) => {
+    // ============================================
+    // GAME STATE
+    // ============================================
 
+    let players = [];
+    let currentPlayerIndex = 0;
+
+    let boardSpaces = [];
+    let darkAlleys = [];
+
+    let isMoving = false;
+    let waitingForThinkChoice = false;
+    let gameOver = false;
+
+    let movementTimer = null;
+
+    // ============================================
+    // SVG HELPERS
+    // ============================================
+
+    const SVG_NS = "http://www.w3.org/2000/svg";
+
+    function createSvgElement(tag, attributes = {}) {
+        const element = document.createElementNS(SVG_NS, tag);
+
+        Object.entries(attributes).forEach(([key, value]) => {
             element.setAttribute(key, value);
+        });
 
-        }
-    );
+        return element;
+    }
 
-    return element;
-}
+    function addText(parent, x, y, content, className) {
+        const text = createSvgElement("text", {
+            x,
+            y,
+            class: className,
+            "text-anchor": "middle",
+            "dominant-baseline": "central"
+        });
 
+        text.textContent = content;
+        parent.appendChild(text);
 
-/* =========================================================
-   FIND SPACE
-========================================================= */
+        return text;
+    }
 
-function getSpace(id) {
+    function clearLayer(layer) {
+        layer.replaceChildren();
+    }
 
-    return spaces.find(
-        space => space.id === id
-    );
+    // ============================================
+    // CREATE THE 64-SPACE BOARD
+    // ============================================
 
-}
+    function createBoardSpaces() {
+        boardSpaces = [];
 
+        const columns = 8;
+        const rows = 8;
 
-/* =========================================================
-   DRAW BOARD SPACES
-========================================================= */
+        const left = 110;
+        const right = 2890;
+        const top = 100;
+        const bottom = 800;
 
-function createSpaces() {
+        const horizontalGap =
+            (right - left) / (columns - 1);
 
-    spaceLayer.innerHTML = "";
+        const verticalGap =
+            (bottom - top) / (rows - 1);
 
+        for (let row = 0; row < rows; row++) {
+            for (let column = 0; column < columns; column++) {
+                const actualColumn =
+                    row % 2 === 0
+                        ? column
+                        : columns - 1 - column;
 
-    spaces.forEach(space => {
+                const number = row * columns + column;
 
-        let element;
+                const x = left + actualColumn * horizontalGap;
+                const y = top + row * verticalGap;
 
+                let type = "normal";
 
-        /* -------------------------------------------------
-           START
-        ------------------------------------------------- */
-
-        if (space.type === "start") {
-
-            element = createSVGElement(
-                "circle",
-                {
-                    cx: space.x,
-                    cy: space.y,
-                    r: 38,
-                    class: "board-space start-space"
+                if (number === 0) {
+                    type = "start";
+                } else if (number === TOTAL_SPACES - 1) {
+                    type = "finish";
+                } else if (COIN_SPACES.has(number)) {
+                    type = "coin";
+                } else if (ANGRY_MOB_SPACES.has(number)) {
+                    type = "angryMob";
+                } else if (THINK_SPACES.has(number)) {
+                    type = "think";
                 }
-            );
 
-
-            const text =
-                createSVGElement(
-                    "text",
-                    {
-                        x: space.x,
-                        y: space.y,
-                        class: "start-text"
-                    }
-                );
-
-            text.textContent = "START";
-
-            spaceLayer.appendChild(element);
-
-            spaceLayer.appendChild(text);
-
-            return;
+                boardSpaces.push({
+                    number,
+                    x,
+                    y,
+                    type
+                });
+            }
         }
+    }
 
+    // ============================================
+    // DRAW THE MAIN MOVEMENT PATH
+    // ============================================
 
-        /* -------------------------------------------------
-           DARK ALLEY
-        ------------------------------------------------- */
+    function drawMovementPaths() {
+        clearLayer(movementPathLayer);
 
-        if (space.type === "dark-alley") {
+        for (let i = 0; i < boardSpaces.length - 1; i++) {
+            const current = boardSpaces[i];
+            const next = boardSpaces[i + 1];
 
-            element = createSVGElement(
-                "rect",
-                {
-                    x: space.x - 22,
-                    y: space.y - 22,
-                    width: 44,
-                    height: 44,
-                    class: "dark-alley-space"
-                }
+            movementPathLayer.appendChild(
+                createSvgElement("line", {
+                    x1: current.x,
+                    y1: current.y,
+                    x2: next.x,
+                    y2: next.y,
+                    class: "movement-path"
+                })
             );
-
-
-            const text =
-                createSVGElement(
-                    "text",
-                    {
-                        x: space.x,
-                        y: space.y,
-                        class: "dark-alley-symbol"
-                    }
-                );
-
-            text.textContent = "DARK";
-
-            spaceLayer.appendChild(element);
-
-            spaceLayer.appendChild(text);
-
-            return;
         }
+    }
 
+    // ============================================
+    // DRAW ALL BOARD SPACES
+    // ============================================
 
-        /* -------------------------------------------------
-           FINISH
-        ------------------------------------------------- */
+    function drawAllSpaces() {
+        clearLayer(spaceLayer);
+        clearLayer(thinkSpaceLayer);
 
-        if (space.type === "finish") {
+        boardSpaces.forEach(space => {
+            switch (space.type) {
+                case "start":
+                    drawStartSpace(space);
+                    break;
 
-            element = createSVGElement(
-                "circle",
-                {
-                    cx: space.x,
-                    cy: space.y,
-                    r: 32,
-                    class: "board-space finish-space"
-                }
-            );
+                case "finish":
+                    drawFinishSpace(space);
+                    break;
 
+                case "coin":
+                    drawCoinSpace(space);
+                    break;
 
-            const text =
-                createSVGElement(
-                    "text",
-                    {
-                        x: space.x,
-                        y: space.y,
-                        class: "finish-text"
-                    }
-                );
+                case "angryMob":
+                    drawAngryMobSpace(space);
+                    break;
 
-            text.textContent = "G";
+                case "think":
+                    drawThinkSpace(space);
+                    break;
 
-            spaceLayer.appendChild(element);
+                default:
+                    drawNormalSpace(space);
+                    break;
+            }
+        });
+    }
 
-            spaceLayer.appendChild(text);
+    function drawNormalSpace(space) {
+        const group = createSvgElement("g");
 
-            return;
-        }
-
-
-        /* -------------------------------------------------
-           SHORTCUT
-        ------------------------------------------------- */
-
-        if (space.type === "shortcut") {
-
-            element = createSVGElement(
-                "polygon",
-                {
-                    points:
-                        createStarPoints(
-                            space.x,
-                            space.y,
-                            32,
-                            20,
-                            12
-                        ),
-
-                    class: "shortcut-space"
-                }
-            );
-
-
-            const text =
-                createSVGElement(
-                    "text",
-                    {
-                        x: space.x,
-                        y: space.y,
-                        class: "shortcut-symbol"
-                    }
-                );
-
-            text.textContent = "SHORTCUT";
-
-            spaceLayer.appendChild(element);
-
-            spaceLayer.appendChild(text);
-
-            return;
-        }
-
-
-        /* -------------------------------------------------
-           MOB / COIN / NORMAL
-        ------------------------------------------------- */
-
-        element = createSVGElement(
-            "circle",
-            {
+        group.appendChild(
+            createSvgElement("circle", {
                 cx: space.x,
                 cy: space.y,
                 r: SPACE_RADIUS,
-                class:
-                    `board-space ${
-                        space.type === "mob"
-                            ? "mob-space"
-                            : space.type === "coin"
-                                ? "coin-space"
-                                : ""
-                    }`
-            }
+                class: "board-space"
+            })
         );
 
-
-        spaceLayer.appendChild(element);
-
-
-        /* Number */
-
-        const number =
-            createSVGElement(
-                "text",
-                {
-                    x: space.x,
-                    y: space.y,
-                    class:
-                        space.type === "mob"
-                            ? "mob-symbol"
-                            : space.type === "coin"
-                                ? "coin-symbol"
-                                : "board-space-number"
-                }
-            );
-
-
-        if (space.type === "mob") {
-
-            number.textContent = "MOB";
-
-        }
-        else if (space.type === "coin") {
-
-            number.textContent =
-                `${space.id}  C`;
-
-        }
-        else {
-
-            number.textContent =
-                space.id;
-
-        }
-
-
-        spaceLayer.appendChild(number);
-
-    });
-
-}
-
-
-/* =========================================================
-   STAR SHAPE
-========================================================= */
-
-function createStarPoints(
-    centerX,
-    centerY,
-    outerRadius,
-    innerRadius,
-    points
-) {
-
-    const coordinates = [];
-
-    const step =
-        Math.PI / points;
-
-    for (
-        let i = 0;
-        i < points * 2;
-        i++
-    ) {
-
-        const radius =
-            i % 2 === 0
-                ? outerRadius
-                : innerRadius;
-
-        const angle =
-            i * step - Math.PI / 2;
-
-        const x =
-            centerX +
-            Math.cos(angle) * radius;
-
-        const y =
-            centerY +
-            Math.sin(angle) * radius;
-
-        coordinates.push(
-            `${x},${y}`
+        addText(
+            group,
+            space.x,
+            space.y,
+            String(space.number + 1),
+            "board-space-label"
         );
 
+        spaceLayer.appendChild(group);
     }
 
-    return coordinates.join(" ");
+    function drawStartSpace(space) {
+        const group = createSvgElement("g");
 
-}
-
-
-/* =========================================================
-   MOVEMENT LINES
-========================================================= */
-
-function createMovementPaths() {
-
-    movementPathLayer.innerHTML = "";
-
-
-    /*
-        Connect numbered spaces in order.
-
-        Special shortcut/dark alley spaces are not part
-        of the normal numbered movement route.
-    */
-
-    const numberedSpaces =
-        spaces.filter(
-            space =>
-                typeof space.id === "number"
+        group.appendChild(
+            createSvgElement("circle", {
+                cx: space.x,
+                cy: space.y,
+                r: START_SPACE_RADIUS,
+                class: "board-space start-space"
+            })
         );
 
+        addText(
+            group,
+            space.x,
+            space.y,
+            "START",
+            "board-space-label start-space-label"
+        );
 
-    for (
-        let i = 0;
-        i < numberedSpaces.length - 1;
-        i++
-    ) {
+        spaceLayer.appendChild(group);
+    }
 
-        const first =
-            numberedSpaces[i];
+    function drawFinishSpace(space) {
+        const group = createSvgElement("g");
 
-        const second =
-            numberedSpaces[i + 1];
+        group.appendChild(
+            createSvgElement("circle", {
+                cx: space.x,
+                cy: space.y,
+                r: FINISH_SPACE_RADIUS,
+                class: "board-space finish-space"
+            })
+        );
 
+        addText(
+            group,
+            space.x,
+            space.y,
+            "G",
+            "board-space-label finish-space-label"
+        );
 
-        const line =
-            createSVGElement(
-                "line",
-                {
+        spaceLayer.appendChild(group);
+    }
+
+    function drawCoinSpace(space) {
+        const group = createSvgElement("g");
+
+        group.appendChild(
+            createSvgElement("circle", {
+                cx: space.x,
+                cy: space.y,
+                r: SPACE_RADIUS,
+                class: "board-space coin-space"
+            })
+        );
+
+        addText(
+            group,
+            space.x,
+            space.y,
+            "C",
+            "coin-space-label"
+        );
+
+        spaceLayer.appendChild(group);
+
+        // Small number label below the coin symbol.
+        addText(
+            group,
+            space.x,
+            space.y + 14,
+            String(space.number + 1),
+            "board-space-label"
+        );
+    }
+
+    function drawAngryMobSpace(space) {
+        const group = createSvgElement("g");
+
+        group.appendChild(
+            createSvgElement("circle", {
+                cx: space.x,
+                cy: space.y,
+                r: SPACE_RADIUS,
+                class: "board-space angry-mob-space"
+            })
+        );
+
+        addText(
+            group,
+            space.x,
+            space.y,
+            "MOB",
+            "angry-mob-label"
+        );
+
+        spaceLayer.appendChild(group);
+    }
+
+    function drawThinkSpace(space) {
+        const group = createSvgElement("g");
+
+        const points = [
+            `${space.x},${space.y - SPACE_RADIUS}`,
+            `${space.x + SPACE_RADIUS},${space.y}`,
+            `${space.x},${space.y + SPACE_RADIUS}`,
+            `${space.x - SPACE_RADIUS},${space.y}`
+        ].join(" ");
+
+        group.appendChild(
+            createSvgElement("polygon", {
+                points,
+                class: "think-space-shape"
+            })
+        );
+
+        addText(
+            group,
+            space.x,
+            space.y,
+            "?",
+            "think-space-label"
+        );
+
+        thinkSpaceLayer.appendChild(group);
+    }
+
+    // ============================================
+    // DARK ALLEY BRANCHES
+    // ============================================
+
+    function createDarkAlleys() {
+        clearLayer(darkAlleyPathLayer);
+        clearLayer(darkAlleySpaceLayer);
+
+        darkAlleys = [];
+
+        THINK_SPACES.forEach(startNumber => {
+            const start = boardSpaces[startNumber];
+
+            // Skip over the next three spaces and rejoin.
+            const rejoinNumber = Math.min(
+                startNumber + ALLEY_LENGTH + 1,
+                TOTAL_SPACES - 2
+            );
+
+            const rejoin = boardSpaces[rejoinNumber];
+
+            const branchSpaces = [];
+
+            // Give each branch a visible offset.
+            const direction = startNumber % 2 === 0 ? -1 : 1;
+
+            for (let i = 1; i <= ALLEY_LENGTH; i++) {
+                const progress = i / (ALLEY_LENGTH + 1);
+
+                const x =
+                    start.x +
+                    (rejoin.x - start.x) * progress;
+
+                const y =
+                    start.y +
+                    (rejoin.y - start.y) * progress +
+                    direction * 65;
+
+                branchSpaces.push({
+                    x,
+                    y,
+                    number: i
+                });
+            }
+
+            const points = [
+                `${start.x},${start.y}`,
+                ...branchSpaces.map(
+                    alleySpace => `${alleySpace.x},${alleySpace.y}`
+                ),
+                `${rejoin.x},${rejoin.y}`
+            ].join(" ");
+
+            darkAlleyPathLayer.appendChild(
+                createSvgElement("polyline", {
+                    points,
+                    class: "dark-alley-path"
+                })
+            );
+
+            branchSpaces.forEach(alleySpace => {
+                const group = createSvgElement("g");
+
+                group.appendChild(
+                    createSvgElement("rect", {
+                        x: alleySpace.x - 22,
+                        y: alleySpace.y - 15,
+                        width: 44,
+                        height: 30,
+                        rx: 3,
+                        class: "dark-alley-space"
+                    })
+                );
+
+                addText(
+                    group,
+                    alleySpace.x,
+                    alleySpace.y,
+                    "DARK",
+                    "dark-alley-label"
+                );
+
+                darkAlleySpaceLayer.appendChild(group);
+            });
+
+            darkAlleys.push({
+                startNumber,
+                rejoinNumber,
+                spaces: branchSpaces
+            });
+        });
+    }
+
+    // ============================================
+    // LINE OF SIGHT
+    // ============================================
+
+    function drawLinesOfSight() {
+        clearLayer(lineOfSightLayer);
+
+        const connections = [
+            [2, 13],
+            [5, 16],
+            [9, 20],
+            [18, 29],
+            [22, 33],
+            [27, 36],
+            [34, 45],
+            [39, 48],
+            [44, 53],
+            [51, 60]
+        ];
+
+        connections.forEach(([from, to]) => {
+            const first = boardSpaces[from];
+            const second = boardSpaces[to];
+
+            if (!first || !second) return;
+
+            lineOfSightLayer.appendChild(
+                createSvgElement("line", {
                     x1: first.x,
                     y1: first.y,
                     x2: second.x,
                     y2: second.y,
-                    class: "movement-line"
-                }
+                    class: "line-of-sight"
+                })
             );
-
-
-        movementPathLayer.appendChild(line);
-
+        });
     }
 
-}
+    // ============================================
+    // CREATE SIX PLAYERS
+    // ============================================
 
+    function createPlayers() {
+        players = [];
 
-/* =========================================================
-   LINE OF SIGHT
-========================================================= */
-
-function createLineOfSight() {
-
-    lineOfSightLayer.innerHTML = "";
-
-
-    /*
-        These are intentionally visual for now.
-
-        Later these same relationships can be used by
-        the attack system.
-    */
-
-    const sightPairs = [
-
-        [2, 17],
-        [3, 16],
-        [5, 14],
-        [6, 13],
-
-        [9, 12],
-        [11, 25],
-
-        [20, 36],
-        [21, 35],
-
-        [22, 34],
-        [25, 33],
-
-        [29, 45],
-        [30, 44],
-
-        [37, 41],
-        [38, 40]
-
-    ];
-
-
-    sightPairs.forEach(
-        ([firstID, secondID]) => {
-
-            const first =
-                getSpace(firstID);
-
-            const second =
-                getSpace(secondID);
-
-
-            if (!first || !second) {
-                return;
-            }
-
-
-            const line =
-                createSVGElement(
-                    "line",
-                    {
-                        x1: first.x,
-                        y1: first.y,
-                        x2: second.x,
-                        y2: second.y,
-                        class: "line-of-sight"
-                    }
-                );
-
-
-            lineOfSightLayer.appendChild(line);
-
+        for (let i = 0; i < MAX_PLAYERS; i++) {
+            players.push({
+                id: i,
+                name: `Player ${i + 1}`,
+                position: 0,
+                coins: 0,
+                color: PLAYER_COLORS[i],
+                angryMobNextTurn: false,
+                finished: false
+            });
         }
-    );
-
-}
-
-
-/* =========================================================
-   CREATE PLAYER TOKENS
-========================================================= */
-
-function createPlayers() {
-
-    playerLayer.innerHTML = "";
-
-
-    players.forEach(
-        player => {
-
-            const space =
-                getSpace(
-                    player.position
-                );
-
-
-            if (!space) {
-                return;
-            }
-
-
-            const token =
-                createSVGElement(
-                    "circle",
-                    {
-                        cx: space.x,
-                        cy: space.y,
-                        r: 18,
-                        class: "player-token",
-
-                        fill: player.color,
-
-                        "data-player":
-                            player.id
-                    }
-                );
-
-
-            /*
-                Offset players slightly if multiple players
-                occupy the same space.
-            */
-
-            const offset =
-                getPlayerOffset(
-                    player
-                );
-
-
-            token.setAttribute(
-                "cx",
-                space.x + offset.x
-            );
-
-            token.setAttribute(
-                "cy",
-                space.y + offset.y
-            );
-
-
-            const text =
-                createSVGElement(
-                    "text",
-                    {
-                        x:
-                            space.x +
-                            offset.x,
-
-                        y:
-                            space.y +
-                            offset.y,
-
-                        class:
-                            "player-token-text"
-                    }
-                );
-
-
-            text.textContent =
-                player.token;
-
-
-            playerLayer.appendChild(token);
-
-            playerLayer.appendChild(text);
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   PLAYER TOKEN OFFSET
-========================================================= */
-
-function getPlayerOffset(player) {
-
-    const playersHere =
-        players.filter(
-            other =>
-                other.position ===
-                player.position
-        );
-
-
-    const index =
-        playersHere.indexOf(player);
-
-
-    if (playersHere.length === 1) {
-
-        return {
-            x: 0,
-            y: 0
-        };
-
-    }
-
-
-    const offsets = [
-
-        { x: -12, y: -12 },
-        { x: 12, y: -12 },
-        { x: -12, y: 12 },
-        { x: 12, y: 12 },
-        { x: 0, y: -17 },
-        { x: 0, y: 17 }
-
-    ];
-
-
-    return offsets[
-        index % offsets.length
-    ];
-
-}
-
-
-/* =========================================================
-   PLAYER LIST
-========================================================= */
-
-function updatePlayerList() {
-
-    const playerList =
-        document.getElementById(
-            "playerList"
-        );
-
-
-    playerList.innerHTML = "";
-
-
-    players.forEach(
-        (player, index) => {
-
-            const entry =
-                document.createElement("div");
-
-
-            entry.className =
-                "player-entry";
-
-
-            if (
-                index ===
-                currentPlayerIndex
-            ) {
-
-                entry.classList.add(
-                    "active"
-                );
-
-            }
-
-
-            entry.innerHTML = `
-
-                <span
-                    style="
-                        color:${player.color};
-                        font-weight:bold;
-                    "
-                >
-                    ●
-                </span>
-
-                <span>
-                    ${player.name}
-                </span>
-
-            `;
-
-
-            playerList.appendChild(
-                entry
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   CURRENT PLAYER DISPLAY
-========================================================= */
-
-function updateTurnDisplay() {
-
-    const player =
-        players[
-            currentPlayerIndex
-        ];
-
-
-    document.getElementById(
-        "currentPlayerDisplay"
-    ).textContent =
-        player.name;
-
-
-    document.getElementById(
-        "turnMessage"
-    ).textContent =
-        `${player.coins} coin${
-            player.coins === 1
-                ? ""
-                : "s"
-        }`;
-
-
-    updatePlayerList();
-
-}
-
-
-/* =========================================================
-   DETERMINE DICE COUNT
-========================================================= */
-
-function getDiceCount(player) {
-
-    const space =
-        getSpace(
-            player.position
-        );
-
-
-    /*
-        If the player is currently on an Angry Mob
-        space, they only get one die.
-    */
-
-    if (
-        space &&
-        space.type === "mob"
-    ) {
-
-        return MOB_DICE;
-
-    }
-
-
-    return NORMAL_DICE;
-
-}
-
-
-/* =========================================================
-   ROLL DICE
-========================================================= */
-
-function rollDice() {
-
-    if (gameOver || isMoving) {
-        return;
-    }
-
-
-    const player =
-        players[
-            currentPlayerIndex
-        ];
-
-
-    const diceCount =
-        getDiceCount(player);
-
-
-    const die1 =
-        Math.floor(
-            Math.random() * 6
-        ) + 1;
-
-
-    let die2 = 0;
-
-
-    if (diceCount === 2) {
-
-        die2 =
-            Math.floor(
-                Math.random() * 6
-            ) + 1;
-
-    }
-
-
-    document.getElementById(
-        "die1"
-    ).textContent =
-        die1;
-
-
-    document.getElementById(
-        "die2"
-    ).textContent =
-        diceCount === 2
-            ? die2
-            : "-";
-
-
-    document.getElementById(
-        "diceMode"
-    ).textContent =
-        diceCount === 1
-            ? "ANGRY MOB — ONE DIE"
-            : "TWO DICE";
-
-
-    const total =
-        die1 + die2;
-
-
-    movePlayer(
-        player,
-        total
-    );
-
-}
-
-
-/* =========================================================
-   MOVE PLAYER
-========================================================= */
-
-async function movePlayer(
-    player,
-    amount
-) {
-
-    isMoving = true;
-
-    document.getElementById(
-        "rollButton"
-    ).disabled = true;
-
-
-    for (
-        let i = 0;
-        i < amount;
-        i++
-    ) {
-
-        const nextPosition =
-            getNextNumberedPosition(
-                player.position
-            );
-
-
-        if (
-            nextPosition === null
-        ) {
-
-            break;
-
-        }
-
-
-        player.position =
-            nextPosition;
-
-
-        createPlayers();
-
-        updatePlayerList();
-
-
-        await delay(300);
-
-    }
-
-
-    await resolveLanding(
-        player
-    );
-
-
-    createPlayers();
-
-    updateTurnDisplay();
-
-
-    if (!gameOver) {
-
-        nextTurn();
-
-    }
-
-}
-
-
-/* =========================================================
-   GET NEXT NUMBERED SPACE
-========================================================= */
-
-function getNextNumberedPosition(
-    currentPosition
-) {
-
-    const numberedSpaces =
-        spaces.filter(
-            space =>
-                typeof space.id === "number"
-        );
-
-
-    const currentIndex =
-        numberedSpaces.findIndex(
-            space =>
-                space.id ===
-                currentPosition
-        );
-
-
-    if (currentIndex === -1) {
-
-        return 1;
-
-    }
-
-
-    if (
-        currentIndex >=
-        numberedSpaces.length - 1
-    ) {
-
-        return numberedSpaces[
-            numberedSpaces.length - 1
-        ].id;
-
-    }
-
-
-    return numberedSpaces[
-        currentIndex + 1
-    ].id;
-
-}
-
-
-/* =========================================================
-   LANDING EFFECTS
-========================================================= */
-
-async function resolveLanding(
-    player
-) {
-
-    const space =
-        getSpace(
-            player.position
-        );
-
-
-    if (!space) {
-        return;
-    }
-
-
-    /* -----------------------------------------------
-       COIN
-    ------------------------------------------------ */
-
-    if (space.type === "coin") {
-
-        player.coins += 1;
-
-
-        showMessage(
-            `${player.name} found a coin!`
-        );
-
-    }
-
-
-    /* -----------------------------------------------
-       ANGRY MOB
-    ------------------------------------------------ */
-
-    else if (
-        space.type === "mob"
-    ) {
-
-        showMessage(
-            `${player.name} entered the Angry Mob!`
-        );
-
-    }
-
-
-    /* -----------------------------------------------
-       DARK ALLEY
-    ------------------------------------------------ */
-
-    else if (
-        space.type === "dark-alley"
-    ) {
-
-        player.coins = 0;
-
-        player.position = 0;
-
-
-        showMessage(
-            `${player.name} was caught in the Dark Alley! ` +
-            `All coins lost. Returned to the Start.`
-        );
-
-    }
-
-
-    /* -----------------------------------------------
-       SHORTCUT
-    ------------------------------------------------ */
-
-    else if (
-        space.type === "shortcut"
-    ) {
-
-        await askShortcut(
-            player,
-            space
-        );
-
-    }
-
-
-    /* -----------------------------------------------
-       FINISH
-    ------------------------------------------------ */
-
-    else if (
-        space.type === "finish"
-    ) {
-
-        endGame(
-            player
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   SHORTCUT CHOICE
-========================================================= */
-
-function askShortcut(
-    player,
-    shortcut
-) {
-
-    return new Promise(
-        resolve => {
-
-            const useShortcut =
-                confirm(
-                    `${player.name} found a shortcut!\n\n` +
-                    `Do you want to risk taking the Dark Alley?`
-                );
-
-
-            if (useShortcut) {
-
-                /*
-                    For this first version, the shortcut
-                    jumps ahead to the shortcut target.
-
-                    Later we can make the Dark Alley
-                    a complete alternate route with
-                    individual spaces.
-                */
-
-                player.position =
-                    shortcut.shortcutTarget;
-
-
-                showMessage(
-                    `${player.name} took the shortcut!`
-                );
-
-            }
-            else {
-
-                showMessage(
-                    `${player.name} stayed on the main road.`
-                );
-
-            }
-
-
-            createPlayers();
-
-
-            resolve();
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   TURN SWITCHING
-========================================================= */
-
-function nextTurn() {
-
-    currentPlayerIndex++;
-
-    if (
-        currentPlayerIndex >=
-        players.length
-    ) {
 
         currentPlayerIndex = 0;
-
     }
 
+    function getCurrentPlayer() {
+        return players[currentPlayerIndex];
+    }
 
-    updateTurnDisplay();
+    // ============================================
+    // DRAW PLAYER PIECES
+    // ============================================
 
+    function drawPlayers() {
+        clearLayer(playerLayer);
 
-    const player =
-        players[
-            currentPlayerIndex
+        const offsets = [
+            [-13, -13],
+            [13, -13],
+            [-13, 13],
+            [13, 13],
+            [0, -19],
+            [0, 19]
         ];
 
+        const groupedPlayers = new Map();
 
-    const space =
-        getSpace(
-            player.position
-        );
+        players.forEach(player => {
+            if (!groupedPlayers.has(player.position)) {
+                groupedPlayers.set(player.position, []);
+            }
 
+            groupedPlayers.get(player.position).push(player);
+        });
 
-    if (
-        space &&
-        space.type === "mob"
-    ) {
+        groupedPlayers.forEach((group, position) => {
+            const space = boardSpaces[position];
 
-        showMessage(
-            `${player.name}'s turn. ` +
-            `The Angry Mob forces one die!`
-        );
+            if (!space) return;
 
+            group.forEach((player, index) => {
+                const offset = offsets[index % offsets.length];
+
+                const groupElement = createSvgElement("g", {
+                    class: "player-piece"
+                });
+
+                groupElement.appendChild(
+                    createSvgElement("circle", {
+                        cx: space.x + offset[0],
+                        cy: space.y + offset[1],
+                        r: 11,
+                        fill: player.color,
+                        stroke: "#211013",
+                        "stroke-width": 2
+                    })
+                );
+
+                addText(
+                    groupElement,
+                    space.x + offset[0],
+                    space.y + offset[1],
+                    String(player.id + 1),
+                    "player-piece-label"
+                );
+
+                playerLayer.appendChild(groupElement);
+            });
+        });
     }
-    else {
 
-        showMessage(
-            `${player.name}'s turn. Roll the dice!`
-        );
+    // ============================================
+    // UPDATE THE UI
+    // ============================================
 
+    function updateUI() {
+        const player = getCurrentPlayer();
+
+        currentPlayerDisplay.textContent = player.name;
+        turnMessage.textContent = `${player.coins} coins`;
+
+        playerList.replaceChildren();
+
+        players.forEach(item => {
+            const entry = document.createElement("div");
+
+            entry.className = "player-entry";
+
+            if (item.id === currentPlayerIndex) {
+                entry.classList.add("active-player");
+            }
+
+            const marker = document.createElement("span");
+            marker.textContent = "● ";
+            marker.style.color = item.color;
+
+            const label = document.createElement("span");
+
+            label.textContent =
+                `${item.name} — ${item.coins} coins`;
+
+            entry.append(marker, label);
+            playerList.appendChild(entry);
+        });
+
+        diceMode.textContent = player.angryMobNextTurn
+            ? "ONE DIE — ANGRY MOB"
+            : "TWO DICE";
+
+        rollButton.disabled =
+            isMoving ||
+            waitingForThinkChoice ||
+            gameOver;
     }
 
+    // ============================================
+    // DICE ROLLING
+    // ============================================
 
-    isMoving = false;
+    function rollDie() {
+        return Math.floor(Math.random() * 6) + 1;
+    }
 
+    function rollCurrentPlayer() {
+        if (isMoving || waitingForThinkChoice || gameOver) {
+            return;
+        }
 
-    document.getElementById(
-        "rollButton"
-    ).disabled = false;
+        const player = getCurrentPlayer();
 
-}
+        const oneDieOnly = player.angryMobNextTurn;
 
+        const firstRoll = rollDie();
+        const secondRoll = oneDieOnly ? 0 : rollDie();
 
-/* =========================================================
-   END GAME
-========================================================= */
+        const total = firstRoll + secondRoll;
 
-function endGame(player) {
+        die1Display.textContent = firstRoll;
+        die2Display.textContent = oneDieOnly ? "—" : secondRoll;
 
-    gameOver = true;
+        // The penalty only affects the next turn.
+        player.angryMobNextTurn = false;
 
+        gameMessage.textContent = oneDieOnly
+            ? `${player.name} rolled ${firstRoll} with one die!`
+            : `${player.name} rolled ${firstRoll} + ${secondRoll} = ${total}!`;
 
-    document.getElementById(
-        "winnerText"
-    ).textContent =
-        `${player.name} reached the Guillotine!`;
+        movePlayer(player, total);
+    }
 
+    // ============================================
+    // MOVE THE PLAYER
+    // ============================================
 
-    document.getElementById(
-        "gameOverPanel"
-    ).classList.remove(
-        "hidden"
-    );
+    function movePlayer(player, spacesToMove) {
+        isMoving = true;
+        updateUI();
 
+        let spacesMoved = 0;
 
-    document.getElementById(
-        "rollButton"
-    ).disabled = true;
+        movementTimer = window.setInterval(() => {
+            if (spacesMoved >= spacesToMove) {
+                window.clearInterval(movementTimer);
+                movementTimer = null;
 
-}
+                isMoving = false;
+                resolveLanding(player);
 
+                return;
+            }
 
-/* =========================================================
-   MESSAGE
-========================================================= */
+            if (player.position < TOTAL_SPACES - 1) {
+                player.position++;
+            }
 
-function showMessage(message) {
+            spacesMoved++;
 
-    document.getElementById(
-        "gameMessage"
-    ).textContent =
-        message;
+            drawPlayers();
+        }, 180);
+    }
 
-}
+    // ============================================
+    // RESOLVE LANDING EFFECTS
+    // ============================================
 
+    function resolveLanding(player) {
+        const space = boardSpaces[player.position];
 
-/* =========================================================
-   DELAY
-========================================================= */
+        if (!space) {
+            finishTurn();
+            return;
+        }
 
-function delay(ms) {
+        if (space.type === "finish") {
+            endGame(player);
+            return;
+        }
 
-    return new Promise(
-        resolve =>
-            setTimeout(
-                resolve,
-                ms
-            )
-    );
+        switch (space.type) {
+            case "coin":
+                player.coins += 2;
 
-}
+                gameMessage.textContent =
+                    `${player.name} collected 2 coins!`;
 
+                break;
 
-/* =========================================================
-   RESTART GAME
-========================================================= */
+            case "angryMob":
+                player.angryMobNextTurn = true;
 
-function restartGame() {
+                gameMessage.textContent =
+                    `${player.name} was caught by the Angry Mob! ` +
+                    "Only one die next turn.";
 
-    players.forEach(
-        player => {
+                break;
 
-            player.position = 0;
+            case "think":
+                showThinkChoice(player);
+                drawPlayers();
+                updateUI();
+                return;
 
-            player.coins = 0;
+            case "start":
+                gameMessage.textContent =
+                    `${player.name} is in the starting safe zone.`;
 
+                break;
+
+            default:
+                gameMessage.textContent =
+                    `${player.name} landed on space ${space.number + 1}.`;
+
+                break;
+        }
+
+        drawPlayers();
+        updateUI();
+        finishTurn();
+    }
+
+    // ============================================
+    // THINK SPACE CHOICE
+    // ============================================
+
+    function showThinkChoice(player) {
+        waitingForThinkChoice = true;
+
+        if (thinkChoiceTitle) {
+            thinkChoiceTitle.textContent = "Choose Your Route";
+        }
+
+        if (thinkChoiceDescription) {
+            thinkChoiceDescription.textContent =
+                `${player.name}, take the safe route or risk the Dark Alley shortcut?`;
+        }
+
+        if (thinkChoicePanel) {
+            thinkChoicePanel.classList.remove("hidden");
+        }
+
+        updateUI();
+    }
+
+    function chooseSafeRoute() {
+        if (!waitingForThinkChoice) return;
+
+        waitingForThinkChoice = false;
+
+        if (thinkChoicePanel) {
+            thinkChoicePanel.classList.add("hidden");
+        }
+
+        gameMessage.textContent =
+            `${getCurrentPlayer().name} chose the safe route.`;
+
+        updateUI();
+        finishTurn();
+    }
+
+    function chooseDarkAlley() {
+        if (!waitingForThinkChoice) return;
+
+        const player = getCurrentPlayer();
+
+        const alley = darkAlleys.find(
+            item => item.startNumber === player.position
+        );
+
+        waitingForThinkChoice = false;
+
+        if (thinkChoicePanel) {
+            thinkChoicePanel.classList.add("hidden");
+        }
+
+        if (alley) {
+            /*
+             * Current implementation: choosing the Dark Alley
+             * advances the player to its rejoin point.
+             *
+             * The individual alley squares are currently
+             * decorative. Landing penalties on those squares
+             * will require a separate movement mechanic.
+             */
+            player.position = alley.rejoinNumber;
+
+            gameMessage.textContent =
+                `${player.name} took the Dark Alley shortcut!`;
+        }
+
+        drawPlayers();
+
+        if (player.position >= TOTAL_SPACES - 1) {
+            endGame(player);
+            return;
+        }
+
+        updateUI();
+        finishTurn();
+    }
+
+    // ============================================
+    // END TURN
+    // ============================================
+
+    function finishTurn() {
+        if (gameOver) return;
+
+        currentPlayerIndex =
+            (currentPlayerIndex + 1) % players.length;
+
+        updateUI();
+    }
+
+    // ============================================
+    // WIN CONDITION
+    // ============================================
+
+    function endGame(player) {
+        gameOver = true;
+        player.finished = true;
+
+        if (winnerText) {
+            winnerText.textContent =
+                `${player.name} reached the Guillotine first!`;
+        }
+
+        if (gameOverPanel) {
+            gameOverPanel.classList.remove("hidden");
+        }
+
+        gameMessage.textContent =
+            `${player.name} has won the revolution!`;
+
+        updateUI();
+    }
+
+    // ============================================
+    // RESTART GAME
+    // ============================================
+
+    function restartGame() {
+        if (movementTimer !== null) {
+            window.clearInterval(movementTimer);
+            movementTimer = null;
+        }
+
+        isMoving = false;
+        waitingForThinkChoice = false;
+        gameOver = false;
+
+        if (thinkChoicePanel) {
+            thinkChoicePanel.classList.add("hidden");
+        }
+
+        if (gameOverPanel) {
+            gameOverPanel.classList.add("hidden");
+        }
+
+        die1Display.textContent = "—";
+        die2Display.textContent = "—";
+
+        createPlayers();
+        drawPlayers();
+        updateUI();
+
+        gameMessage.textContent =
+            "Player 1 begins the revolution!";
+    }
+
+    // ============================================
+    // MENU BUTTONS
+    // ============================================
+
+    document.getElementById("chatButton")?.addEventListener(
+        "click",
+        () => {
+            gameMessage.textContent =
+                "The local chatroom is not implemented yet.";
         }
     );
 
-
-    currentPlayerIndex = 0;
-
-    gameOver = false;
-
-    isMoving = false;
-
-
-    document.getElementById(
-        "die1"
-    ).textContent = "-";
-
-
-    document.getElementById(
-        "die2"
-    ).textContent = "-";
-
-
-    document.getElementById(
-        "diceMode"
-    ).textContent =
-        "TWO DICE";
-
-
-    document.getElementById(
-        "gameOverPanel"
-    ).classList.add(
-        "hidden"
+    document.getElementById("rulesButton")?.addEventListener(
+        "click",
+        () => {
+            gameMessage.textContent =
+                "Reach the Guillotine first. Collect coins, " +
+                "watch out for the Angry Mob, and choose your route wisely.";
+        }
     );
 
+    document.getElementById("leaderboardButton")?.addEventListener(
+        "click",
+        () => {
+            const standings = [...players].sort(
+                (a, b) => b.position - a.position
+            );
 
-    document.getElementById(
-        "rollButton"
-    ).disabled = false;
-
-
-    createPlayers();
-
-    updateTurnDisplay();
-
-    showMessage(
-        "The revolution begins again!"
+            gameMessage.textContent =
+                "Current standings: " +
+                standings.map(player => player.name).join(", ");
+        }
     );
 
-}
+    // ============================================
+    // CONNECT GAME CONTROLS
+    // ============================================
 
+    rollButton.addEventListener("click", rollCurrentPlayer);
 
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-document.getElementById(
-    "rollButton"
-).addEventListener(
-    "click",
-    rollDice
-);
-
-
-document.getElementById(
-    "restartButton"
-).addEventListener(
-    "click",
-    restartGame
-);
-
-
-/* These buttons don't have functionality yet. */
-
-document.getElementById(
-    "chatButton"
-).addEventListener(
-    "click",
-    () => {
-
-        showMessage(
-            "Chatroom coming soon."
-        );
-
-    }
-);
-
-
-document.getElementById(
-    "rulesButton"
-).addEventListener(
-    "click",
-    () => {
-
-        showMessage(
-            "Game Rules coming soon."
-        );
-
-    }
-);
-
-
-document.getElementById(
-    "leaderboardButton"
-).addEventListener(
-    "click",
-    () => {
-
-        showMessage(
-            "Leader Boards coming soon."
-        );
-
-    }
-);
-
-
-/* =========================================================
-   INITIALIZE BOARD
-========================================================= */
-
-function initializeGame() {
-
-    createSpaces();
-
-    createMovementPaths();
-
-    createLineOfSight();
-
-    createPlayers();
-
-    updateTurnDisplay();
-
-    showMessage(
-        "Player 1 begins the revolution!"
+    safeRouteButton?.addEventListener(
+        "click",
+        chooseSafeRoute
     );
 
-}
+    darkAlleyButton?.addEventListener(
+        "click",
+        chooseDarkAlley
+    );
 
+    restartButton?.addEventListener(
+        "click",
+        restartGame
+    );
 
-initializeGame();
+    // ============================================
+    // INITIALIZE THE BOARD
+    // ============================================
+
+    function initializeGame() {
+        createBoardSpaces();
+        drawMovementPaths();
+        drawAllSpaces();
+        createDarkAlleys();
+        drawLinesOfSight();
+
+        createPlayers();
+        drawPlayers();
+        updateUI();
+    }
+
+    initializeGame();
+
+})();

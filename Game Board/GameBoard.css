@@ -1,13 +1,3 @@
-/* =========================================================
-   GET TO THE GUILLOTINE
-   NEW BOARD DESIGN
-========================================================= */
-
-
-/* =========================================================
-   GLOBAL
-========================================================= */
-
 * {
     box-sizing: border-box;
 }
@@ -974,4 +964,450 @@ body {
 
         padding-bottom: 10px;
     }
+}
+
+/* =========================================
+   FULL-SCREEN GAME LAYOUT
+   ========================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #17090c;
+    color: #f0dfc5;
+}
+
+/* Main game: header, board, and controls */
+.game {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.game-header {
+    flex: 0 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 7px;
+    border-bottom: 2px solid #72232d;
+}
+
+.title-area {
+    min-width: 0;
+}
+
+.title-area h1 {
+    margin: 0;
+    color: #f0dfc5;
+    font-size: clamp(24px, 3vw, 48px);
+    line-height: 1.05;
+    letter-spacing: 2px;
+}
+
+.title-area p,
+.title-area .tagline {
+    margin: 5px 0 0;
+    color: #c74450;
+    font-size: clamp(10px, 1vw, 16px);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+.game-menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.game-menu button {
+    padding: 10px 14px;
+    background: #17090c;
+    color: #f0dfc5;
+    border: 1px solid #72232d;
+    cursor: pointer;
+    font: inherit;
+    white-space: nowrap;
+}
+
+.game-menu button:hover {
+    background: #54202a;
+}
+
+/* =========================================
+   BOARD AREA
+   Uses all available space between
+   the header and bottom controls.
+   ========================================= */
+
+.board-section {
+    flex: 1 1 0;
+    min-height: 0;
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+}
+
+.board-wrapper {
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    border: 4px solid #382027;
+    background: #b9aa87;
+}
+
+.game-board {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+/* =========================================
+   BOARD SPACES
+   ========================================= */
+
+.board-space {
+    fill: #e5d5b5;
+    stroke: #382521;
+    stroke-width: 2.5;
+}
+
+.board-space-label {
+    fill: #241315;
+    font-family: Georgia, serif;
+    font-size: 13px;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+.board-space.coin-space {
+    fill: #c6a653;
+    stroke: #795d2d;
+}
+
+.coin-space-label {
+    fill: #352316;
+    font-family: Georgia, serif;
+    font-size: 12px;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+.board-space.angry-mob-space {
+    fill: #8e2635;
+    stroke: #4c111b;
+    stroke-width: 3;
+}
+
+.angry-mob-label {
+    fill: #f3dfc4;
+    font-family: Georgia, serif;
+    font-size: 12px;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+.angry-mob-shape {
+    fill: #8e2635;
+    stroke: #4c111b;
+    stroke-width: 2.5;
+}
+
+.think-space {
+    fill: #d4b66f;
+    stroke: #5b3826;
+    stroke-width: 3;
+}
+
+.think-space-label {
+    fill: #32171a;
+    font-family: Georgia, serif;
+    font-size: 12px;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+.think-space-shape {
+    fill: #b88c4a;
+    stroke: #4a2920;
+    stroke-width: 2.5;
+}
+
+.dark-alley-space {
+    fill: #241015;
+    stroke: #9a3541;
+    stroke-width: 3;
+}
+
+.dark-alley-label {
+    fill: #f1d7b9;
+    font-family: Georgia, serif;
+    font-size: 11px;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+/* =========================================
+   PATHS AND LINE OF SIGHT
+   ========================================= */
+
+.movement-path {
+    fill: none;
+    stroke: #554137;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.dark-alley-path {
+    fill: none;
+    stroke: #8e2635;
+    stroke-width: 3;
+    stroke-dasharray: 7 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.line-of-sight {
+    fill: none;
+    stroke: #9b5960;
+    stroke-width: 1.5;
+    stroke-dasharray: 3 6;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* =========================================
+   ZONES
+   ========================================= */
+
+.zone-safe {
+    fill: #b8a889;
+    fill-opacity: 0.45;
+    stroke: #42655a;
+    stroke-width: 2.5;
+    stroke-dasharray: 7 4;
+}
+
+/* =========================================
+   BOTTOM CONTROLS
+   ========================================= */
+
+.game-controls {
+    flex: 0 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(150px, 0.8fr)
+                           minmax(260px, 3.8fr)
+                           minmax(130px, 0.75fr)
+                           minmax(200px, 1.2fr);
+    gap: 14px;
+    min-height: 100px;
+}
+
+/* Control panels */
+.game-controls > *,
+.current-player-panel,
+.player-list-panel,
+.dice-panel,
+.roll-panel {
+    min-width: 0;
+    min-height: 0;
+}
+
+/* Allow the panels to shrink with the screen */
+.current-player-panel,
+.player-list-panel,
+.dice-panel,
+.roll-panel {
+    padding: 10px;
+    border: 1px solid #72232d;
+    background: #190b0e;
+}
+
+/* Player list */
+#playerList {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+}
+
+#playerList > * {
+    min-width: 0;
+}
+
+/* Dice */
+.dice-panel {
+    text-align: center;
+}
+
+.dice-display {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+#die1,
+#die2 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    min-height: 40px;
+    background: #e5d5b5;
+    color: #241315;
+    border: 2px solid #382521;
+    font-weight: bold;
+}
+
+/* Roll button */
+#rollButton {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px;
+    background: #842732;
+    color: #f0dfc5;
+    border: 2px solid #a64a50;
+    font: inherit;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+#rollButton:hover {
+    background: #a43643;
+}
+
+#rollButton:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* Hide popups and panels until needed */
+.hidden {
+    display: none !important;
+}
+
+/* =========================================
+   SHORTER SCREENS
+   ========================================= */
+
+@media (max-height: 800px) {
+    .game {
+        padding: 7px;
+        gap: 7px;
+    }
+
+    .game-header {
+        padding-bottom: 5px;
+    }
+
+    .title-area h1 {
+        font-size: clamp(22px, 2.6vw, 36px);
+    }
+
+    .game-controls {
+        min-height: 85px;
+        gap: 8px;
+    }
+
+    .current-player-panel,
+    .player-list-panel,
+    .dice-panel,
+    .roll-panel {
+        padding: 7px;
+    }
+
+    #rollButton {
+        min-height: 40px;
+    }
+}
+
+/* =========================================
+   NARROW SCREENS
+   ========================================= */
+
+@media (max-width: 900px) {
+    .game-header {
+        flex-wrap: wrap;
+    }
+
+    .game-menu {
+        gap: 5px;
+    }
+
+    .game-menu button {
+        padding: 7px 9px;
+        font-size: 12px;
+    }
+
+    .game-controls {
+        grid-template-columns: minmax(110px, 1fr)
+                               minmax(180px, 2fr)
+                               minmax(100px, 0.8fr)
+                               minmax(130px, 1.2fr);
+        gap: 6px;
+    }
+
+    #playerList {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .board-space.start-space {
+    fill: #42655a;
+    stroke: #263e34;
+    stroke-width: 4;
+}
+
+.start-space-label {
+    fill: #fff0d5;
+    font-size: 12px;
+}
+
+.board-space.finish-space {
+    fill: #8e2635;
+    stroke: #4c111b;
+    stroke-width: 4;
+}
+
+.finish-space-label {
+    fill: #fff0d5;
+    font-size: 20px;
+}
+
 }
