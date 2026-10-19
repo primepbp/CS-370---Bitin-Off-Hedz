@@ -9,6 +9,15 @@
     const TOTAL_SPACES = 64;
     const MAX_PLAYERS = 6;
 
+    const PLAYER_IMAGES = [
+        "characters/Robespierre.gif",
+        "characters/Anne Bolyne.gif",
+        "characters/King Louis XVI.gif",
+        "characters/Marie Antoinette.gif",
+        "characters/Queen of Hearts.gif",
+        "characters/HeadlessHoreman.png"
+    ];
+
     const BOARD_WIDTH = 3000;
     const BOARD_HEIGHT = 900;
 
@@ -627,6 +636,7 @@
     // DRAW PLAYER PIECES
     // ============================================
 
+
     function drawPlayers() {
         clearLayer(playerLayer);
 
@@ -657,33 +667,23 @@
             group.forEach((player, index) => {
                 const offset = offsets[index % offsets.length];
 
-                const groupElement = createSvgElement("g", {
-                    class: "player-piece"
+                const imagePath = PLAYER_IMAGES[player.id];
+
+                const characterImage = createSvgElement("image", {
+                    x: space.x + offset[0] - 16,
+                    y: space.y + offset[1] - 16,
+                    width: 32,
+                    height: 32,
+                    href: imagePath,
+                    preserveAspectRatio: "xMidYMid meet",
+                    class: "player-piece-image"
                 });
 
-                groupElement.appendChild(
-                    createSvgElement("circle", {
-                        cx: space.x + offset[0],
-                        cy: space.y + offset[1],
-                        r: 11,
-                        fill: player.color,
-                        stroke: "#211013",
-                        "stroke-width": 2
-                    })
-                );
-
-                addText(
-                    groupElement,
-                    space.x + offset[0],
-                    space.y + offset[1],
-                    String(player.id + 1),
-                    "player-piece-label"
-                );
-
-                playerLayer.appendChild(groupElement);
+                playerLayer.appendChild(characterImage);
             });
         });
     }
+
 
     // ============================================
     // UPDATE THE UI
