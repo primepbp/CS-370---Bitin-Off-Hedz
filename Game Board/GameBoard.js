@@ -143,6 +143,18 @@
         return;
     }
 
+    class Player {
+        constructor(id) {
+            this.id = id;
+            this.name = `Player ${id + 1}`;
+            this.position = 0;
+            this.coins = 0;
+            this.color = PLAYER_COLORS[id];
+            this.angryMobNextTurn = false;
+            this.finished = false;
+        }
+    }
+
     // ============================================
     // GAME STATE
     // ============================================
@@ -601,15 +613,7 @@
         players = [];
 
         for (let i = 0; i < MAX_PLAYERS; i++) {
-            players.push({
-                id: i,
-                name: `Player ${i + 1}`,
-                position: 0,
-                coins: 0,
-                color: PLAYER_COLORS[i],
-                angryMobNextTurn: false,
-                finished: false
-            });
+            players.push(new Player(i));
         }
 
         currentPlayerIndex = 0;
