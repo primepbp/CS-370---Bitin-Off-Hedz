@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get To The Guillotine</title>
+    <link rel="stylesheet" href="TitleScreen.css">
+</head>
+<body>
+
+    <!-- Decorative doodles -->
+    <div class="doodle bat">☾</div>
+    <div class="doodle star">✦</div>
+    <div class="doodle skull">☠</div>
+    <div class="doodle candle">🕯</div>
+    <div class="doodle raven">♜</div>
+    <div class="doodle star2">✧</div>
+
+    <main>
+
+        <!-- TITLE SCREEN -->
+        <section id="titleScreen" class="screen title">
+            <p class="eyebrow">A delightfully dreadful party game</p>
+
+            <h1>
+                GET TO THE<br>
+                <span>GUILLOTINE</span>
+            </h1>
+
+            <p class="subtitle">
+                Roll the dice. Outsmart the crowd. Keep your head.
+            </p>
+
+            <div class="actions">
+                <button id="hostGame">HOST GAME</button>
+                <button id="joinGame" class="outline">JOIN GAME</button>
+            </div>
+
+            <div id="joinArea" class="join hidden">
+                <input id="roomCodeInput" maxlength="5" placeholder="ROOM CODE">
+                <button id="confirmJoin">JOIN ROOM</button>
+            </div>
+
+            <p id="message"></p>
+        </section>
+
+        <!-- LOBBY SCREEN -->
+        <section id="lobbyScreen" class="screen panel hidden">
+
+            <header>
+                <p class="eyebrow">Gather your doomed companions</p>
+                <h2>THE WAITING ROOM</h2>
+
+                <p>
+                    ROOM CODE:
+                    <b id="roomCode">-----</b>
+                    <button id="copyRoomCode" class="mini">COPY</button>
+                </p>
+
+                <p id="playerCount">1 / 6 players</p>
+            </header>
+
+            <div class="columns">
+
+                <!-- CHARACTER SELECTION -->
+                <section class="character panel-inner">
+
+                    <h3>CHOOSE YOUR CHARACTER</h3>
+
+                    <div class="picker">
+
+                        <button id="previousCharacter" class="arrow">
+                            &#8249;
+                        </button>
+
+                        <div class="portrait">
+                            <img
+                                id="characterImage"
+                                src="characters/Marie%20Antoinette.gif"
+                                alt="Character"
+                            >
+
+                            <h3 id="characterName">Marie Antoinette</h3>
+
+                            <small id="characterPosition">1 of 6</small>
+                        </div>
+
+                        <button id="nextCharacter" class="arrow">
+                            &#8250;
+                        </button>
+
+                    </div>
+
+                    <details>
+                        <summary>CHARACTER POWER INFORMATION</summary>
+                        <p id="characterPower">
+                            Cannot be pushed back to the start by another player.
+                        </p>
+                    </details>
+
+                    <button id="selectCharacter" class="outline">
+                        SELECT THIS CHARACTER
+                    </button>
+
+                    <p id="selectionStatus" class="muted">
+                        Choose a character.
+                    </p>
+
+                </section>
+
+                <!-- PLAYER LIST -->
+                <aside class="players panel-inner">
+
+                    <h3>PLAYERS</h3>
+
+                    <ul id="playerList"></ul>
+
+                    <p id="lobbyMessage"></p>
+
+                    <button id="readyButton">I'M READY</button>
+
+                    <button id="startGame" class="outline hidden">
+                        START GAME
+                    </button>
+
+                    <button id="leaveLobby" class="link">
+                        LEAVE LOBBY
+                    </button>
+
+                </aside>
+
+            </div>
+        </section>
+
+        <!-- GAME SCREEN -->
+        <section id="gameScreen" class="screen hidden">
+            <iframe
+                id="gameBoardFrame"
+                title="Game board">
+            </iframe>
+        </section>
+
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="TitleScreen.js"></script>
+
+</body>
+</html>
