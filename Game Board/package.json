@@ -1,33 +1,18 @@
-<<<<<<< HEAD
-{
-  "name": "game-board",
-  "version": "1.0.0",
-  "description": "",
-  "main": "GameBoard.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-=======
 
 {
   "name": "gttg",
   "version": "1.0.0",
   "description": "Get to the Guillotine multiplayer game",
-  "main": "server.js",
+  "main": "server/server.js",
   "scripts": {
-    "start": "node server.js"
->>>>>>> d1eff00f1feec972561342668504685b1195bd9c
+    "start": "node server/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-<<<<<<< HEAD
     "express": "^5.3.0",
     "socket.io": "^4.8.4"
-=======
-    "express": "^4.21.2",
-    "socket.io": "^4.8.3"
->>>>>>> d1eff00f1feec972561342668504685b1195bd9c
   }
 }
