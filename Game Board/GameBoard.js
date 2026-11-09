@@ -25,6 +25,8 @@
     const START_SPACE_RADIUS = 36;
     const FINISH_SPACE_RADIUS = 40;
 
+    const SAFE_ZONE_SPACES = 7;
+
     const PLAYER_COLORS = [
         "#a52a35",
         "#315c79",
@@ -49,6 +51,8 @@
     ]);
 
     const ALLEY_LENGTH = 3;
+
+    var connections = []; // array of spaces that have line of sight. filled in drawlinesofsight func
 
     // ============================================
     // HTML ELEMENTS
@@ -584,7 +588,7 @@
     function drawLinesOfSight() {
         clearLayer(lineOfSightLayer);
 
-        const connections = [
+        connections = [
             [2, 13],
             [5, 16],
             [9, 20],
@@ -848,7 +852,7 @@
 
                 break;
         }
-
+        playerCollision(player);
         drawPlayers();
         updateUI();
         finishTurn();
@@ -932,6 +936,59 @@
 
         updateUI();
         finishTurn();
+    }
+
+
+    // ===============================================
+    // checking player collision
+    // ===============================================
+
+    function playerCollision(player) {
+        players.forEach(enemyPlayer => {
+            // check if player isn't in starting area
+            // and if they share a position with another player (except themselves)
+            if ((player.position > SAFE_ZONE_SPACES) && 
+                (player.position == enemyPlayer.position) && 
+                (player.id != enemyPlayer.id)) {
+                // pop-up window for killing or not
+                // for right now, enemy is just killed
+                enemyPlayer.position = 0;
+                gameMessage.textContent =
+                    `${player.name} chopped off ${enemyPlayer.name}'s head! Off to the start for them!`;
+
+            }
+        });
+    }
+
+    // =================================================
+    // checking player line of sight
+    // =================================================
+
+    function checkLineOfSight(player) {
+        connections.forEach(([from, to]) => {
+            // check if players position is the same as any of the spaces with line of sight
+            const first = boardSpaces[from];
+            const second = boardSpaces[to];
+            
+            if ((player.position == first) || (player.position == second)) {
+                players.forEach(enemyPlayer => {
+                    // check other player positions to see if they have LOS with current player
+                    // and if they aren't in the same position
+                    if ((player.position != enemyPlayer.position) && 
+                       ((enemyPlayer.position == first) || (enemyPlayer.position == second))) {
+                        cutInLine(player, enemyPlayer);
+                    }
+                });
+            } 
+        });
+    }
+
+    // ============================================
+    // cut in line
+    // ============================================
+
+    function cutInLine(attackPlayer, defendPlayer) {
+        
     }
 
     // ============================================
