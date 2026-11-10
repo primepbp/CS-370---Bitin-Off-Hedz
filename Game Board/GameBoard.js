@@ -52,6 +52,8 @@
 
     const ALLEY_LENGTH = 3;
 
+    const CUT_IN_LINE_COST = 1;
+
     var connections = []; // array of spaces that have line of sight. filled in drawlinesofsight func
 
     // ============================================
@@ -120,6 +122,20 @@
     const darkAlleyButton =
         document.getElementById("darkAlleyButton");
 
+    // player collision html elements
+    const playerCollisionPanel = document.getElementById("playerCollisionPanel");
+    const playerCollisionTitle = document.getElementById("playerCollisionTitle");
+    const playerCollisionDescription = document.getElementById("playerCollisionDescription");
+    const playerCollisionAttackButton = document.getElementById("playerCollisionAttackButton");
+    const playerCollisionIgnoreButton = document.getElementById("playerCollisionIgnoreButton");
+
+    // cutting in line html elements
+    const cutInLinePanel = document.getElementById("cutInLinePanel");
+    const cutInLineTitle = document.getElementById("cutInLineTitle");
+    const cutInLineDescription = document.getElementById("cutInLineDescription");
+    const cutInLineAttackButton = document.getElementById("cutInLineAttackButton");
+    const cutInLineIgnoreButton = document.getElementById("cutInLineIgnoreButton");
+
     const gameOverPanel =
         document.getElementById("gameOverPanel");
 
@@ -183,6 +199,8 @@
     let gameOver = false;
 
     let movementTimer = null;
+
+    let cutInLineDefendPlayer = null;
 
     // ============================================
     // SVG HELPERS
@@ -599,6 +617,12 @@
             [39, 48],
             [44, 53],
             [51, 60]
+            // below are debug connections for testing. remove.
+            ,[3, 14],
+            [4, 13],
+            [5, 12],
+            [6,11],
+            [7,10] 
         ];
 
         connections.forEach(([from, to]) => {
@@ -796,6 +820,7 @@
             spacesMoved++;
 
             drawPlayers();
+            checkLineOfSight(player);
         }, 180);
     }
 
@@ -965,30 +990,83 @@
     // =================================================
 
     function checkLineOfSight(player) {
-        connections.forEach(([from, to]) => {
+        // called to check for line of sight first in movePlayer
+        // and in cutInLine, where calling it from there will return the defending player
+        for (let i = 0; i < connections.length; i++) {
             // check if players position is the same as any of the spaces with line of sight
-            const first = boardSpaces[from];
-            const second = boardSpaces[to];
+            const first = connections[i][0];
+            const second = connections[i][1];
             
             if ((player.position == first) || (player.position == second)) {
-                players.forEach(enemyPlayer => {
+                console.log("playerpos: " + player.position);
+                for (let j = 0; j < players.length; j++) {
                     // check other player positions to see if they have LOS with current player
                     // and if they aren't in the same position
+                    const enemyPlayer = players[j];
                     if ((player.position != enemyPlayer.position) && 
                        ((enemyPlayer.position == first) || (enemyPlayer.position == second))) {
-                        cutInLine(player, enemyPlayer);
+                        console.log("i could cut in line.");
+                        console.log("enemyPlayerPos: " + enemyPlayer.position);
+                        decideToCutInLine();
+                        cutInLineDefendPlayer = enemyPlayer;
+                        break;
                     }
-                });
+                };
             } 
-        });
+        };
+    }
+
+    // ============================================
+    // ask player if they wish to cut in line
+    // ============================================
+    function decideToCutInLine() {
+        waitingForThinkChoice = true;
+        if (cutInLinePanel) {
+            cutInLinePanel.classList.remove("hidden");
+        }
+        updateUI();
     }
 
     // ============================================
     // cut in line
     // ============================================
 
-    function cutInLine(attackPlayer, defendPlayer) {
-        
+    function cutInLine() {
+        if (!waitingForThinkChoice) return;
+        // get players
+        const attackPlayer = getCurrentPlayer();
+        console.log("waiting for think choice: " + waitingForThinkChoice);
+        const defendPlayer = cutInLineDefendPlayer;
+
+        // deduct cost for cutting in line
+        attackPlayer.coins -= CUT_IN_LINE_COST;
+
+        // have them roll
+        const attackPlayerRoll = rollDie() + rollDie();
+        const defendPlayerRoll = rollDie() + rollDie();
+        gameMessage.textContent =
+                    `${attackPlayer.name} rolls ${attackPlayerRoll}. ${defendPlayer.name} rolls ${defendPlayerRoll}. `;
+
+        // check rolls
+        if (attackPlayerRoll > defendPlayerRoll) {
+            // players swap position
+            const attackPlayerPos = attackPlayer.position;
+            attackPlayer.position = defendPlayer.position;
+            defendPlayer.position = attackPlayerPos;
+            gameMessage.textContent +=
+                    `${attackPlayer.name} cuts in line, switching with ${defendPlayer.name}.`;
+        } else {
+            gameMessage.textContent +=
+                    `${attackPlayer.name} does not roll high enough to cut in line with ${defendPlayer.name}.`;
+        }
+
+        waitingForThinkChoice = false;
+        cutinLineDefendPlayer = null;
+
+        if (cutInLinePanel) {
+            cutInLinePanel.classList.add("hidden");
+        }
+        finishTurn();
     }
 
     // ============================================
@@ -1129,6 +1207,27 @@
     darkAlleyButton?.addEventListener(
         "click",
         chooseDarkAlley
+    );
+    /*
+    playerCollisionAttackButton?.addEventListener(
+        "click",
+        // call for it here
+    );
+
+    playerCollisionIgnorebutton?.addEventListener(
+        "click",
+        // do nothing
+    );
+    */
+    cutInLineAttackButton?.addEventListener(
+        "click",
+        cutInLine
+    );
+
+    cutInLineIgnoreButton?.addEventListener(
+        "click",
+        // do nothing
+        function() {return;}
     );
 
     restartButton?.addEventListener(
