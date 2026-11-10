@@ -177,7 +177,7 @@
             this.id = id;
             this.name = `Player ${id + 1}`;
             this.position = 0;
-            this.coins = 0;
+            this.coins = 5;
             this.color = PLAYER_COLORS[id];
             this.angryMobNextTurn = false;
             this.finished = false;
@@ -803,6 +803,11 @@
         let spacesMoved = 0;
 
         movementTimer = window.setInterval(() => {
+            // pause movement while waiting for player descision
+            // used for checking line of sight
+            if (waitingForThinkChoice) {
+                return;
+            }
             if (spacesMoved >= spacesToMove) {
                 window.clearInterval(movementTimer);
                 movementTimer = null;
@@ -878,6 +883,7 @@
                 break;
         }
         playerCollision(player);
+        checkLineOfSight(player);
         drawPlayers();
         updateUI();
         finishTurn();
@@ -992,24 +998,22 @@
     function checkLineOfSight(player) {
         // called to check for line of sight first in movePlayer
         // and in cutInLine, where calling it from there will return the defending player
+        if (waitingForThinkChoice) return;
         for (let i = 0; i < connections.length; i++) {
             // check if players position is the same as any of the spaces with line of sight
             const first = connections[i][0];
             const second = connections[i][1];
             
             if ((player.position == first) || (player.position == second)) {
-                console.log("playerpos: " + player.position);
                 for (let j = 0; j < players.length; j++) {
                     // check other player positions to see if they have LOS with current player
                     // and if they aren't in the same position
                     const enemyPlayer = players[j];
                     if ((player.position != enemyPlayer.position) && 
                        ((enemyPlayer.position == first) || (enemyPlayer.position == second))) {
-                        console.log("i could cut in line.");
-                        console.log("enemyPlayerPos: " + enemyPlayer.position);
-                        decideToCutInLine();
                         cutInLineDefendPlayer = enemyPlayer;
-                        break;
+                        decideToCutInLine();
+                        return;
                     }
                 };
             } 
@@ -1020,10 +1024,19 @@
     // ask player if they wish to cut in line
     // ============================================
     function decideToCutInLine() {
+
+        if (waitingForThinkChoice) return;
         waitingForThinkChoice = true;
+        
+        if (cutInLineDescription) {
+            cutInLineDescription.textContent =
+                `You are within line of sight of ${cutInLineDefendPlayer.name}. You may spend a coin to attempt switching positions, or ignore them, and continue along your path.`;
+        }
+        
         if (cutInLinePanel) {
             cutInLinePanel.classList.remove("hidden");
         }
+        
         updateUI();
     }
 
@@ -1040,6 +1053,10 @@
 
         // deduct cost for cutting in line
         attackPlayer.coins -= CUT_IN_LINE_COST;
+
+        console.log("attackplayerpos: " + attackPlayer.position);
+        console.log("defendplayerpos: " + defendPlayer.position);
+
 
         // have them roll
         const attackPlayerRoll = rollDie() + rollDie();
@@ -1061,11 +1078,19 @@
         }
 
         waitingForThinkChoice = false;
-        cutinLineDefendPlayer = null;
+        cutInLineDefendPlayer = null;
 
         if (cutInLinePanel) {
             cutInLinePanel.classList.add("hidden");
         }
+
+        if (movementTimer !== null) {
+            clearInterval(movementTimer);
+            movementTimer = null;
+        }
+        isMoving = false;
+        drawPlayers();
+        updateUI();
         finishTurn();
     }
 
@@ -1221,13 +1246,36 @@
     */
     cutInLineAttackButton?.addEventListener(
         "click",
-        cutInLine
+        function() {
+            // check if player has enough coins
+            if (getCurrentPlayer().coins >= CUT_IN_LINE_COST) {
+                cutInLine();
+            } else {
+                waitingForThinkChoice = false;
+                cutInLineDefendPlayer = null;
+                if (cutInLinePanel) {
+                cutInLinePanel.classList.add("hidden");
+                }
+                gameMessage.textContent =
+                    `${getCurrentPlayer().name} does not have enough coins to cut in line.`;
+                updateUI();
+            }
+        }
     );
 
     cutInLineIgnoreButton?.addEventListener(
         "click",
         // do nothing
-        function() {return;}
+        function() {
+            waitingForThinkChoice = false;
+            cutInLineDefendPlayer = null;
+            if (cutInLinePanel) {
+                cutInLinePanel.classList.add("hidden");
+            }
+            gameMessage.textContent =
+                `${getCurrentPlayer().name} does not cut in line.`;
+            updateUI();
+        }
     );
 
     restartButton?.addEventListener(
