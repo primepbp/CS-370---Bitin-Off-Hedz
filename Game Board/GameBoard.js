@@ -201,6 +201,8 @@
     let movementTimer = null;
 
     let cutInLineDefendPlayer = null;
+    
+    let movementState = null;
 
     // ============================================
     // SVG HELPERS
@@ -798,34 +800,62 @@
 
     function movePlayer(player, spacesToMove) {
         isMoving = true;
-        updateUI();
 
-        let spacesMoved = 0;
+        movementState = {
+            player: player,
+            spacesToMove: spacesToMove,
+            spacesMoved: 0
+        };
+
+        updateUI();
+        resumeMovement();
+}
+
+    function resumeMovement() {
+
+        if (!movementState || waitingForThinkChoice) return;
+
+        // prevent multiple movement intervals
+        if (movementTimer !== null) {
+            clearInterval(movementTimer);
+        }
 
         movementTimer = window.setInterval(() => {
-            // pause movement while waiting for player descision
-            // used for checking line of sight
+
             if (waitingForThinkChoice) {
+                clearInterval(movementTimer);
+                movementTimer = null;
                 return;
             }
-            if (spacesMoved >= spacesToMove) {
-                window.clearInterval(movementTimer);
+
+            if (movementState.spacesMoved >= movementState.spacesToMove) {
+                clearInterval(movementTimer);
                 movementTimer = null;
+
+                const player = movementState.player;
+                movementState = null;
 
                 isMoving = false;
                 resolveLanding(player);
-
                 return;
             }
 
-            if (player.position < TOTAL_SPACES - 1) {
-                player.position++;
+            if (movementState.player.position < TOTAL_SPACES - 1) {
+                movementState.player.position++;
             }
 
-            spacesMoved++;
+            movementState.spacesMoved++;
 
             drawPlayers();
-            checkLineOfSight(player);
+
+            checkLineOfSight(movementState.player);
+
+            // immediately stop the interval if an opponent is detected
+            if (waitingForThinkChoice) {
+                clearInterval(movementTimer);
+                movementTimer = null;
+            }
+
         }, 180);
     }
 
@@ -1012,6 +1042,8 @@
                     if ((player.position != enemyPlayer.position) && 
                        ((enemyPlayer.position == first) || (enemyPlayer.position == second))) {
                         cutInLineDefendPlayer = enemyPlayer;
+                        console.log("attackplayerpos: " + player.position);
+                        console.log("defendplayerpos: " + enemyPlayer.position);
                         decideToCutInLine();
                         return;
                     }
@@ -1045,7 +1077,7 @@
     // ============================================
 
     function cutInLine() {
-        if (!waitingForThinkChoice) return;
+        if (!waitingForThinkChoice || !movementState) return;
         // get players
         const attackPlayer = getCurrentPlayer();
         console.log("waiting for think choice: " + waitingForThinkChoice);
@@ -1076,7 +1108,7 @@
             gameMessage.textContent +=
                     `${attackPlayer.name} does not roll high enough to cut in line with ${defendPlayer.name}.`;
         }
-
+        // reset html elements and gamestate variables
         waitingForThinkChoice = false;
         cutInLineDefendPlayer = null;
 
@@ -1089,6 +1121,7 @@
             movementTimer = null;
         }
         isMoving = false;
+        movementState = null;
         drawPlayers();
         updateUI();
         finishTurn();
@@ -1275,6 +1308,7 @@
             gameMessage.textContent =
                 `${getCurrentPlayer().name} does not cut in line.`;
             updateUI();
+            resumeMovement();
         }
     );
 
