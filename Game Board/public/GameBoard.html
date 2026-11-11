@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Get to the Guillotine</title>
+
+    <link rel="stylesheet" href="GameBoard.css">
+</head>
+
+<body>
+
+    <main class="game">
+
+        <!-- =====================================
+             HEADER
+        ====================================== -->
+
+        <header class="game-header">
+
+            <div class="title-area">
+                <h1>GET TO THE GUILLOTINE</h1>
+                <p class="tagline">A Revolutionary Game</p>
+            </div>
+
+            <nav class="game-menu">
+
+                <button id="chatButton" type="button">
+                    Chatroom
+                </button>
+
+                <button id="rulesButton" type="button">
+                    Game Rules
+                </button>
+
+                <button id="leaderboardButton" type="button">
+                    Leader Boards
+                </button>
+
+            </nav>
+
+        </header>
+
+
+        <!-- =====================================
+             GAME RULES DROPDOWN
+        ====================================== -->
+
+        <section id="rulesPanel" class="rules-panel hidden">
+
+            <button
+                id="closeRules"
+                class="rules-close"
+                type="button"
+                aria-label="Close game rules"
+            >
+                &times;
+            </button>
+
+            <p class="rules-eyebrow">
+                GET TO THE GUILLOTINE • GAME GUIDE
+            </p>
+
+            <h2>PLAYER MECHANICS</h2>
+
+            <p class="rules-tagline">
+                Every turn brings you closer to the blade!
+            </p>
+
+            <div class="rules-content">
+
+                <article class="rule-item">
+
+                    <div class="rule-icon">🎲</div>
+
+                    <div>
+                        <h3>1. Roll the Dice</h3>
+
+                        <p>
+                            Roll the dice on your turn to determine
+                            how far you can travel along the board.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="rule-item">
+
+                    <div class="rule-icon">👣</div>
+
+                    <div>
+                        <h3>2. Advance Along the Path</h3>
+
+                        <p>
+                            Move your character forward according
+                            to your roll and prepare for whatever
+                            awaits on the road to the guillotine.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="rule-item">
+
+                    <div class="rule-icon">🪙</div>
+
+                    <div>
+                        <h3>3. Collect and Strategize</h3>
+
+                        <p>
+                            Gather coins, navigate dangerous
+                            spaces, and use your choices to gain
+                            an advantage.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="rule-item">
+
+                    <div class="rule-icon">⚔️</div>
+
+                    <div>
+                        <h3>4. Outmaneuver Your Rivals</h3>
+
+                        <p>
+                            Compete against the other players,
+                            interfere with their progress, and
+                            race to the finish.
+                        </p>
+                    </div>
+
+                </article>
+
+            </div>
+
+            <p class="rules-footer">
+                SURVIVE THE REVOLUTION. OUTSMART YOUR RIVALS.
+                AVOID THE BLADE.
+            </p>
+
+        </section>
+
+
+        <!-- =====================================
+             GAME BOARD
+        ====================================== -->
+
+        <section class="board-section">
+
+            <div class="board-wrapper">
+
+                <svg
+                    id="gameBoard"
+                    class="game-board"
+                    viewBox="0 0 3000 900"
+                    preserveAspectRatio="xMidYMid meet"
+                    role="img"
+                    aria-label="Get to the Guillotine game board"
+                >
+
+                    <!-- Board background -->
+
+                    <rect
+                        class="board-background"
+                        x="0"
+                        y="0"
+                        width="3000"
+                        height="900"
+                    />
+
+
+                    <!-- Line of sight connections -->
+
+                    <g id="lineOfSightLayer"></g>
+
+
+                    <!-- Main movement path -->
+
+                    <g id="movementPathLayer"></g>
+
+
+                    <!-- Dark Alley shortcut paths -->
+
+                    <g id="darkAlleyPathLayer"></g>
+
+
+                    <!-- Main board spaces -->
+
+                    <g id="spaceLayer"></g>
+
+
+                    <!-- Think spaces -->
+
+                    <g id="thinkSpaceLayer"></g>
+
+
+                    <!-- Dark Alley spaces -->
+
+                    <g id="darkAlleySpaceLayer"></g>
+
+
+                    <!-- Player characters -->
+
+                    <g id="playerLayer"></g>
+
+                </svg>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             BOTTOM GAME CONTROLS
+        ====================================== -->
+
+        <section class="game-controls">
+
+
+            <!-- CURRENT PLAYER -->
+
+            <section class="current-player-panel">
+
+                <h3>CURRENT TURN</h3>
+
+                <div id="currentPlayerDisplay">
+                    Player 1
+                </div>
+
+                <p id="turnMessage">
+                    5 coins
+                </p>
+
+            </section>
+
+
+            <!-- PLAYER LIST -->
+
+            <section class="player-list-panel">
+
+                <h3>PLAYERS</h3>
+
+                <div id="playerList"></div>
+
+            </section>
+
+
+            <!-- DICE -->
+
+            <section class="dice-panel">
+
+                <h3>DICE</h3>
+
+                <div class="dice-display">
+
+                    <div id="die1">-</div>
+
+                    <div id="die2">-</div>
+
+                </div>
+
+                <p id="diceMode">
+                    TWO DICE
+                </p>
+
+            </section>
+
+
+            <!-- ROLL CONTROLS -->
+
+            <section class="roll-panel">
+
+                <button id="rollButton" type="button">
+                    ROLL DICE
+                </button>
+
+                <p id="gameMessage">
+                    Player 1 begins the revolution!
+                </p>
+
+            </section>
+
+        </section>
+
+
+        <!-- =====================================
+             BACKGROUND MUSIC
+        ====================================== -->
+
+        <div class="music-controls">
+
+            <button id="musicToggle" type="button">
+                ♫ Play Music
+            </button>
+
+            <label for="musicVolume">
+                Volume
+            </label>
+
+            <input
+                id="musicVolume"
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value="0.25"
+            >
+
+        </div>
+
+        <audio id="backgroundMusic" loop preload="auto">
+
+            <source
+                src="audio/tavern-music.mp3"
+                type="audio/mpeg"
+            >
+
+        </audio>
+
+
+        <!-- =====================================
+             THINK SPACE CHOICE
+        ====================================== -->
+
+        <section id="thinkChoicePanel" class="hidden">
+
+            <h2 id="thinkChoiceTitle">
+                Choose Your Route
+            </h2>
+
+            <p id="thinkChoiceDescription">
+                Will you take the safe route or risk the
+                Dark Alley?
+            </p>
+
+            <button id="safeRouteButton" type="button">
+                Take the Safe Route
+            </button>
+
+            <button id="darkAlleyButton" type="button">
+                Enter the Dark Alley
+            </button>
+
+        </section>
+
+
+        <!-- =====================================
+             PLAYER COLLISION CHOICE
+        ====================================== -->
+
+        <section id="playerCollisionPanel" class="hidden">
+
+            <h2 id="playerCollisionTitle">
+                Off with their head or spare them?
+            </h2>
+
+            <p id="playerCollisionDescription">
+                You have landed on the same space as another
+                player. You may kill them, sending them to
+                the beginning, or spare them.
+            </p>
+
+            <button
+                id="playerCollisionAttackButton"
+                type="button"
+            >
+                Kill the player
+            </button>
+
+            <button
+                id="playerCollisionIgnoreButton"
+                type="button"
+            >
+                Spare the player
+            </button>
+
+        </section>
+
+
+        <!-- =====================================
+             CUT IN LINE CHOICE
+        ====================================== -->
+
+        <section id="cutInLinePanel" class="hidden">
+
+            <h2 id="cutInLineTitle">
+                Cut in line?
+            </h2>
+
+            <p id="cutInLineDescription">
+                You are within line of sight of another
+                player. You may spend a coin to attempt
+                switching positions, or ignore them and
+                continue along your path.
+            </p>
+
+            <button
+                id="cutInLineAttackButton"
+                type="button"
+            >
+                Cut in line
+            </button>
+
+            <button
+                id="cutInLineIgnoreButton"
+                type="button"
+            >
+                Ignore the player
+            </button>
+
+        </section>
+
+
+        <!-- =====================================
+             GAME OVER
+        ====================================== -->
+
+        <section id="gameOverPanel" class="hidden">
+
+            <h2>THE REVOLUTION IS OVER!</h2>
+
+            <p id="winnerText"></p>
+
+            <button id="restartButton" type="button">
+                PLAY AGAIN
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================
+         JAVASCRIPT
+    ====================================== -->
+
+    <script src="GameBoard.js"></script>
+
+</body>
+
+</html>

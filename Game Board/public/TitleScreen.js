@@ -42,6 +42,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const message = $("message");
     const lobbyMessage = $("lobbyMessage");
 
+    const usernameInput = $("usernameInput");
+
+    function getUsername() {
+    const username = usernameInput.value.trim();
+
+    if (!username) {
+        message.textContent = "Please enter your player name.";
+        usernameInput.focus();
+        return null;
+    }
+
+    if (username.length > 16) {
+        message.textContent = "Your name must be 16 characters or fewer.";
+        usernameInput.focus();
+        return null;
+    }
+
+    return username;
+}
+
     if (typeof io === "undefined") {
         message.textContent =
             "Socket.IO did not load. Open this page through the Node.js server.";
@@ -70,24 +90,27 @@ document.addEventListener("DOMContentLoaded", () => {
             "Cannot connect to server. Use http://localhost:3000/TitleScreen.html";
     });
 
-    // HOST GAME
-
+    // HOST GAME Updated by Cailyn
     $("hostGame").onclick = () => {
 
-        message.textContent = "Creating room...";
+    const username = getUsername();
 
-        socket.emit("host-game", response => {
+    if (!username) return;
 
-            if (!response?.success) {
-                message.textContent =
-                    response?.message || "Could not create room.";
-                return;
-            }
+    message.textContent = "Creating room...";
 
-            roomCode = response.roomCode;
-            isHost = true;
+    socket.emit("host-game", username, response => {
 
-            enterLobby();
+        if (!response?.success) {
+            message.textContent =
+                response?.message || "Could not create room.";
+            return;
+        }
+
+        roomCode = response.roomCode;
+        isHost = true;
+
+        enterLobby();
         });
     };
 
@@ -107,27 +130,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
     $("confirmJoin").onclick = () => {
 
-        const code = $("roomCodeInput").value.trim();
+    const username = getUsername();
 
-        if (!code) {
-            message.textContent = "Enter a room code.";
+    if (!username) return;
+
+    const code = $("roomCodeInput").value.trim();
+
+    if (!code) {
+        message.textContent = "Enter a room code.";
+        return;
+    }
+
+    socket.emit("join-game", {
+        username,
+        roomCode: code
+    }, response => {
+
+        if (!response?.success) {
+            message.textContent =
+                response?.message || "Could not join room.";
             return;
         }
 
-        socket.emit("join-game", code, response => {
+        roomCode = response.roomCode;
+        isHost = false;
 
-            if (!response?.success) {
-                message.textContent =
-                    response?.message || "Could not join room.";
-                return;
-            }
-
-            roomCode = response.roomCode;
-            isHost = false;
-
-            enterLobby();
-        });
-    };
+        enterLobby();
+    });
+};
 
     // OPEN LOBBY
 
@@ -228,18 +258,38 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // LEAVE LOBBY
+$("leaveLobby").onclick = () => {
 
-    $("leaveLobby").onclick = () => {
+    lobbyMessage.textContent = "Leaving room...";
 
-        socket.emit("leave-room");
+    $("leaveLobby").disabled = true;
+
+    socket.emit("leave-room", response => {
+
+        $("leaveLobby").disabled = false;
+
+        if (!response?.success) {
+            lobbyMessage.textContent =
+                "Could not leave the room. Please try again.";
+            return;
+        }
 
         roomCode = "";
+        isHost = false;
         selected = null;
         ready = false;
+        players = [];
+
+        $("playerList").replaceChildren();
+        $("roomCode").textContent = "";
+
+        lobbyMessage.textContent = "";
+        message.textContent = "";
 
         lobby.classList.add("hidden");
         title.classList.remove("hidden");
-    };
+    });
+};
 
     // COPY ROOM CODE
 
@@ -267,8 +317,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const li = document.createElement("li");
 
             const name = document.createElement("span");
+
             name.textContent =
                 (player.isHost ? "HOST · " : "") +
+                    player.name +
+                    " — " +
                 (player.character || "Choosing character");
 
             const status = document.createElement("span");

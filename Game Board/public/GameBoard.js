@@ -36,25 +36,26 @@
         "#b85b30"
     ];
 
-    // Space numbers here are zero-based.
-    // Space 0 is the start; space 63 is the finish.
+    // Space numbers are zero-based.
+    // No Angry Mob spaces appear in the opening stretch.
+
     const COIN_SPACES = new Set([
-        5, 10, 17, 23, 30, 38, 45, 52, 58
+        8, 15, 23, 30, 39, 47, 55
     ]);
 
     const ANGRY_MOB_SPACES = new Set([
-        7, 14, 21, 28, 35, 42, 49, 55, 60
+        17, 27, 37, 46, 54, 58, 59, 60, 61, 62
     ]);
 
+    // Think spaces replace ordinary spaces.
     const THINK_SPACES = new Set([
-        12, 26, 40, 50
+        13, 32, 48
     ]);
 
     const ALLEY_LENGTH = 3;
-
     const CUT_IN_LINE_COST = 1;
 
-    var connections = []; // array of spaces that have line of sight. filled in drawlinesofsight func
+    var connections = [];
 
     // ============================================
     // HTML ELEMENTS
@@ -122,19 +123,37 @@
     const darkAlleyButton =
         document.getElementById("darkAlleyButton");
 
-    // player collision html elements
-    const playerCollisionPanel = document.getElementById("playerCollisionPanel");
-    const playerCollisionTitle = document.getElementById("playerCollisionTitle");
-    const playerCollisionDescription = document.getElementById("playerCollisionDescription");
-    const playerCollisionAttackButton = document.getElementById("playerCollisionAttackButton");
-    const playerCollisionIgnoreButton = document.getElementById("playerCollisionIgnoreButton");
+    // Player collision HTML elements
+    const playerCollisionPanel =
+        document.getElementById("playerCollisionPanel");
 
-    // cutting in line html elements
-    const cutInLinePanel = document.getElementById("cutInLinePanel");
-    const cutInLineTitle = document.getElementById("cutInLineTitle");
-    const cutInLineDescription = document.getElementById("cutInLineDescription");
-    const cutInLineAttackButton = document.getElementById("cutInLineAttackButton");
-    const cutInLineIgnoreButton = document.getElementById("cutInLineIgnoreButton");
+    const playerCollisionTitle =
+        document.getElementById("playerCollisionTitle");
+
+    const playerCollisionDescription =
+        document.getElementById("playerCollisionDescription");
+
+    const playerCollisionAttackButton =
+        document.getElementById("playerCollisionAttackButton");
+
+    const playerCollisionIgnoreButton =
+        document.getElementById("playerCollisionIgnoreButton");
+
+    // Cutting in line HTML elements
+    const cutInLinePanel =
+        document.getElementById("cutInLinePanel");
+
+    const cutInLineTitle =
+        document.getElementById("cutInLineTitle");
+
+    const cutInLineDescription =
+        document.getElementById("cutInLineDescription");
+
+    const cutInLineAttackButton =
+        document.getElementById("cutInLineAttackButton");
+
+    const cutInLineIgnoreButton =
+        document.getElementById("cutInLineIgnoreButton");
 
     const gameOverPanel =
         document.getElementById("gameOverPanel");
@@ -172,6 +191,10 @@
         return;
     }
 
+    // ============================================
+    // PLAYER CLASS
+    // ============================================
+
     class Player {
         constructor(id) {
             this.id = id;
@@ -199,9 +222,7 @@
     let gameOver = false;
 
     let movementTimer = null;
-
     let cutInLineDefendPlayer = null;
-    
     let movementState = null;
 
     // ============================================
@@ -211,7 +232,10 @@
     const SVG_NS = "http://www.w3.org/2000/svg";
 
     function createSvgElement(tag, attributes = {}) {
-        const element = document.createElementNS(SVG_NS, tag);
+        const element = document.createElementNS(
+            SVG_NS,
+            tag
+        );
 
         Object.entries(attributes).forEach(([key, value]) => {
             element.setAttribute(key, value);
@@ -240,60 +264,107 @@
     }
 
     // ============================================
-    // CREATE THE 64-SPACE BOARD
+    // CREATE THE CUSTOM SPIRAL BOARD
     // ============================================
 
     function createBoardSpaces() {
         boardSpaces = [];
 
-        const columns = 8;
+        /*
+         * The path winds around the board and gradually
+         * spirals inward, like the hand-drawn design.
+         * It has one entrance at START and one continuous
+         * main route.
+         */
+
+        const grid = [];
         const rows = 8;
-
-        const left = 110;
-        const right = 2890;
-        const top = 100;
-        const bottom = 800;
-
-        const horizontalGap =
-            (right - left) / (columns - 1);
-
-        const verticalGap =
-            (bottom - top) / (rows - 1);
+        const columns = 9;
 
         for (let row = 0; row < rows; row++) {
+            grid[row] = [];
+
             for (let column = 0; column < columns; column++) {
-                const actualColumn =
-                    row % 2 === 0
-                        ? column
-                        : columns - 1 - column;
-
-                const number = row * columns + column;
-
-                const x = left + actualColumn * horizontalGap;
-                const y = top + row * verticalGap;
-
-                let type = "normal";
-
-                if (number === 0) {
-                    type = "start";
-                } else if (number === TOTAL_SPACES - 1) {
-                    type = "finish";
-                } else if (COIN_SPACES.has(number)) {
-                    type = "coin";
-                } else if (ANGRY_MOB_SPACES.has(number)) {
-                    type = "angryMob";
-                } else if (THINK_SPACES.has(number)) {
-                    type = "think";
-                }
-
-                boardSpaces.push({
-                    number,
-                    x,
-                    y,
-                    type
-                });
+                grid[row][column] = { row, column };
             }
         }
+
+        const route = [];
+
+        let top = 0;
+        let bottom = rows - 1;
+        let left = 0;
+        let right = columns - 1;
+
+        while (top <= bottom && left <= right) {
+            for (let col = left; col <= right; col++) {
+                route.push(grid[top][col]);
+            }
+
+            top++;
+
+            for (let row = top; row <= bottom; row++) {
+                route.push(grid[row][right]);
+            }
+
+            right--;
+
+            if (top <= bottom) {
+                for (let col = right; col >= left; col--) {
+                    route.push(grid[bottom][col]);
+                }
+
+                bottom--;
+            }
+
+            if (left <= right) {
+                for (let row = bottom; row >= top; row--) {
+                    route.push(grid[row][left]);
+                }
+
+                left++;
+            }
+        }
+
+        const leftEdge = 145;
+        const rightEdge = 2855;
+        const topEdge = 105;
+        const bottomEdge = 795;
+
+        const xGap =
+            (rightEdge - leftEdge) / (columns - 1);
+
+        const yGap =
+            (bottomEdge - topEdge) / (rows - 1);
+
+        route.slice(0, TOTAL_SPACES).forEach((cell, number) => {
+            let type = "normal";
+
+            if (number === 0) {
+                type = "start";
+            } else if (number === TOTAL_SPACES - 1) {
+                type = "finish";
+            } else if (THINK_SPACES.has(number)) {
+                type = "think";
+            } else if (ANGRY_MOB_SPACES.has(number)) {
+                type = "angryMob";
+            } else if (COIN_SPACES.has(number)) {
+                type = "coin";
+            }
+
+            boardSpaces.push({
+                number,
+                x: leftEdge + cell.column * xGap,
+                y: topEdge + cell.row * yGap,
+                type,
+                colorStage: Math.min(
+                    6,
+                    Math.floor(
+                        (number / (TOTAL_SPACES - 1)) * 7
+                    )
+                )
+            });
+        });
     }
 
     // ============================================
@@ -364,7 +435,7 @@
                 cx: space.x,
                 cy: space.y,
                 r: SPACE_RADIUS,
-                class: "board-space"
+                class: `board-space region-${space.colorStage}`
             })
         );
 
@@ -433,7 +504,7 @@
                 cx: space.x,
                 cy: space.y,
                 r: SPACE_RADIUS,
-                class: "board-space coin-space"
+                class: `board-space coin-space region-${space.colorStage}`
             })
         );
 
@@ -441,13 +512,12 @@
             group,
             space.x,
             space.y,
-            "C",
-            "coin-space-label"
+            "✦",
+            "coin-symbol"
         );
 
         spaceLayer.appendChild(group);
 
-        // Small number label below the coin symbol.
         addText(
             group,
             space.x,
@@ -465,7 +535,7 @@
                 cx: space.x,
                 cy: space.y,
                 r: SPACE_RADIUS,
-                class: "board-space angry-mob-space"
+                class: `board-space mob-space region-${space.colorStage}`
             })
         );
 
@@ -483,17 +553,27 @@
     function drawThinkSpace(space) {
         const group = createSvgElement("g");
 
-        const points = [
-            `${space.x},${space.y - SPACE_RADIUS}`,
-            `${space.x + SPACE_RADIUS},${space.y}`,
-            `${space.x},${space.y + SPACE_RADIUS}`,
-            `${space.x - SPACE_RADIUS},${space.y}`
-        ].join(" ");
+        const points = [];
+
+        for (let i = 0; i < 16; i++) {
+            const angle =
+                (Math.PI * 2 * i) / 16 - Math.PI / 2;
+
+            const radius =
+                i % 2 === 0
+                    ? SPACE_RADIUS + 7
+                    : SPACE_RADIUS - 2;
+
+            points.push(
+                `${space.x + Math.cos(angle) * radius},` +
+                `${space.y + Math.sin(angle) * radius}`
+            );
+        }
 
         group.appendChild(
             createSvgElement("polygon", {
-                points,
-                class: "think-space-shape"
+                points: points.join(" "),
+                class: `board-space shortcut-space region-${space.colorStage}`
             })
         );
 
@@ -501,8 +581,8 @@
             group,
             space.x,
             space.y,
-            "?",
-            "think-space-label"
+            "THINK",
+            "shortcut-symbol"
         );
 
         thinkSpaceLayer.appendChild(group);
@@ -531,20 +611,38 @@
 
             const branchSpaces = [];
 
-            // Give each branch a visible offset.
-            const direction = startNumber % 2 === 0 ? -1 : 1;
+            // Offset the three shortcut spaces perpendicular
+            // to the main route so the branch is visible.
+
+            const dx = rejoin.x - start.x;
+            const dy = rejoin.y - start.y;
+            const length = Math.hypot(dx, dy) || 1;
+
+            const perpendicularX = -dy / length;
+            const perpendicularY = dx / length;
+
+            const centerX = BOARD_WIDTH / 2;
+            const centerY = BOARD_HEIGHT / 2;
+
+            const towardCenter =
+                (centerX - start.x) * perpendicularX +
+                (centerY - start.y) * perpendicularY;
+
+            const direction = towardCenter >= 0 ? 1 : -1;
+            const offset = 78;
 
             for (let i = 1; i <= ALLEY_LENGTH; i++) {
                 const progress = i / (ALLEY_LENGTH + 1);
 
                 const x =
                     start.x +
-                    (rejoin.x - start.x) * progress;
+                    dx * progress +
+                    perpendicularX * offset * direction;
 
                 const y =
                     start.y +
-                    (rejoin.y - start.y) * progress +
-                    direction * 65;
+                    dy * progress +
+                    perpendicularY * offset * direction;
 
                 branchSpaces.push({
                     x,
@@ -556,7 +654,8 @@
             const points = [
                 `${start.x},${start.y}`,
                 ...branchSpaces.map(
-                    alleySpace => `${alleySpace.x},${alleySpace.y}`
+                    alleySpace =>
+                        `${alleySpace.x},${alleySpace.y}`
                 ),
                 `${rejoin.x},${rejoin.y}`
             ].join(" ");
@@ -586,8 +685,8 @@
                     group,
                     alleySpace.x,
                     alleySpace.y,
-                    "DARK",
-                    "dark-alley-label"
+                    `D${alleySpace.number}`,
+                    "dark-alley-symbol"
                 );
 
                 darkAlleySpaceLayer.appendChild(group);
@@ -618,13 +717,14 @@
             [34, 45],
             [39, 48],
             [44, 53],
-            [51, 60]
-            // below are debug connections for testing. remove.
-            ,[3, 14],
+            [51, 60],
+
+            // Debug connections for testing.
+            [3, 14],
             [4, 13],
             [5, 12],
-            [6,11],
-            [7,10] 
+            [6, 11],
+            [7, 10]
         ];
 
         connections.forEach(([from, to]) => {
@@ -644,6 +744,7 @@
             );
         });
     }
+
     // ============================================
     // CREATE SIX PLAYERS
     // ============================================
@@ -665,7 +766,6 @@
     // ============================================
     // DRAW PLAYER PIECES
     // ============================================
-
 
     function drawPlayers() {
         clearLayer(playerLayer);
@@ -713,7 +813,6 @@
             });
         });
     }
-
 
     // ============================================
     // UPDATE THE UI
@@ -809,26 +908,27 @@
 
         updateUI();
         resumeMovement();
-}
+    }
 
     function resumeMovement() {
-
         if (!movementState || waitingForThinkChoice) return;
 
-        // prevent multiple movement intervals
+        // Prevent multiple movement intervals.
         if (movementTimer !== null) {
             clearInterval(movementTimer);
         }
 
         movementTimer = window.setInterval(() => {
-
             if (waitingForThinkChoice) {
                 clearInterval(movementTimer);
                 movementTimer = null;
                 return;
             }
 
-            if (movementState.spacesMoved >= movementState.spacesToMove) {
+            if (
+                movementState.spacesMoved >=
+                movementState.spacesToMove
+            ) {
                 clearInterval(movementTimer);
                 movementTimer = null;
 
@@ -840,7 +940,10 @@
                 return;
             }
 
-            if (movementState.player.position < TOTAL_SPACES - 1) {
+            if (
+                movementState.player.position <
+                TOTAL_SPACES - 1
+            ) {
                 movementState.player.position++;
             }
 
@@ -850,7 +953,7 @@
 
             checkLineOfSight(movementState.player);
 
-            // immediately stop the interval if an opponent is detected
+            // Immediately stop if an opponent is detected.
             if (waitingForThinkChoice) {
                 clearInterval(movementTimer);
                 movementTimer = null;
@@ -912,8 +1015,10 @@
 
                 break;
         }
+
         playerCollision(player);
         checkLineOfSight(player);
+
         drawPlayers();
         updateUI();
         finishTurn();
@@ -975,13 +1080,14 @@
 
         if (alley) {
             /*
-             * Current implementation: choosing the Dark Alley
-             * advances the player to its rejoin point.
+             * Choosing the Dark Alley advances the player
+             * to its rejoin point.
              *
-             * The individual alley squares are currently
-             * decorative. Landing penalties on those squares
-             * will require a separate movement mechanic.
+             * The three alley squares are currently visual
+             * spaces; the shortcut moves directly to the
+             * rejoining point.
              */
+
             player.position = alley.rejoinNumber;
 
             gameMessage.textContent =
@@ -999,116 +1105,143 @@
         finishTurn();
     }
 
-
     // ===============================================
-    // checking player collision
+    // CHECK PLAYER COLLISION
     // ===============================================
 
     function playerCollision(player) {
         players.forEach(enemyPlayer => {
-            // check if player isn't in starting area
-            // and if they share a position with another player (except themselves)
-            if ((player.position > SAFE_ZONE_SPACES) && 
-                (player.position == enemyPlayer.position) && 
-                (player.id != enemyPlayer.id)) {
-                // pop-up window for killing or not
-                // for right now, enemy is just killed
-                enemyPlayer.position = 0;
-                gameMessage.textContent =
-                    `${player.name} chopped off ${enemyPlayer.name}'s head! Off to the start for them!`;
+            // Check if the player is outside the starting
+            // area and shares a position with another player.
 
+            if (
+                player.position > SAFE_ZONE_SPACES &&
+                player.position === enemyPlayer.position &&
+                player.id !== enemyPlayer.id
+            ) {
+                // The opposing player is sent back to START.
+
+                enemyPlayer.position = 0;
+
+                gameMessage.textContent =
+                    `${player.name} chopped off ${enemyPlayer.name}'s head! ` +
+                    "Off to the start for them!";
             }
         });
     }
 
-    // =================================================
-    // checking player line of sight
-    // =================================================
+    // ===============================================
+    // CHECK PLAYER LINE OF SIGHT
+    // ===============================================
 
     function checkLineOfSight(player) {
-        // called to check for line of sight first in movePlayer
-        // and in cutInLine, where calling it from there will return the defending player
+        // Called during movement and after landing.
+        // It checks whether another player is connected
+        // to the current player's position.
+
         if (waitingForThinkChoice) return;
+
         for (let i = 0; i < connections.length; i++) {
-            // check if players position is the same as any of the spaces with line of sight
             const first = connections[i][0];
             const second = connections[i][1];
-            
-            if ((player.position == first) || (player.position == second)) {
+
+            if (
+                player.position === first ||
+                player.position === second
+            ) {
                 for (let j = 0; j < players.length; j++) {
-                    // check other player positions to see if they have LOS with current player
-                    // and if they aren't in the same position
                     const enemyPlayer = players[j];
-                    if ((player.position != enemyPlayer.position) && 
-                       ((enemyPlayer.position == first) || (enemyPlayer.position == second))) {
+
+                    if (
+                        player.position !== enemyPlayer.position &&
+                        (
+                            enemyPlayer.position === first ||
+                            enemyPlayer.position === second
+                        )
+                    ) {
                         cutInLineDefendPlayer = enemyPlayer;
-                        console.log("attackplayerpos: " + player.position);
-                        console.log("defendplayerpos: " + enemyPlayer.position);
+
+                        console.log(
+                            "attackplayerpos: " + player.position
+                        );
+
+                        console.log(
+                            "defendplayerpos: " + enemyPlayer.position
+                        );
+
                         decideToCutInLine();
                         return;
                     }
-                };
-            } 
-        };
+                }
+            }
+        }
     }
 
     // ============================================
-    // ask player if they wish to cut in line
+    // ASK PLAYER IF THEY WISH TO CUT IN LINE
     // ============================================
-    function decideToCutInLine() {
 
+    function decideToCutInLine() {
         if (waitingForThinkChoice) return;
+
         waitingForThinkChoice = true;
-        
+
         if (cutInLineDescription) {
             cutInLineDescription.textContent =
-                `You are within line of sight of ${cutInLineDefendPlayer.name}. You may spend a coin to attempt switching positions, or ignore them, and continue along your path.`;
+                `You are within line of sight of ` +
+                `${cutInLineDefendPlayer.name}. You may spend a coin ` +
+                `to attempt switching positions, or ignore them, ` +
+                `and continue along your path.`;
         }
-        
+
         if (cutInLinePanel) {
             cutInLinePanel.classList.remove("hidden");
         }
-        
+
         updateUI();
     }
 
     // ============================================
-    // cut in line
+    // CUT IN LINE
     // ============================================
 
     function cutInLine() {
         if (!waitingForThinkChoice || !movementState) return;
-        // get players
+
         const attackPlayer = getCurrentPlayer();
-        console.log("waiting for think choice: " + waitingForThinkChoice);
         const defendPlayer = cutInLineDefendPlayer;
 
-        // deduct cost for cutting in line
+        // Deduct the cost for cutting in line.
         attackPlayer.coins -= CUT_IN_LINE_COST;
 
         console.log("attackplayerpos: " + attackPlayer.position);
         console.log("defendplayerpos: " + defendPlayer.position);
 
-
-        // have them roll
+        // Both players roll two dice.
         const attackPlayerRoll = rollDie() + rollDie();
         const defendPlayerRoll = rollDie() + rollDie();
-        gameMessage.textContent =
-                    `${attackPlayer.name} rolls ${attackPlayerRoll}. ${defendPlayer.name} rolls ${defendPlayerRoll}. `;
 
-        // check rolls
+        gameMessage.textContent =
+            `${attackPlayer.name} rolls ${attackPlayerRoll}. ` +
+            `${defendPlayer.name} rolls ${defendPlayerRoll}. `;
+
+        // Check the rolls.
         if (attackPlayerRoll > defendPlayerRoll) {
-            // players swap position
             const attackPlayerPos = attackPlayer.position;
+
             attackPlayer.position = defendPlayer.position;
             defendPlayer.position = attackPlayerPos;
+
             gameMessage.textContent +=
-                    `${attackPlayer.name} cuts in line, switching with ${defendPlayer.name}.`;
+                `${attackPlayer.name} cuts in line, switching with ` +
+                `${defendPlayer.name}.`;
         } else {
             gameMessage.textContent +=
-                    `${attackPlayer.name} does not roll high enough to cut in line with ${defendPlayer.name}.`;
+                `${attackPlayer.name} does not roll high enough to cut in line ` +
+                `with ${defendPlayer.name}.`;
         }
-        // reset html elements and gamestate variables
+
+        // Reset HTML elements and game state variables.
         waitingForThinkChoice = false;
         cutInLineDefendPlayer = null;
 
@@ -1120,8 +1253,10 @@
             clearInterval(movementTimer);
             movementTimer = null;
         }
+
         isMoving = false;
         movementState = null;
+
         drawPlayers();
         updateUI();
         finishTurn();
@@ -1176,9 +1311,15 @@
         isMoving = false;
         waitingForThinkChoice = false;
         gameOver = false;
+        movementState = null;
+        cutInLineDefendPlayer = null;
 
         if (thinkChoicePanel) {
             thinkChoicePanel.classList.add("hidden");
+        }
+
+        if (cutInLinePanel) {
+            cutInLinePanel.classList.add("hidden");
         }
 
         if (gameOverPanel) {
@@ -1195,6 +1336,7 @@
         gameMessage.textContent =
             "Player 1 begins the revolution!";
     }
+
     // ============================================
     // MENU BUTTONS
     // ============================================
@@ -1211,9 +1353,14 @@
     // GAME RULES DROPDOWN
     // ============================================
 
-    const rulesButton = document.getElementById("rulesButton");
-    const rulesPanel = document.getElementById("rulesPanel");
-    const closeRules = document.getElementById("closeRules");
+    const rulesButton =
+        document.getElementById("rulesButton");
+
+    const rulesPanel =
+        document.getElementById("rulesPanel");
+
+    const closeRules =
+        document.getElementById("closeRules");
 
     if (rulesButton && rulesPanel) {
         rulesButton.addEventListener("click", () => {
@@ -1228,7 +1375,7 @@
     }
 
     // Close the rules panel with Escape.
-    document.addEventListener("keydown", (event) => {
+    document.addEventListener("keydown", event => {
         if (event.key === "Escape" && rulesPanel) {
             rulesPanel.classList.add("hidden");
         }
@@ -1266,47 +1413,58 @@
         "click",
         chooseDarkAlley
     );
+
     /*
     playerCollisionAttackButton?.addEventListener(
         "click",
-        // call for it here
+        // Add player collision attack behavior here.
     );
 
-    playerCollisionIgnorebutton?.addEventListener(
+    playerCollisionIgnoreButton?.addEventListener(
         "click",
-        // do nothing
+        // Add player collision ignore behavior here.
     );
     */
+
     cutInLineAttackButton?.addEventListener(
         "click",
         function() {
-            // check if player has enough coins
-            if (getCurrentPlayer().coins >= CUT_IN_LINE_COST) {
+            // Check if the player has enough coins.
+            if (
+                getCurrentPlayer().coins >= CUT_IN_LINE_COST
+            ) {
                 cutInLine();
             } else {
                 waitingForThinkChoice = false;
                 cutInLineDefendPlayer = null;
+
                 if (cutInLinePanel) {
-                cutInLinePanel.classList.add("hidden");
+                    cutInLinePanel.classList.add("hidden");
                 }
+
                 gameMessage.textContent =
-                    `${getCurrentPlayer().name} does not have enough coins to cut in line.`;
+                    `${getCurrentPlayer().name} does not have enough ` +
+                    `coins to cut in line.`;
+
                 updateUI();
+                resumeMovement();
             }
         }
     );
 
     cutInLineIgnoreButton?.addEventListener(
         "click",
-        // do nothing
         function() {
             waitingForThinkChoice = false;
             cutInLineDefendPlayer = null;
+
             if (cutInLinePanel) {
                 cutInLinePanel.classList.add("hidden");
             }
+
             gameMessage.textContent =
                 `${getCurrentPlayer().name} does not cut in line.`;
+
             updateUI();
             resumeMovement();
         }
@@ -1349,30 +1507,42 @@
         document.getElementById("musicVolume");
 
     if (backgroundMusic && musicToggle && musicVolume) {
-        backgroundMusic.volume = Number(musicVolume.value);
+        backgroundMusic.volume =
+            Number(musicVolume.value);
 
         musicToggle.addEventListener("click", async () => {
             if (backgroundMusic.paused) {
                 try {
                     await backgroundMusic.play();
-                    musicToggle.textContent = "♫ Turn Music Off";
+
+                    musicToggle.textContent =
+                        "♫ Turn Music Off";
+
                 } catch (error) {
-                    console.error("Music could not play:", error);
+                    console.error(
+                        "Music could not play:",
+                        error
+                    );
+
                     gameMessage.textContent =
                         "Music could not start. Check the audio file path.";
                 }
             } else {
                 backgroundMusic.pause();
-                musicToggle.textContent = "♫ Play Music";
+
+                musicToggle.textContent =
+                    "♫ Play Music";
             }
         });
 
         musicVolume.addEventListener("input", () => {
-            backgroundMusic.volume = Number(musicVolume.value);
+            backgroundMusic.volume =
+                Number(musicVolume.value);
         });
 
         backgroundMusic.addEventListener("ended", () => {
-            musicToggle.textContent = "♫ Play Music";
+            musicToggle.textContent =
+                "♫ Play Music";
         });
     }
 

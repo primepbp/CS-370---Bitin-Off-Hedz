@@ -1554,4 +1554,109 @@ body {
     font-size: 20px;
 }
 
+/* ============================================
+   CUSTOM SPIRAL BOARD COLOR PROGRESSION
+============================================ */
+
+.board-space.region-0 { fill: #12b96c; }
+.board-space.region-1 { fill: #58c85c; }
+.board-space.region-2 { fill: #a3c94d; }
+.board-space.region-3 { fill: #d8c447; }
+.board-space.region-4 { fill: #e7a13d; }
+.board-space.region-5 { fill: #e56d36; }
+.board-space.region-6 { fill: #df4545; }
+
+/* Start */
+.board-space.start-space {
+    fill: #159b62;
+    stroke: #174b35;
+    stroke-width: 5;
+}
+
+/* Number labels */
+.board-space-label {
+    fill: #211a17;
+    font-family: Georgia, serif;
+    font-size: 17px;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+/* Coin spaces */
+.board-space.coin-space {
+    fill: #f1c34e;
+    stroke: #8c641c;
+    stroke-width: 4;
+}
+
+.coin-symbol {
+    fill: #8a5b12;
+    font-size: 25px;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+/* Angry Mob spaces */
+.board-space.mob-space {
+    fill: #d71920;
+    stroke: #650e16;
+    stroke-width: 4;
+}
+
+.angry-mob-label {
+    fill: #fff0df;
+    font-size: 15px;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+/* Think spaces */
+.board-space.shortcut-space {
+    fill: #aaa9a4;
+    stroke: #393633;
+    stroke-width: 4;
+}
+
+.shortcut-symbol {
+    fill: #292522;
+    font-size: 12px;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+/* Dark Alley */
+.dark-alley-space {
+    fill: #211b1d;
+    stroke: #f0c64d;
+    stroke-width: 4;
+}
+
+.dark-alley-symbol {
+    fill: #f7e6bd;
+    font-size: 15px;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+/* Movement paths */
+.movement-path {
+    stroke: #342820;
+    stroke-width: 7;
+    fill: none;
+    stroke-linecap: round;
+}
+
+.dark-alley-path {
+    stroke: #211b1d;
+    stroke-width: 7;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
 }
