@@ -6,7 +6,7 @@
     // Local pass-and-play board game
     // ============================================
 
-    const TOTAL_SPACES = 64;
+    const TOTAL_SPACES = 67;
     const MAX_PLAYERS = 6;
 
     const PLAYER_IMAGES = [
