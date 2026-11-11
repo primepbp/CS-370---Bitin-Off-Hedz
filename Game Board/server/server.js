@@ -11,6 +11,8 @@ const io = new Server(server);
 
 const PORT = 3000;
 const MAX_PLAYERS = 6;
+//(Cailyn) Added line 15
+const MAX_USERNAME_LENGTH = 16;
 
 const rooms = new Map();
 
@@ -22,9 +24,20 @@ const CHARACTERS = [
     "Headless Horseman",
     "Queen of Hearts"
 ];
+//(Cailyn) Added to trim extra spaces and limits names to 16 characters.
+function cleanUsername(value) {
+    if (typeof value !== "string") return "";
+
+    return value
+        .trim()
+        .replace(/\s+/g, " ")
+        .replace(/[<>]/g, "")
+        .slice(0, MAX_USERNAME_LENGTH);
+}
 
 // Serve files from the main Game Board folder.
-app.use(express.static(path.join(__dirname, "..")));
+//app.use(express.static(path.join(__dirname, "..")));
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 app.get("/health", (req, res) => {
     res.json({ status: "GTTG server is running" });
@@ -48,10 +61,11 @@ function generateRoomCode() {
     return code;
 }
 
-// Send only public player information.
+// Updated by Cailyn. Send only public player information.
 function getPublicPlayers(room) {
     return room.players.map(player => ({
         id: player.id,
+        name: player.name,
         character: player.character,
         ready: player.ready,
         isHost: player.id === room.hostId
@@ -110,96 +124,124 @@ function removePlayer(socket) {
 io.on("connection", socket => {
     console.log("Player connected:", socket.id);
 
-    // HOST GAME
-    socket.on("host-game", callback => {
-        if (socket.data.roomCode) {
-            removePlayer(socket);
-        }
+    // HOST GAME Updated by Cailyn
+socket.on("host-game", (username, callback) => {
+    username = cleanUsername(username);
 
-        const code = generateRoomCode();
-
-        const room = {
-            hostId: socket.id,
-            players: [{
-                id: socket.id,
-                character: null,
-                ready: false
-            }],
-            started: false
-        };
-
-        rooms.set(code, room);
-
-        socket.join(code);
-        socket.data.roomCode = code;
-
-        console.log("Room created:", code);
-
+    if (!username) {
         if (typeof callback === "function") {
             callback({
-                success: true,
-                roomCode: code,
-                hostId: socket.id
+                success: false,
+                message: "Please enter a valid player name."
             });
         }
+        return;
+    }
 
-        updateLobby(code);
-    });
+    if (socket.data.roomCode) {
+        removePlayer(socket);
+    }
 
-    // JOIN GAME
-    socket.on("join-game", (roomCode, callback) => {
-        const code = String(roomCode || "")
-            .trim()
-            .toUpperCase();
+    const code = generateRoomCode();
 
-        const room = rooms.get(code);
-
-        if (!room || room.started) {
-            if (typeof callback === "function") {
-                callback({
-                    success: false,
-                    message: "Room not found or game already started."
-                });
-            }
-            return;
-        }
-
-        if (room.players.length >= MAX_PLAYERS) {
-            if (typeof callback === "function") {
-                callback({
-                    success: false,
-                    message: "Room is full."
-                });
-            }
-            return;
-        }
-
-        if (socket.data.roomCode) {
-            removePlayer(socket);
-        }
-
-        room.players.push({
+    const room = {
+        hostId: socket.id,
+        players: [{
             id: socket.id,
+            name: username,
             character: null,
             ready: false
+        }],
+        started: false
+    };
+
+    rooms.set(code, room);
+
+    socket.join(code);
+    socket.data.roomCode = code;
+
+    console.log(`${username} created room: ${code}`);
+
+    if (typeof callback === "function") {
+        callback({
+            success: true,
+            roomCode: code,
+            hostId: socket.id,
+            playerName: username
         });
+    }
 
-        socket.join(code);
-        socket.data.roomCode = code;
+    updateLobby(code);
+});
 
-        console.log("Player joined:", code);
+    // JOIN GAME
+socket.on("join-game", (data, callback) => {
+    const username = cleanUsername(data?.username);
 
+    const code = String(data?.roomCode || "")
+        .trim()
+        .toUpperCase();
+
+    if (!username) {
         if (typeof callback === "function") {
             callback({
-                success: true,
-                roomCode: code,
-                hostId: room.hostId
+                success: false,
+                message: "Please enter a valid player name."
             });
         }
+        return;
+    }
 
-        io.to(code).emit("player-joined");
-        updateLobby(code);
+    const room = rooms.get(code);
+
+    if (!room || room.started) {
+        if (typeof callback === "function") {
+            callback({
+                success: false,
+                message: "Room not found or game already started."
+            });
+        }
+        return;
+    }
+
+    if (room.players.length >= MAX_PLAYERS) {
+        if (typeof callback === "function") {
+            callback({
+                success: false,
+                message: "Room is full."
+            });
+        }
+        return;
+    }
+
+    if (socket.data.roomCode) {
+        removePlayer(socket);
+    }
+
+    room.players.push({
+        id: socket.id,
+        name: username,
+        character: null,
+        ready: false
     });
+
+    socket.join(code);
+    socket.data.roomCode = code;
+
+    console.log(`${username} joined room: ${code}`);
+
+    if (typeof callback === "function") {
+        callback({
+            success: true,
+            roomCode: code,
+            hostId: room.hostId,
+            playerName: username
+        });
+    }
+
+    io.to(code).emit("player-joined");
+    updateLobby(code);
+});
 
     // SELECT CHARACTER
     socket.on("select-character", data => {
@@ -298,8 +340,14 @@ io.on("connection", socket => {
     });
 
     // LEAVE ROOM
-    socket.on("leave-room", () => {
+    socket.on("leave-room", callback => {
         removePlayer(socket);
+
+    if (typeof callback === "function") {
+        callback({
+            success: true
+        });
+    }
     });
 
     // DISCONNECT

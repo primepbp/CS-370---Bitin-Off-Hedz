@@ -18,7 +18,7 @@
 
     <main>
 
-        <!-- TITLE SCREEN -->
+        <!-- TITLE SCREEN (updated[line 34-line 43] by Cailyn to now keep track of player names)-->
         <section id="titleScreen" class="screen title">
             <p class="eyebrow">A delightfully dreadful party game</p>
 
@@ -30,6 +30,17 @@
             <p class="subtitle">
                 Roll the dice. Outsmart the crowd. Keep your head.
             </p>
+
+            <div class="username-input">
+                <label for="usernameInput">Player Name</label>
+                    <input
+                    type="text"
+                    id="usernameInput"
+                    placeholder="ENTER YOUR NAME"
+                    maxlength="16"
+                    autocomplete="nickname"
+    >
+            </div>
 
             <div class="actions">
                 <button id="hostGame">HOST GAME</button>
