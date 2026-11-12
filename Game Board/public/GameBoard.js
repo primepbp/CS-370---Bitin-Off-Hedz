@@ -1,3 +1,4 @@
+
 (() => {
     "use strict";
 
@@ -6,7 +7,6 @@
     // Local pass-and-play board game
     // ============================================
 
-    const TOTAL_SPACES = 67;
     const MAX_PLAYERS = 6;
 
     const PLAYER_IMAGES = [
@@ -18,12 +18,13 @@
         "characters/HeadlessHoreman.png"
     ];
 
-    const BOARD_WIDTH = 3000;
-    const BOARD_HEIGHT = 900;
+    // Board dimensions match the SVG viewBox.
+    const BOARD_WIDTH = 1037;
+    const BOARD_HEIGHT = 585;
 
-    const SPACE_RADIUS = 27;
-    const START_SPACE_RADIUS = 36;
-    const FINISH_SPACE_RADIUS = 40;
+    const SPACE_RADIUS = 18;
+    const START_SPACE_RADIUS = 24;
+    const FINISH_SPACE_RADIUS = 30;
 
     const SAFE_ZONE_SPACES = 7;
 
@@ -36,21 +37,115 @@
         "#b85b30"
     ];
 
-    // Space numbers are zero-based.
-    // No Angry Mob spaces appear in the opening stretch.
+    /*
+     * UPDATED BOARD COORDINATES
+     *
+     * START = separate starting position.
+     * Artwork markers = positions 1 through 71.
+     * G = final destination, position 72.
+     *
+     * The special spaces are included in the route.
+     */
 
-    const COIN_SPACES = new Set([
-        8, 15, 23, 30, 39, 47, 55
-    ]);
+    const ARTWORK_SPACES = [
+        { type: "normal", x: 273, y: 68, label: "1" },
+        { type: "normal", x: 349, y: 38, label: "2" },
+        { type: "normal", x: 425, y: 68, label: "3" },
+        { type: "normal", x: 501, y: 35, label: "4" },
+        { type: "normal", x: 577, y: 72, label: "5" },
+        { type: "coin", x: 646, y: 114, label: "" },
+        { type: "normal", x: 694, y: 49, label: "7" },
+        { type: "normal", x: 773, y: 49, label: "8" },
+        { type: "normal", x: 801, y: 122, label: "9" },
+        { type: "angryMob", x: 740, y: 177, label: "" },
+        { type: "angryMob", x: 778, y: 248, label: "" },
+        { type: "think", x: 862, y: 242, label: "" },
+        { type: "angryMob", x: 990, y: 246, label: "" },
+        { type: "normal", x: 953, y: 42, label: "15" },
+        { type: "normal", x: 888, y: 80, label: "14" },
+        { type: "normal", x: 878, y: 162, label: "13" },
+        { type: "normal", x: 956, y: 178, label: "17" },
+        { type: "coin", x: 988, y: 106, label: "" },
+        { type: "normal", x: 958, y: 313, label: "19" },
+        { type: "normal", x: 1001, y: 380, label: "20" },
+        { type: "coin", x: 977, y: 454, label: "" },
+        { type: "normal", x: 1001, y: 525, label: "22" },
+        { type: "angryMob", x: 933, y: 548, label: "" },
+        { type: "normal", x: 830, y: 552, label: "25" },
+        { type: "coin", x: 756, y: 550, label: "" },
+        { type: "normal", x: 793, y: 476, label: "27" },
+        { type: "normal", x: 790, y: 398, label: "28" },
+        { type: "coin", x: 767, y: 329, label: "" },
+        { type: "angryMob", x: 707, y: 377, label: "" },
+        { type: "angryMob", x: 727, y: 456, label: "" },
+        { type: "normal", x: 682, y: 520, label: "69" },
+        { type: "normal", x: 615, y: 544, label: "68" },
+        { type: "coin", x: 546, y: 521, label: "" },
+        { type: "normal", x: 510, y: 453, label: "66" },
+        { type: "normal", x: 486, y: 385, label: "65" },
+        { type: "coin", x: 424, y: 310, label: "" },
+        { type: "normal", x: 348, y: 307, label: "63" },
+        { type: "normal", x: 286, y: 365, label: "62" },
+        { type: "think", x: 285, y: 448, label: "" },
+        { type: "normal", x: 372, y: 469, label: "60" },
+        { type: "normal", x: 442, y: 485, label: "59" },
+        { type: "normal", x: 476, y: 548, label: "58" },
+        { type: "normal", x: 405, y: 552, label: "57" },
+        { type: "coin", x: 333, y: 550, label: "" },
+        { type: "angryMob", x: 259, y: 538, label: "" },
+        { type: "normal", x: 184, y: 549, label: "54" },
+        { type: "normal", x: 205, y: 477, label: "53" },
+        { type: "angryMob", x: 133, y: 450, label: "" },
+        { type: "coin", x: 197, y: 389, label: "" },
+        { type: "normal", x: 111, y: 359, label: "46" },
+        { type: "coin", x: 46, y: 435, label: "" },
+        { type: "normal", x: 52, y: 505, label: "43" },
+        { type: "normal", x: 111, y: 526, label: "44" },
+        { type: "normal", x: 34, y: 360, label: "41" },
+        { type: "angryMob", x: 41, y: 292, label: "" },
+        { type: "normal", x: 48, y: 220, label: "39" },
+        { type: "coin", x: 131, y: 263, label: "" },
+        { type: "normal", x: 194, y: 220, label: "48" },
+        { type: "normal", x: 276, y: 218, label: "49" },
+        { type: "normal", x: 267, y: 290, label: "50" },
+        { type: "normal", x: 201, y: 307, label: "51" },
+        { type: "coin", x: 114, y: 163, label: "" },
+        { type: "coin", x: 198, y: 141, label: "" },
+        { type: "normal", x: 275, y: 145, label: "36" },
+        { type: "angryMob", x: 354, y: 126, label: "" },
+        { type: "think", x: 442, y: 136, label: "" },
+        { type: "coin", x: 523, y: 133, label: "" },
+        { type: "normal", x: 590, y: 163, label: "32" },
+        { type: "normal", x: 661, y: 192, label: "31" },
+        { type: "normal", x: 698, y: 267, label: "30" },
+        { type: "angryMob", x: 640, y: 319, label: "" }
+    ];
 
-    const ANGRY_MOB_SPACES = new Set([
-        17, 27, 37, 46, 54, 58, 59, 60, 61, 62
-    ]);
+    const TOTAL_SPACES = ARTWORK_SPACES.length + 2;
 
-    // Think spaces replace ordinary spaces.
-    const THINK_SPACES = new Set([
-        13, 32, 48
-    ]);
+    const COIN_SPACES = new Set(
+        ARTWORK_SPACES
+            .map((space, index) =>
+                space.type === "coin" ? index + 1 : -1
+            )
+            .filter(index => index >= 0)
+    );
+
+    const ANGRY_MOB_SPACES = new Set(
+        ARTWORK_SPACES
+            .map((space, index) =>
+                space.type === "angryMob" ? index + 1 : -1
+            )
+            .filter(index => index >= 0)
+    );
+
+    const THINK_SPACES = new Set(
+        ARTWORK_SPACES
+            .map((space, index) =>
+                space.type === "think" ? index + 1 : -1
+            )
+            .filter(index => index >= 0)
+    );
 
     const ALLEY_LENGTH = 3;
     const CUT_IN_LINE_COST = 1;
@@ -123,7 +218,6 @@
     const darkAlleyButton =
         document.getElementById("darkAlleyButton");
 
-    // Player collision HTML elements
     const playerCollisionPanel =
         document.getElementById("playerCollisionPanel");
 
@@ -139,7 +233,6 @@
     const playerCollisionIgnoreButton =
         document.getElementById("playerCollisionIgnoreButton");
 
-    // Cutting in line HTML elements
     const cutInLinePanel =
         document.getElementById("cutInLinePanel");
 
@@ -264,167 +357,63 @@
     }
 
     // ============================================
-    // CREATE THE CUSTOM SPIRAL BOARD
+    // CREATE BOARD SPACES FROM UPDATED ARTWORK
     // ============================================
 
     function createBoardSpaces() {
         boardSpaces = [];
 
-        /*
-         * The path winds around the board and gradually
-         * spirals inward, like the hand-drawn design.
-         * It has one entrance at START and one continuous
-         * main route.
-         */
+        // START is separate from the numbered spaces.
+        boardSpaces.push({
+            number: 0,
+            x: 104,
+            y: 78,
+            type: "start",
+            label: "START",
+            colorStage: 0
+        });
 
-        const grid = [];
-        const rows = 8;
-        const columns = 9;
-
-        for (let row = 0; row < rows; row++) {
-            grid[row] = [];
-
-            for (let column = 0; column < columns; column++) {
-                grid[row][column] = { row, column };
-            }
-        }
-
-        const route = [];
-
-        let top = 0;
-        let bottom = rows - 1;
-        let left = 0;
-        let right = columns - 1;
-
-        while (top <= bottom && left <= right) {
-            for (let col = left; col <= right; col++) {
-                route.push(grid[top][col]);
-            }
-
-            top++;
-
-            for (let row = top; row <= bottom; row++) {
-                route.push(grid[row][right]);
-            }
-
-            right--;
-
-            if (top <= bottom) {
-                for (let col = right; col >= left; col--) {
-                    route.push(grid[bottom][col]);
-                }
-
-                bottom--;
-            }
-
-            if (left <= right) {
-                for (let row = bottom; row >= top; row--) {
-                    route.push(grid[row][left]);
-                }
-
-                left++;
-            }
-        }
-
-        const leftEdge = 145;
-        const rightEdge = 2855;
-        const topEdge = 105;
-        const bottomEdge = 795;
-
-        const xGap =
-            (rightEdge - leftEdge) / (columns - 1);
-
-        const yGap =
-            (bottomEdge - topEdge) / (rows - 1);
-
-        route.slice(0, TOTAL_SPACES).forEach((cell, number) => {
-            let type = "normal";
-
-            if (number === 0) {
-                type = "start";
-            } else if (number === TOTAL_SPACES - 1) {
-                type = "finish";
-            } else if (THINK_SPACES.has(number)) {
-                type = "think";
-            } else if (ANGRY_MOB_SPACES.has(number)) {
-                type = "angryMob";
-            } else if (COIN_SPACES.has(number)) {
-                type = "coin";
-            }
-
+        ARTWORK_SPACES.forEach((artworkSpace, index) => {
             boardSpaces.push({
-                number,
-                x: leftEdge + cell.column * xGap,
-                y: topEdge + cell.row * yGap,
-                type,
+                number: index + 1,
+                x: artworkSpace.x,
+                y: artworkSpace.y,
+                type: artworkSpace.type,
+                label: artworkSpace.label,
                 colorStage: Math.min(
                     6,
                     Math.floor(
-                        (number / (TOTAL_SPACES - 1)) * 7
+                        (index / (ARTWORK_SPACES.length - 1)) * 7
                     )
                 )
             });
         });
+
+        // G is the final destination after all 71 artwork markers.
+        boardSpaces.push({
+            number: ARTWORK_SPACES.length + 1,
+            x: 546,
+            y: 280,
+            type: "finish",
+            label: "G",
+            colorStage: 6
+        });
     }
 
     // ============================================
-    // DRAW THE MAIN MOVEMENT PATH
+    // DRAWING LAYERS
     // ============================================
 
     function drawMovementPaths() {
+        // Connecting lines are already printed in the background image.
         clearLayer(movementPathLayer);
-
-        for (let i = 0; i < boardSpaces.length - 1; i++) {
-            const current = boardSpaces[i];
-            const next = boardSpaces[i + 1];
-
-            movementPathLayer.appendChild(
-                createSvgElement("line", {
-                    x1: current.x,
-                    y1: current.y,
-                    x2: next.x,
-                    y2: next.y,
-                    class: "movement-path"
-                })
-            );
-        }
     }
 
-    // ============================================
-    // DRAW ALL BOARD SPACES
-    // ============================================
-
     function drawAllSpaces() {
+        // The background image already contains all space artwork.
+        // Do not draw duplicate circles or labels over it.
         clearLayer(spaceLayer);
         clearLayer(thinkSpaceLayer);
-
-        boardSpaces.forEach(space => {
-            switch (space.type) {
-                case "start":
-                    drawStartSpace(space);
-                    break;
-
-                case "finish":
-                    drawFinishSpace(space);
-                    break;
-
-                case "coin":
-                    drawCoinSpace(space);
-                    break;
-
-                case "angryMob":
-                    drawAngryMobSpace(space);
-                    break;
-
-                case "think":
-                    drawThinkSpace(space);
-                    break;
-
-                default:
-                    drawNormalSpace(space);
-                    break;
-            }
-        });
     }
 
     function drawNormalSpace(space) {
@@ -589,113 +578,27 @@
     }
 
     // ============================================
-    // DARK ALLEY BRANCHES
+    // DARK ALLEY SHORTCUTS
     // ============================================
 
     function createDarkAlleys() {
+        // Dark Alley artwork is already part of the background image.
+        // Keep the shortcut movement data without drawing duplicates.
         clearLayer(darkAlleyPathLayer);
         clearLayer(darkAlleySpaceLayer);
 
         darkAlleys = [];
 
         THINK_SPACES.forEach(startNumber => {
-            const start = boardSpaces[startNumber];
-
-            // Skip over the next three spaces and rejoin.
             const rejoinNumber = Math.min(
                 startNumber + ALLEY_LENGTH + 1,
                 TOTAL_SPACES - 2
             );
 
-            const rejoin = boardSpaces[rejoinNumber];
-
-            const branchSpaces = [];
-
-            // Offset the three shortcut spaces perpendicular
-            // to the main route so the branch is visible.
-
-            const dx = rejoin.x - start.x;
-            const dy = rejoin.y - start.y;
-            const length = Math.hypot(dx, dy) || 1;
-
-            const perpendicularX = -dy / length;
-            const perpendicularY = dx / length;
-
-            const centerX = BOARD_WIDTH / 2;
-            const centerY = BOARD_HEIGHT / 2;
-
-            const towardCenter =
-                (centerX - start.x) * perpendicularX +
-                (centerY - start.y) * perpendicularY;
-
-            const direction = towardCenter >= 0 ? 1 : -1;
-            const offset = 78;
-
-            for (let i = 1; i <= ALLEY_LENGTH; i++) {
-                const progress = i / (ALLEY_LENGTH + 1);
-
-                const x =
-                    start.x +
-                    dx * progress +
-                    perpendicularX * offset * direction;
-
-                const y =
-                    start.y +
-                    dy * progress +
-                    perpendicularY * offset * direction;
-
-                branchSpaces.push({
-                    x,
-                    y,
-                    number: i
-                });
-            }
-
-            const points = [
-                `${start.x},${start.y}`,
-                ...branchSpaces.map(
-                    alleySpace =>
-                        `${alleySpace.x},${alleySpace.y}`
-                ),
-                `${rejoin.x},${rejoin.y}`
-            ].join(" ");
-
-            darkAlleyPathLayer.appendChild(
-                createSvgElement("polyline", {
-                    points,
-                    class: "dark-alley-path"
-                })
-            );
-
-            branchSpaces.forEach(alleySpace => {
-                const group = createSvgElement("g");
-
-                group.appendChild(
-                    createSvgElement("rect", {
-                        x: alleySpace.x - 22,
-                        y: alleySpace.y - 15,
-                        width: 44,
-                        height: 30,
-                        rx: 3,
-                        class: "dark-alley-space"
-                    })
-                );
-
-                addText(
-                    group,
-                    alleySpace.x,
-                    alleySpace.y,
-                    `D${alleySpace.number}`,
-                    "dark-alley-symbol"
-                );
-
-                darkAlleySpaceLayer.appendChild(group);
-            });
-
             darkAlleys.push({
                 startNumber,
                 rejoinNumber,
-                spaces: branchSpaces
+                spaces: []
             });
         });
     }
@@ -707,6 +610,8 @@
     function drawLinesOfSight() {
         clearLayer(lineOfSightLayer);
 
+        // Original project line-of-sight pairings.
+        // Debug-only connections have been removed.
         connections = [
             [2, 13],
             [5, 16],
@@ -717,36 +622,12 @@
             [34, 45],
             [39, 48],
             [44, 53],
-            [51, 60],
-
-            // Debug connections for testing.
-            [3, 14],
-            [4, 13],
-            [5, 12],
-            [6, 11],
-            [7, 10]
+            [51, 60]
         ];
-
-        connections.forEach(([from, to]) => {
-            const first = boardSpaces[from];
-            const second = boardSpaces[to];
-
-            if (!first || !second) return;
-
-            lineOfSightLayer.appendChild(
-                createSvgElement("line", {
-                    x1: first.x,
-                    y1: first.y,
-                    x2: second.x,
-                    y2: second.y,
-                    class: "line-of-sight"
-                })
-            );
-        });
     }
 
     // ============================================
-    // CREATE SIX PLAYERS
+    // CREATE PLAYERS
     // ============================================
 
     function createPlayers() {
@@ -764,7 +645,7 @@
     }
 
     // ============================================
-    // DRAW PLAYER PIECES
+    // DRAW PLAYER CHARACTERS
     // ============================================
 
     function drawPlayers() {
@@ -815,7 +696,7 @@
     }
 
     // ============================================
-    // UPDATE THE UI
+    // UPDATE UI
     // ============================================
 
     function updateUI() {
@@ -859,7 +740,7 @@
     }
 
     // ============================================
-    // DICE ROLLING
+    // DICE
     // ============================================
 
     function rollDie() {
@@ -894,10 +775,23 @@
     }
 
     // ============================================
-    // MOVE THE PLAYER
+    // MOVE PLAYER
     // ============================================
 
     function movePlayer(player, spacesToMove) {
+        const targetPosition = player.position + spacesToMove;
+        const finishIndex = TOTAL_SPACES - 1;
+
+        // Exact roll required to reach G.
+        if (targetPosition > finishIndex) {
+            gameMessage.textContent =
+                `${player.name} needs an exact roll to reach the Guillotine. ` +
+                "No movement this turn.";
+
+            finishTurn();
+            return;
+        }
+
         isMoving = true;
 
         movementState = {
@@ -913,7 +807,6 @@
     function resumeMovement() {
         if (!movementState || waitingForThinkChoice) return;
 
-        // Prevent multiple movement intervals.
         if (movementTimer !== null) {
             clearInterval(movementTimer);
         }
@@ -953,7 +846,6 @@
 
             checkLineOfSight(movementState.player);
 
-            // Immediately stop if an opponent is detected.
             if (waitingForThinkChoice) {
                 clearInterval(movementTimer);
                 movementTimer = null;
@@ -1011,7 +903,8 @@
 
             default:
                 gameMessage.textContent =
-                    `${player.name} landed on space ${space.number + 1}.`;
+                    `${player.name} landed on ` +
+                    `${space.label ? `space ${space.label}` : `space ${space.number}`}.`;
 
                 break;
         }
@@ -1079,15 +972,6 @@
         }
 
         if (alley) {
-            /*
-             * Choosing the Dark Alley advances the player
-             * to its rejoin point.
-             *
-             * The three alley squares are currently visual
-             * spaces; the shortcut moves directly to the
-             * rejoining point.
-             */
-
             player.position = alley.rejoinNumber;
 
             gameMessage.textContent =
@@ -1105,22 +989,17 @@
         finishTurn();
     }
 
-    // ===============================================
-    // CHECK PLAYER COLLISION
-    // ===============================================
+    // ============================================
+    // PLAYER COLLISION
+    // ============================================
 
     function playerCollision(player) {
         players.forEach(enemyPlayer => {
-            // Check if the player is outside the starting
-            // area and shares a position with another player.
-
             if (
                 player.position > SAFE_ZONE_SPACES &&
                 player.position === enemyPlayer.position &&
                 player.id !== enemyPlayer.id
             ) {
-                // The opposing player is sent back to START.
-
                 enemyPlayer.position = 0;
 
                 gameMessage.textContent =
@@ -1130,15 +1009,11 @@
         });
     }
 
-    // ===============================================
-    // CHECK PLAYER LINE OF SIGHT
-    // ===============================================
+    // ============================================
+    // LINE OF SIGHT
+    // ============================================
 
     function checkLineOfSight(player) {
-        // Called during movement and after landing.
-        // It checks whether another player is connected
-        // to the current player's position.
-
         if (waitingForThinkChoice) return;
 
         for (let i = 0; i < connections.length; i++) {
@@ -1178,7 +1053,7 @@
     }
 
     // ============================================
-    // ASK PLAYER IF THEY WISH TO CUT IN LINE
+    // CUT-IN-LINE CHOICE
     // ============================================
 
     function decideToCutInLine() {
@@ -1211,13 +1086,11 @@
         const attackPlayer = getCurrentPlayer();
         const defendPlayer = cutInLineDefendPlayer;
 
-        // Deduct the cost for cutting in line.
         attackPlayer.coins -= CUT_IN_LINE_COST;
 
         console.log("attackplayerpos: " + attackPlayer.position);
         console.log("defendplayerpos: " + defendPlayer.position);
 
-        // Both players roll two dice.
         const attackPlayerRoll = rollDie() + rollDie();
         const defendPlayerRoll = rollDie() + rollDie();
 
@@ -1225,7 +1098,6 @@
             `${attackPlayer.name} rolls ${attackPlayerRoll}. ` +
             `${defendPlayer.name} rolls ${defendPlayerRoll}. `;
 
-        // Check the rolls.
         if (attackPlayerRoll > defendPlayerRoll) {
             const attackPlayerPos = attackPlayer.position;
 
@@ -1241,7 +1113,6 @@
                 `with ${defendPlayer.name}.`;
         }
 
-        // Reset HTML elements and game state variables.
         waitingForThinkChoice = false;
         cutInLineDefendPlayer = null;
 
@@ -1374,7 +1245,6 @@
         });
     }
 
-    // Close the rules panel with Escape.
     document.addEventListener("keydown", event => {
         if (event.key === "Escape" && rulesPanel) {
             rulesPanel.classList.add("hidden");
@@ -1414,22 +1284,9 @@
         chooseDarkAlley
     );
 
-    /*
-    playerCollisionAttackButton?.addEventListener(
-        "click",
-        // Add player collision attack behavior here.
-    );
-
-    playerCollisionIgnoreButton?.addEventListener(
-        "click",
-        // Add player collision ignore behavior here.
-    );
-    */
-
     cutInLineAttackButton?.addEventListener(
         "click",
         function() {
-            // Check if the player has enough coins.
             if (
                 getCurrentPlayer().coins >= CUT_IN_LINE_COST
             ) {
@@ -1476,7 +1333,7 @@
     );
 
     // ============================================
-    // INITIALIZE THE BOARD
+    // INITIALIZE GAME
     // ============================================
 
     function initializeGame() {
@@ -1494,7 +1351,7 @@
     initializeGame();
 
     // ============================================
-    // BACKGROUND TAVERN MUSIC
+    // BACKGROUND MUSIC
     // ============================================
 
     const backgroundMusic =

@@ -377,11 +377,28 @@ li {
 
 /* GAME BOARD */
 
-iframe {
+/* FULL-SCREEN GAME BOARD */
+
+#gameScreen {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+    z-index: 1000;
+    background: #17090c;
+}
+
+#gameBoardFrame {
+    display: block;
     width: 100%;
-    min-height: 85vh;
-    border: 0;
-    background: white;
+    height: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+    background: #17090c;
 }
 
 /* MOBILE */
