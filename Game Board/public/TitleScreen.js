@@ -383,14 +383,30 @@ $("leaveLobby").onclick = () => {
         lobbyMessage.textContent = "A player left.";
     });
 
-    // GAME STARTED
+    
+// GAME STARTED
 
-    socket.on("game-started", () => {
+    socket.on("game-started", data => {
 
         lobby.classList.add("hidden");
         game.classList.remove("hidden");
 
-        $("gameBoardFrame").src = "GameBoard.html";
+        const gameBoardFrame = $("gameBoardFrame");
+
+        // Wait until the game board has loaded.
+        gameBoardFrame.onload = () => {
+
+            // Send the actual room players to the game board.
+            gameBoardFrame.contentWindow.postMessage({
+                type: "GTTG_GAME_START",
+                roomCode: data.roomCode,
+                players: data.players
+            }, window.location.origin);
+
+        };
+
+        gameBoardFrame.src = "GameBoard.html";
     });
+
 
 });

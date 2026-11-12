@@ -630,15 +630,35 @@
     // CREATE PLAYERS
     // ============================================
 
-    function createPlayers() {
+    
+    function createPlayers(roomPlayers = null) {
         players = [];
 
-        for (let i = 0; i < MAX_PLAYERS; i++) {
-            players.push(new Player(i));
+        // If multiplayer players were received, use only those players.
+        if (Array.isArray(roomPlayers) && roomPlayers.length > 0) {
+
+            roomPlayers.forEach((roomPlayer, index) => {
+
+                const player = new Player(index);
+
+                player.name = roomPlayer.name;
+                player.character = roomPlayer.character;
+                player.socketId = roomPlayer.id;
+
+                players.push(player);
+            });
+
+        } else {
+
+            // Keep the existing six-player behavior for local testing.
+            for (let i = 0; i < MAX_PLAYERS; i++) {
+                players.push(new Player(i));
+            }
         }
 
         currentPlayerIndex = 0;
     }
+
 
     function getCurrentPlayer() {
         return players[currentPlayerIndex];
@@ -1347,6 +1367,29 @@
         drawPlayers();
         updateUI();
     }
+    // Receive multiplayer players from TitleScreen.js
+    window.addEventListener("message", event => {
+
+        // Accept messages only from the same website.
+        if (event.origin !== window.location.origin) {
+            return;
+        }
+
+        const data = event.data;
+
+        // Check that this is the game-start message.
+        if (!data || data.type !== "GTTG_GAME_START") {
+            return;
+        }
+
+        // Create only the players who joined the room.
+        createPlayers(data.players);
+
+        // Refresh the game board.
+        drawPlayers();
+        updateUI();
+
+    });
 
     initializeGame();
 
