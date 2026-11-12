@@ -1908,3 +1908,100 @@ body {
     max-width: none !important;
     max-height: none !important;
 }
+
+
+/* ================================== */
+/* GAME CHAT PANEL */
+/* ================================== */
+
+.chat-panel {
+    position: absolute;
+    top: 90px;
+    right: 25px;
+    width: 340px;
+    height: 420px;
+    display: flex;
+    flex-direction: column;
+    background: #251719;
+    color: #f3e5cc;
+    border: 2px solid #8c3945;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    z-index: 1100;
+    overflow: hidden;
+}
+
+.chat-header {
+    padding: 14px;
+    background: #54232c;
+    border-bottom: 1px solid #8c3945;
+    text-align: center;
+}
+
+.chat-header h2 {
+    margin: 0;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: #f3e5cc;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-empty-message {
+    color: #b9a7a0;
+    text-align: center;
+    font-size: 13px;
+}
+
+.chat-form {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    border-top: 1px solid #8c3945;
+    background: #1b1113;
+}
+
+.chat-form input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px;
+    border: 1px solid #8c3945;
+    border-radius: 6px;
+    background: #352326;
+    color: #f3e5cc;
+    outline: none;
+}
+
+.chat-form input::placeholder {
+    color: #b9a7a0;
+}
+
+.chat-form button {
+    padding: 10px 14px;
+    border: 1px solid #a34a55;
+    border-radius: 6px;
+    background: #7b303b;
+    color: #fff0dc;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.chat-form button:hover {
+    background: #a34450;
+}
+
+@media (max-width: 600px) {
+    .chat-panel {
+        width: calc(100% - 30px);
+        right: 15px;
+        top: 85px;
+        height: 350px;
+    }
+}

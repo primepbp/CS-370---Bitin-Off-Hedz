@@ -34,6 +34,42 @@
 
 
         <!-- ================================== -->
+        <!-- GAME CHAT PANEL -->
+        <!-- ================================== -->
+
+        <section id="chatPanel" class="chat-panel hidden">
+
+            <div class="chat-header">
+                <h2>GAME CHAT</h2>
+            </div>
+
+            <div id="chatMessages" class="chat-messages">
+                <p class="chat-empty-message">
+                    Welcome! Send a message to your fellow players.
+                </p>
+            </div>
+
+            <form id="chatForm" class="chat-form">
+
+                <input
+                    type="text"
+                    id="chatInput"
+                    placeholder="Type your message..."
+                    maxlength="200"
+                    autocomplete="off"
+                >
+
+                <button type="submit" id="sendChatButton">
+                    SEND
+                </button>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- ================================== -->
         <!-- GAME RULES PANEL -->
         <!-- ================================== -->
 

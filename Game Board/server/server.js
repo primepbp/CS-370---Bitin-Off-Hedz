@@ -339,6 +339,39 @@ socket.on("join-game", (data, callback) => {
         console.log("Game started:", code);
     });
 
+
+    // GAME CHAT
+    socket.on("chat-message", message => {
+
+        const code = socket.data.roomCode;
+        const room = rooms.get(code);
+
+        // Only allow players who belong to a started game.
+        if (!room || !room.started) return;
+
+        // Find the player who sent the message.
+        const player = room.players.find(
+            p => p.id === socket.id
+        );
+
+        if (!player) return;
+
+        // Validate the message.
+        if (typeof message !== "string") return;
+
+        const cleanMessage = message.trim().slice(0, 200);
+
+        if (!cleanMessage) return;
+
+        // Send the message only to players in this room.
+        io.to(code).emit("chat-message", {
+            name: player.name,
+            message: cleanMessage
+        });
+
+    });
+
+
     // LEAVE ROOM
     socket.on("leave-room", callback => {
         removePlayer(socket);

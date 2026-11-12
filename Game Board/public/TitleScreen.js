@@ -384,6 +384,46 @@ $("leaveLobby").onclick = () => {
     });
 
     
+    // ==================================
+    // GAME CHAT COMMUNICATION
+    // ==================================
+
+    // Receive chat messages from the server.
+    socket.on("chat-message", data => {
+
+        const gameBoardFrame = $("gameBoardFrame");
+
+        if (!gameBoardFrame || !gameBoardFrame.contentWindow) {
+            return;
+        }
+
+        gameBoardFrame.contentWindow.postMessage({
+            type: "GTTG_CHAT_MESSAGE",
+            name: data.name,
+            message: data.message
+        }, window.location.origin);
+
+    });
+
+
+    // Receive chat messages from GameBoard.js.
+    window.addEventListener("message", event => {
+
+        if (event.origin !== window.location.origin) {
+            return;
+        }
+
+        const data = event.data;
+
+        if (!data || data.type !== "GTTG_CHAT_SEND") {
+            return;
+        }
+
+        // Send the message through the existing room connection.
+        socket.emit("chat-message", data.message);
+
+    });
+
 // GAME STARTED
 
     socket.on("game-started", data => {

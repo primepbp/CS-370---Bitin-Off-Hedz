@@ -202,6 +202,21 @@
 
     const gameMessage =
         document.getElementById("gameMessage");
+        // ============================================
+    // GAME CHAT ELEMENTS
+    // ============================================
+
+    const chatPanel =
+        document.getElementById("chatPanel");
+
+    const chatMessages =
+        document.getElementById("chatMessages");
+
+    const chatForm =
+        document.getElementById("chatForm");
+
+    const chatInput =
+        document.getElementById("chatInput");
 
     const thinkChoicePanel =
         document.getElementById("thinkChoicePanel");
@@ -1232,14 +1247,17 @@
     // MENU BUTTONS
     // ============================================
 
+    
     document.getElementById("chatButton")?.addEventListener(
         "click",
         () => {
-            gameMessage.textContent =
-                "The local chatroom is not implemented yet.";
+            const chatPanel = document.getElementById("chatPanel");
+
+            if (chatPanel) {
+                chatPanel.classList.toggle("hidden");
+            }
         }
     );
-
     // ============================================
     // GAME RULES DROPDOWN
     // ============================================
@@ -1351,6 +1369,84 @@
         "click",
         restartGame
     );
+
+    // ============================================
+    // GAME CHAT FUNCTIONALITY
+    // ============================================
+
+    // Send a message when the player submits the form.
+    chatForm?.addEventListener("submit", event => {
+
+        event.preventDefault();
+
+        const message = chatInput.value.trim();
+
+        if (!message) return;
+
+        // Send the message to TitleScreen.js.
+        window.parent.postMessage({
+            type: "GTTG_CHAT_SEND",
+            message: message
+        }, window.location.origin);
+
+        chatInput.value = "";
+        chatInput.focus();
+
+    });
+
+
+    // Receive messages from TitleScreen.js.
+    window.addEventListener("message", event => {
+
+        if (event.origin !== window.location.origin) {
+            return;
+        }
+
+        const data = event.data;
+
+        if (!data || data.type !== "GTTG_CHAT_MESSAGE") {
+            return;
+        }
+
+        // Remove the welcome message when the first message arrives.
+        const emptyMessage =
+            chatMessages.querySelector(".chat-empty-message");
+
+        if (emptyMessage) {
+            emptyMessage.remove();
+        }
+
+        // Create a message container.
+        const messageElement =
+            document.createElement("div");
+
+        messageElement.className = "chat-message";
+
+        // Display the sender's name.
+        const senderElement =
+            document.createElement("strong");
+
+        senderElement.textContent = data.name + ": ";
+
+        // Display the actual message.
+        const textElement =
+            document.createElement("span");
+
+        textElement.textContent = data.message;
+
+        messageElement.append(
+            senderElement,
+            textElement
+        );
+
+        chatMessages.appendChild(messageElement);
+
+        // Automatically scroll to the latest message.
+        chatMessages.scrollTop =
+            chatMessages.scrollHeight;
+
+    });
+
 
     // ============================================
     // INITIALIZE GAME
