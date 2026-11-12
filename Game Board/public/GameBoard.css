@@ -1660,3 +1660,251 @@ body {
 }
 
 }
+
+
+/* =========================================================
+   GET TO THE GUILLOTINE
+   FULL-SCREEN GAME BOARD LAYOUT
+   Larger board + compact controls
+========================================================= */
+
+/* Main game layout */
+.game {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    padding: 3px 5px;
+    gap: 3px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* ================= HEADER ================= */
+
+.game-header {
+    flex: 0 0 43px;
+    min-height: 43px;
+    height: 43px;
+    padding: 2px 5px;
+    overflow: hidden;
+}
+
+.title-area h1 {
+    font-size: clamp(17px, 2vw, 27px);
+    margin: 0;
+}
+
+.title-area p {
+    font-size: 9px;
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+.game-menu {
+    gap: 5px;
+}
+
+.game-menu button {
+    padding: 5px 9px;
+    font-size: 10px;
+}
+
+/* ================= GAME BOARD ================= */
+
+.board-section {
+    flex: 1 1 0;
+    min-height: 0;
+    width: 100%;
+    padding: 2px 0;
+    overflow: hidden;
+    display: flex;
+}
+
+.board-wrapper {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    padding: 3px;
+    border-width: 3px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-board {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: contain;
+}
+
+/* ================= GAME CONTROLS ================= */
+
+.game-controls {
+    flex: 0 0 100px;
+    min-height: 100px;
+    max-height: 100px;
+    gap: 6px;
+    padding: 2px 0;
+    grid-template-columns:
+        minmax(105px, 0.8fr)
+        minmax(180px, 3.8fr)
+        minmax(85px, 0.7fr)
+        minmax(130px, 1.2fr);
+    overflow: hidden;
+}
+
+/* Smaller control panels */
+.current-player-panel,
+.player-list-panel,
+.dice-panel,
+.roll-panel {
+    padding: 5px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.game-controls h3 {
+    font-size: 13px;
+    margin: 3px 0 6px;
+}
+
+/* Player list */
+#playerList {
+    gap: 3px;
+}
+
+#playerList > * {
+    padding: 3px 5px;
+    font-size: 10px;
+}
+
+/* Dice */
+.dice-container {
+    gap: 5px;
+}
+
+#die1,
+#die2 {
+    min-width: 31px;
+    min-height: 31px;
+    width: 31px;
+    height: 31px;
+    font-size: 16px;
+}
+
+#diceMode {
+    font-size: 10px;
+    margin: 3px 0;
+}
+
+/* Roll button */
+#rollButton {
+    min-height: 32px;
+    padding: 4px;
+    font-size: 11px;
+}
+
+#gameMessage {
+    font-size: 11px;
+    margin: 5px 0;
+}
+
+/* ================= MUSIC CONTROLS ================= */
+
+.music-controls {
+    flex: 0 0 25px;
+    min-height: 25px;
+    max-height: 25px;
+    gap: 6px;
+    font-size: 10px;
+    padding: 0;
+}
+
+#musicToggle {
+    padding: 3px 8px;
+    font-size: 10px;
+}
+
+#musicVolume {
+    width: 65px;
+}
+
+/* ================= SMALLER SCREENS ================= */
+
+@media (max-width: 800px) {
+    .game-controls {
+        grid-template-columns:
+            minmax(80px, 0.8fr)
+            minmax(120px, 2fr)
+            minmax(65px, 0.7fr)
+            minmax(100px, 1fr);
+    }
+
+    .game-controls h3 {
+        font-size: 10px;
+    }
+
+    #playerList > * {
+        font-size: 8px;
+    }
+}
+
+/* Short laptop screens */
+@media (max-height: 700px) {
+    .game-header {
+        flex-basis: 36px;
+        min-height: 36px;
+        height: 36px;
+    }
+
+    .game-controls {
+        flex-basis: 82px;
+        min-height: 82px;
+        max-height: 82px;
+    }
+
+    .music-controls {
+        flex-basis: 21px;
+        min-height: 21px;
+        max-height: 21px;
+    }
+}
+
+
+/* FULL-WIDTH GAME BOARD */
+
+.board-section {
+    width: 100%;
+    flex: 1 1 0;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.board-wrapper {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.game-board {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+}
