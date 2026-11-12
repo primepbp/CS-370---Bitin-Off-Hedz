@@ -48,17 +48,17 @@
      */
 
     const ARTWORK_SPACES = [
-        { type: "normal", x: 273, y: 68, label: "1" },
-        { type: "normal", x: 349, y: 38, label: "2" },
+        { type: "normal", x: 266, y: 68, label: "1" },
+        { type: "normal", x: 338, y: 38, label: "2" },
         { type: "normal", x: 425, y: 68, label: "3" },
         { type: "normal", x: 501, y: 35, label: "4" },
         { type: "normal", x: 577, y: 72, label: "5" },
-        { type: "coin", x: 646, y: 114, label: "" },
+        { type: "coin", x: 646, y: 114, label: "6" },
         { type: "normal", x: 694, y: 49, label: "7" },
         { type: "normal", x: 773, y: 49, label: "8" },
         { type: "normal", x: 801, y: 122, label: "9" },
-        { type: "angryMob", x: 740, y: 177, label: "" },
-        { type: "angryMob", x: 778, y: 248, label: "" },
+        { type: "angryMob", x: 740, y: 177, label: "10" },
+        { type: "angryMob", x: 778, y: 248, label: "11" },
         { type: "think", x: 862, y: 242, label: "" },
         { type: "angryMob", x: 990, y: 246, label: "" },
         { type: "normal", x: 953, y: 42, label: "15" },
@@ -716,8 +716,8 @@
                 const imagePath = PLAYER_IMAGES[player.id];
 
                 const characterImage = createSvgElement("image", {
-                    x: space.x + offset[0] - 16,
-                    y: space.y + offset[1] - 16,
+                    x: space.x + offset[0],
+                    y: space.y + offset[1],
                     width: 32,
                     height: 32,
                     href: imagePath,
