@@ -1,12 +1,3 @@
-/* =========================================================
-   GET TO THE GUILLOTINE
-   COMPLETE GAME BOARD STYLESHEET
-========================================================= */
-
-/* =========================================================
-   GLOBAL STYLES
-========================================================= */
-
 * {
     box-sizing: border-box;
 }
@@ -51,9 +42,9 @@ body {
 ========================================================= */
 
 .game-header {
-    flex: 0 0 64px;
-    min-height: 64px;
-    height: 64px;
+    flex: 0 0 54px;
+    min-height: 54px;
+    height: 54px;
 
     display: flex;
     align-items: center;
@@ -161,9 +152,7 @@ body {
     box-sizing: border-box;
     overflow: hidden;
 
-    /* RED BORDER AROUND BOARD */
     border: 2px solid #a8323e;
-
     background: #b9aa87;
 }
 
@@ -183,16 +172,12 @@ body {
 }
 
 /* =========================================================
-   SVG BOARD BACKGROUND
+   SVG BOARD STYLES
 ========================================================= */
 
 .board-background {
     fill: #b8a887;
 }
-
-/* =========================================================
-   BOARD ZONES
-========================================================= */
 
 .zone-safe {
     fill: rgba(45, 76, 66, 0.22);
@@ -490,10 +475,10 @@ body {
 ========================================================= */
 
 .game-controls {
-    flex: 0 0 114px;
+    flex: 0 0 120px;
 
-    min-height: 114px;
-    max-height: 114px;
+    min-height: 120px;
+    max-height: 120px;
 
     width: 100%;
 
@@ -567,7 +552,7 @@ body {
 .player-list {
     display: grid;
 
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 
     gap: 4px;
     width: 100%;
@@ -630,8 +615,8 @@ body {
 .die,
 #die1,
 #die2 {
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
 
     min-width: 0;
     min-height: 0;
@@ -673,7 +658,7 @@ body {
 #rollButton,
 .roll-button {
     width: 100%;
-    min-height: 34px;
+    min-height: 40px;
 
     padding: 6px;
 
@@ -771,16 +756,259 @@ body {
 }
 
 /* =========================================================
+   SHARED POPUP STYLES
+========================================================= */
+
+.choice-panel {
+    position: fixed;
+    z-index: 1200;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: min(450px, calc(100% - 30px));
+
+    padding: 25px;
+
+    border: 2px solid #9d343e;
+    background: #211013;
+
+    color: #f3e5cc;
+    text-align: center;
+
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8);
+}
+
+.choice-panel h2 {
+    margin-top: 0;
+    color: #e8d9c0;
+    font-size: 22px;
+}
+
+.choice-panel p {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.choice-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.choice-buttons button {
+    padding: 10px 16px;
+
+    border: 1px solid #a64a55;
+    background: #641e29;
+    color: #f3e4c9;
+
+    font-family: Georgia, serif;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.choice-buttons button:hover {
+    background: #842b38;
+}
+
+/* =========================================================
+   DARK ALLEY COIN FLIP POPUP
+========================================================= */
+
+.coin-flip-panel {
+    width: min(430px, calc(100% - 30px));
+    padding: 28px;
+    text-align: center;
+}
+
+.coin-flip-panel h2 {
+    color: #e9c76f;
+    font-size: 25px;
+    letter-spacing: 2px;
+}
+
+.coin-flip-panel p {
+    line-height: 1.5;
+}
+
+.coin-flip-button {
+    width: 120px;
+    height: 120px;
+
+    margin: 18px auto;
+
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+
+    background: transparent;
+    cursor: pointer;
+
+    perspective: 600px;
+}
+
+.coin-face {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 7px double #9a671b;
+    border-radius: 50%;
+
+    background: radial-gradient(
+        circle at 35% 30%,
+        #ffe99a,
+        #e4b83e 65%,
+        #a36c19
+    );
+
+    color: #70420e;
+    font-family: Georgia, serif;
+    font-size: 30px;
+    font-weight: bold;
+
+    box-shadow:
+        0 5px 0 #704615,
+        0 8px 18px rgba(0, 0, 0, 0.5);
+
+    transform-style: preserve-3d;
+}
+
+.coin-flip-button:hover:not(:disabled) .coin-face {
+    filter: brightness(1.12);
+}
+
+.coin-flip-button:disabled {
+    cursor: default;
+}
+
+.coin-face.flipping {
+    animation: coinFlip 1.2s ease-in-out;
+}
+
+@keyframes coinFlip {
+    0% {
+        transform: rotateY(0deg) scale(1);
+    }
+
+    25% {
+        transform: rotateY(360deg) scale(1.15);
+    }
+
+    50% {
+        transform: rotateY(720deg) scale(1);
+    }
+
+    75% {
+        transform: rotateY(1080deg) scale(1.15);
+    }
+
+    100% {
+        transform: rotateY(1440deg) scale(1);
+    }
+}
+
+.coin-flip-result {
+    min-height: 25px;
+    margin-top: 12px;
+
+    color: #f2dcae;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+/* =========================================================
+   DISHONOR POPUP
+========================================================= */
+
+.dishonor-panel {
+    position: fixed;
+    z-index: 2500;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: min(650px, calc(100% - 35px));
+
+    padding: 45px 30px;
+
+    border: 4px solid #9e2029;
+    background: radial-gradient(
+        circle,
+        #351015,
+        #150608 75%
+    );
+
+    box-shadow:
+        0 0 0 100vmax rgba(0, 0, 0, 0.78),
+        0 0 35px rgba(180, 20, 30, 0.55);
+
+    text-align: center;
+}
+
+.dishonor-panel h1 {
+    margin: 0 0 18px;
+
+    color: #e21d2b;
+    font-family: Georgia, serif;
+    font-size: clamp(42px, 8vw, 76px);
+    font-weight: bold;
+    letter-spacing: 7px;
+
+    text-shadow:
+        3px 3px 0 #650b12,
+        0 0 18px rgba(220, 20, 35, 0.6);
+}
+
+.dishonor-panel p {
+    margin: 0 0 28px;
+
+    color: #f0dfc5;
+    font-family: Georgia, serif;
+    font-size: clamp(16px, 3vw, 23px);
+    line-height: 1.5;
+}
+
+.dishonor-panel button {
+    padding: 12px 25px;
+
+    border: 2px solid #b73540;
+    background: #701720;
+    color: #f5e5d0;
+
+    font-family: Georgia, serif;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+
+    cursor: pointer;
+}
+
+.dishonor-panel button:hover {
+    background: #a32230;
+}
+
+/* =========================================================
    GAME RULES PANEL
 ========================================================= */
 
 .rules-panel {
-    position: absolute;
+    position: fixed;
     z-index: 1000;
 
-    top: 75px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
 
     width: min(680px, calc(100% - 32px));
     max-height: 75vh;
@@ -845,10 +1073,10 @@ body {
 ========================================================= */
 
 .chat-panel {
-    position: absolute;
+    position: fixed;
     z-index: 1100;
 
-    top: 75px;
+    top: 70px;
     right: 15px;
 
     width: min(340px, calc(100% - 30px));
@@ -950,68 +1178,6 @@ body {
 }
 
 /* =========================================================
-   CHOICE PANELS
-========================================================= */
-
-.choice-panel {
-    position: absolute;
-    z-index: 1200;
-
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    width: min(450px, calc(100% - 30px));
-
-    padding: 25px;
-
-    border: 2px solid #9d343e;
-    background: #211013;
-
-    color: #f3e5cc;
-    text-align: center;
-
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8);
-}
-
-.choice-panel h2 {
-    margin-top: 0;
-    color: #e8d9c0;
-    font-size: 22px;
-}
-
-.choice-panel p {
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.choice-buttons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-
-    margin-top: 20px;
-}
-
-.choice-buttons button {
-    padding: 10px 16px;
-
-    border: 1px solid #a64a55;
-    background: #641e29;
-    color: #f3e4c9;
-
-    font-family: Georgia, serif;
-    font-weight: bold;
-
-    cursor: pointer;
-}
-
-.choice-buttons button:hover {
-    background: #842b38;
-}
-
-/* =========================================================
    GAME OVER PANEL
 ========================================================= */
 
@@ -1039,8 +1205,7 @@ body {
     letter-spacing: 2px;
 }
 
-#winnerText,
-.winner-text {
+#winnerText {
     margin: 20px 0;
     font-size: 18px;
 }
@@ -1073,6 +1238,7 @@ body {
 ========================================================= */
 
 @media (max-width: 900px) {
+
     .game-header {
         gap: 8px;
     }
@@ -1120,6 +1286,7 @@ body {
 ========================================================= */
 
 @media (max-height: 700px) {
+
     .game-header {
         flex-basis: 48px;
         min-height: 48px;
@@ -1155,6 +1322,7 @@ body {
 ========================================================= */
 
 @media (max-width: 600px) {
+
     body {
         overflow: auto;
     }

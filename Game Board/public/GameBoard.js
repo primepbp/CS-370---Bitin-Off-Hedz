@@ -1,10 +1,8 @@
-
 (() => {
     "use strict";
 
     // ============================================
     // GET TO THE GUILLOTINE
-    // Local pass-and-play board game
     // ============================================
 
     const MAX_PLAYERS = 6;
@@ -18,7 +16,6 @@
         "characters/HeadlessHoreman.png"
     ];
 
-    // Board dimensions match the SVG viewBox.
     const BOARD_WIDTH = 1037;
     const BOARD_HEIGHT = 585;
 
@@ -38,13 +35,9 @@
     ];
 
     /*
-     * UPDATED BOARD COORDINATES
-     *
      * START = separate starting position.
      * Artwork markers = positions 1 through 71.
      * G = final destination, position 72.
-     *
-     * The special spaces are included in the route.
      */
 
     const ARTWORK_SPACES = [
@@ -202,7 +195,8 @@
 
     const gameMessage =
         document.getElementById("gameMessage");
-        // ============================================
+
+    // ============================================
     // GAME CHAT ELEMENTS
     // ============================================
 
@@ -232,6 +226,26 @@
 
     const darkAlleyButton =
         document.getElementById("darkAlleyButton");
+
+    // DARK ALLEY COIN FLIP + DISHONOR POPUPS
+
+    const darkAlleyFlipPanel =
+        document.getElementById("darkAlleyFlipPanel");
+
+    const flipCoinButton =
+        document.getElementById("flipCoinButton");
+
+    const coinFace =
+        document.getElementById("coinFace");
+
+    const coinFlipResult =
+        document.getElementById("coinFlipResult");
+
+    const dishonorPanel =
+        document.getElementById("dishonorPanel");
+
+    const dishonorContinueButton =
+        document.getElementById("dishonorContinueButton");
 
     const playerCollisionPanel =
         document.getElementById("playerCollisionPanel");
@@ -332,6 +346,10 @@
     let movementTimer = null;
     let cutInLineDefendPlayer = null;
     let movementState = null;
+
+    // Dark Alley coin-flip state.
+    let pendingDarkAlley = null;
+    let coinFlipInProgress = false;
 
     // ============================================
     // SVG HELPERS
@@ -626,7 +644,6 @@
         clearLayer(lineOfSightLayer);
 
         // Original project line-of-sight pairings.
-        // Debug-only connections have been removed.
         connections = [
             [2, 13],
             [5, 16],
@@ -645,15 +662,12 @@
     // CREATE PLAYERS
     // ============================================
 
-    
     function createPlayers(roomPlayers = null) {
         players = [];
 
         // If multiplayer players were received, use only those players.
         if (Array.isArray(roomPlayers) && roomPlayers.length > 0) {
-
             roomPlayers.forEach((roomPlayer, index) => {
-
                 const player = new Player(index);
 
                 player.name = roomPlayer.name;
@@ -662,9 +676,7 @@
 
                 players.push(player);
             });
-
         } else {
-
             // Keep the existing six-player behavior for local testing.
             for (let i = 0; i < MAX_PLAYERS; i++) {
                 players.push(new Player(i));
@@ -673,7 +685,6 @@
 
         currentPlayerIndex = 0;
     }
-
 
     function getCurrentPlayer() {
         return players[currentPlayerIndex];
@@ -712,7 +723,6 @@
 
             group.forEach((player, index) => {
                 const offset = offsets[index % offsets.length];
-
                 const imagePath = PLAYER_IMAGES[player.id];
 
                 const characterImage = createSvgElement("image", {
@@ -991,8 +1001,12 @@
         finishTurn();
     }
 
+    // ============================================
+    // DARK ALLEY COIN FLIP
+    // ============================================
+
     function chooseDarkAlley() {
-        if (!waitingForThinkChoice) return;
+        if (!waitingForThinkChoice || gameOver) return;
 
         const player = getCurrentPlayer();
 
@@ -1000,28 +1014,144 @@
             item => item.startNumber === player.position
         );
 
-        waitingForThinkChoice = false;
+        if (!alley) {
+            waitingForThinkChoice = false;
+
+            if (thinkChoicePanel) {
+                thinkChoicePanel.classList.add("hidden");
+            }
+
+            gameMessage.textContent =
+                "The Dark Alley is unavailable from this space.";
+
+            updateUI();
+            finishTurn();
+            return;
+        }
+
+        // Keep the turn paused while the player flips the coin.
+        pendingDarkAlley = alley;
+        coinFlipInProgress = false;
 
         if (thinkChoicePanel) {
             thinkChoicePanel.classList.add("hidden");
         }
 
-        if (alley) {
-            player.position = alley.rejoinNumber;
-
-            gameMessage.textContent =
-                `${player.name} took the Dark Alley shortcut!`;
+        if (coinFace) {
+            coinFace.textContent = "?";
+            coinFace.classList.remove("flipping");
         }
 
-        drawPlayers();
+        if (coinFlipResult) {
+            coinFlipResult.textContent = "Click the coin to flip!";
+        }
 
-        if (player.position >= TOTAL_SPACES - 1) {
-            endGame(player);
+        if (flipCoinButton) {
+            flipCoinButton.disabled = false;
+        }
+
+        if (darkAlleyFlipPanel) {
+            darkAlleyFlipPanel.classList.remove("hidden");
+        }
+
+        gameMessage.textContent =
+            `${player.name} is risking the Dark Alley!`;
+
+        updateUI();
+    }
+
+    function flipDarkAlleyCoin() {
+        if (
+            !waitingForThinkChoice ||
+            coinFlipInProgress ||
+            !pendingDarkAlley ||
+            gameOver
+        ) {
             return;
         }
 
-        updateUI();
-        finishTurn();
+        coinFlipInProgress = true;
+
+        if (flipCoinButton) {
+            flipCoinButton.disabled = true;
+        }
+
+        if (coinFace) {
+            coinFace.classList.remove("flipping");
+            void coinFace.offsetWidth;
+            coinFace.classList.add("flipping");
+        }
+
+        if (coinFlipResult) {
+            coinFlipResult.textContent = "The coin is flipping...";
+        }
+
+        // A fair 50/50 coin flip.
+        const landedHeads = Math.random() < 0.5;
+
+        window.setTimeout(() => {
+            coinFlipInProgress = false;
+
+            if (coinFace) {
+                coinFace.classList.remove("flipping");
+                coinFace.textContent = landedHeads ? "H" : "T";
+            }
+
+            const player = getCurrentPlayer();
+
+            if (landedHeads) {
+                // HEADS: the player survives and rejoins beyond the alley.
+                player.position = pendingDarkAlley.rejoinNumber;
+
+                if (coinFlipResult) {
+                    coinFlipResult.textContent = "HEADS! YOU SURVIVED!";
+                }
+
+                gameMessage.textContent =
+                    `${player.name} survived the Dark Alley!`;
+
+                pendingDarkAlley = null;
+                waitingForThinkChoice = false;
+
+                if (darkAlleyFlipPanel) {
+                    darkAlleyFlipPanel.classList.add("hidden");
+                }
+
+                drawPlayers();
+
+                if (player.position >= TOTAL_SPACES - 1) {
+                    endGame(player);
+                    return;
+                }
+
+                updateUI();
+                finishTurn();
+
+            } else {
+                // TAILS: lose every coin and return to the start.
+                player.position = 0;
+                player.coins = 0;
+                player.angryMobNextTurn = false;
+
+                pendingDarkAlley = null;
+
+                if (darkAlleyFlipPanel) {
+                    darkAlleyFlipPanel.classList.add("hidden");
+                }
+
+                if (dishonorPanel) {
+                    dishonorPanel.classList.remove("hidden");
+                }
+
+                gameMessage.textContent =
+                    `${player.name} died dishonorably in the Dark Alley!`;
+
+                drawPlayers();
+                updateUI();
+
+                // Do not finish the turn until the player dismisses Dishonor.
+            }
+        }, 1200);
     }
 
     // ============================================
@@ -1219,6 +1349,25 @@
         gameOver = false;
         movementState = null;
         cutInLineDefendPlayer = null;
+        pendingDarkAlley = null;
+        coinFlipInProgress = false;
+
+        if (darkAlleyFlipPanel) {
+            darkAlleyFlipPanel.classList.add("hidden");
+        }
+
+        if (dishonorPanel) {
+            dishonorPanel.classList.add("hidden");
+        }
+
+        if (flipCoinButton) {
+            flipCoinButton.disabled = false;
+        }
+
+        if (coinFace) {
+            coinFace.textContent = "?";
+            coinFace.classList.remove("flipping");
+        }
 
         if (thinkChoicePanel) {
             thinkChoicePanel.classList.add("hidden");
@@ -1247,7 +1396,6 @@
     // MENU BUTTONS
     // ============================================
 
-    
     document.getElementById("chatButton")?.addEventListener(
         "click",
         () => {
@@ -1258,6 +1406,7 @@
             }
         }
     );
+
     // ============================================
     // GAME RULES DROPDOWN
     // ============================================
@@ -1322,6 +1471,24 @@
         chooseDarkAlley
     );
 
+    flipCoinButton?.addEventListener(
+        "click",
+        flipDarkAlleyCoin
+    );
+
+    dishonorContinueButton?.addEventListener(
+        "click",
+        () => {
+            if (dishonorPanel) {
+                dishonorPanel.classList.add("hidden");
+            }
+
+            waitingForThinkChoice = false;
+            updateUI();
+            finishTurn();
+        }
+    );
+
     cutInLineAttackButton?.addEventListener(
         "click",
         function() {
@@ -1374,16 +1541,14 @@
     // GAME CHAT FUNCTIONALITY
     // ============================================
 
-    // Send a message when the player submits the form.
     chatForm?.addEventListener("submit", event => {
-
         event.preventDefault();
 
         const message = chatInput.value.trim();
 
         if (!message) return;
 
-        // Send the message to TitleScreen.js.
+        // Send a message to TitleScreen.js.
         window.parent.postMessage({
             type: "GTTG_CHAT_SEND",
             message: message
@@ -1391,13 +1556,10 @@
 
         chatInput.value = "";
         chatInput.focus();
-
     });
-
 
     // Receive messages from TitleScreen.js.
     window.addEventListener("message", event => {
-
         if (event.origin !== window.location.origin) {
             return;
         }
@@ -1408,7 +1570,6 @@
             return;
         }
 
-        // Remove the welcome message when the first message arrives.
         const emptyMessage =
             chatMessages.querySelector(".chat-empty-message");
 
@@ -1416,19 +1577,16 @@
             emptyMessage.remove();
         }
 
-        // Create a message container.
         const messageElement =
             document.createElement("div");
 
         messageElement.className = "chat-message";
 
-        // Display the sender's name.
         const senderElement =
             document.createElement("strong");
 
         senderElement.textContent = data.name + ": ";
 
-        // Display the actual message.
         const textElement =
             document.createElement("span");
 
@@ -1441,12 +1599,9 @@
 
         chatMessages.appendChild(messageElement);
 
-        // Automatically scroll to the latest message.
         chatMessages.scrollTop =
             chatMessages.scrollHeight;
-
     });
-
 
     // ============================================
     // INITIALIZE GAME
@@ -1463,17 +1618,15 @@
         drawPlayers();
         updateUI();
     }
-    // Receive multiplayer players from TitleScreen.js
-    window.addEventListener("message", event => {
 
-        // Accept messages only from the same website.
+    // Receive multiplayer players from TitleScreen.js.
+    window.addEventListener("message", event => {
         if (event.origin !== window.location.origin) {
             return;
         }
 
         const data = event.data;
 
-        // Check that this is the game-start message.
         if (!data || data.type !== "GTTG_GAME_START") {
             return;
         }
@@ -1481,10 +1634,8 @@
         // Create only the players who joined the room.
         createPlayers(data.players);
 
-        // Refresh the game board.
         drawPlayers();
         updateUI();
-
     });
 
     initializeGame();
