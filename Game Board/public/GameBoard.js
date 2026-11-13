@@ -40,78 +40,79 @@
      * G = final destination, position 72.
      */
 
-    const ARTWORK_SPACES = [
+       const ARTWORK_SPACES = [
         { type: "normal", x: 266, y: 68, label: "1" },
-        { type: "normal", x: 338, y: 38, label: "2" },
-        { type: "normal", x: 425, y: 68, label: "3" },
-        { type: "normal", x: 501, y: 35, label: "4" },
-        { type: "normal", x: 577, y: 72, label: "5" },
-        { type: "coin", x: 646, y: 114, label: "6" },
-        { type: "normal", x: 694, y: 49, label: "7" },
-        { type: "normal", x: 773, y: 49, label: "8" },
-        { type: "normal", x: 801, y: 122, label: "9" },
-        { type: "angryMob", x: 740, y: 177, label: "10" },
-        { type: "angryMob", x: 778, y: 248, label: "11" },
-        { type: "think", x: 862, y: 242, label: "" },
-        { type: "angryMob", x: 990, y: 246, label: "" },
-        { type: "normal", x: 953, y: 42, label: "15" },
-        { type: "normal", x: 888, y: 80, label: "14" },
-        { type: "normal", x: 878, y: 162, label: "13" },
-        { type: "normal", x: 956, y: 178, label: "17" },
-        { type: "coin", x: 988, y: 106, label: "" },
-        { type: "normal", x: 958, y: 313, label: "19" },
-        { type: "normal", x: 1001, y: 380, label: "20" },
-        { type: "coin", x: 977, y: 454, label: "" },
-        { type: "normal", x: 1001, y: 525, label: "22" },
-        { type: "angryMob", x: 933, y: 548, label: "" },
-        { type: "normal", x: 830, y: 552, label: "25" },
-        { type: "coin", x: 756, y: 550, label: "" },
-        { type: "normal", x: 793, y: 476, label: "27" },
-        { type: "normal", x: 790, y: 398, label: "28" },
-        { type: "coin", x: 767, y: 329, label: "" },
-        { type: "angryMob", x: 707, y: 377, label: "" },
-        { type: "angryMob", x: 727, y: 456, label: "" },
-        { type: "normal", x: 682, y: 520, label: "69" },
-        { type: "normal", x: 615, y: 544, label: "68" },
-        { type: "coin", x: 546, y: 521, label: "" },
-        { type: "normal", x: 510, y: 453, label: "66" },
-        { type: "normal", x: 486, y: 385, label: "65" },
-        { type: "coin", x: 424, y: 310, label: "" },
-        { type: "normal", x: 348, y: 307, label: "63" },
-        { type: "normal", x: 286, y: 365, label: "62" },
-        { type: "think", x: 285, y: 448, label: "" },
-        { type: "normal", x: 372, y: 469, label: "60" },
-        { type: "normal", x: 442, y: 485, label: "59" },
-        { type: "normal", x: 476, y: 548, label: "58" },
-        { type: "normal", x: 405, y: 552, label: "57" },
-        { type: "coin", x: 333, y: 550, label: "" },
-        { type: "angryMob", x: 259, y: 538, label: "" },
-        { type: "normal", x: 184, y: 549, label: "54" },
-        { type: "normal", x: 205, y: 477, label: "53" },
-        { type: "angryMob", x: 133, y: 450, label: "" },
-        { type: "coin", x: 197, y: 389, label: "" },
-        { type: "normal", x: 111, y: 359, label: "46" },
-        { type: "coin", x: 46, y: 435, label: "" },
-        { type: "normal", x: 52, y: 505, label: "43" },
-        { type: "normal", x: 111, y: 526, label: "44" },
-        { type: "normal", x: 34, y: 360, label: "41" },
-        { type: "angryMob", x: 41, y: 292, label: "" },
-        { type: "normal", x: 48, y: 220, label: "39" },
-        { type: "coin", x: 131, y: 263, label: "" },
-        { type: "normal", x: 194, y: 220, label: "48" },
-        { type: "normal", x: 276, y: 218, label: "49" },
-        { type: "normal", x: 267, y: 290, label: "50" },
-        { type: "normal", x: 201, y: 307, label: "51" },
-        { type: "coin", x: 114, y: 163, label: "" },
-        { type: "coin", x: 198, y: 141, label: "" },
-        { type: "normal", x: 275, y: 145, label: "36" },
-        { type: "angryMob", x: 354, y: 126, label: "" },
-        { type: "think", x: 442, y: 136, label: "" },
-        { type: "coin", x: 523, y: 133, label: "" },
-        { type: "normal", x: 590, y: 163, label: "32" },
-        { type: "normal", x: 661, y: 192, label: "31" },
-        { type: "normal", x: 698, y: 267, label: "30" },
-        { type: "angryMob", x: 640, y: 319, label: "" }
+        { type: "normal", x: 338, y: 40, label: "2" },
+        { type: "normal", x: 411, y: 67, label: "3" },
+        { type: "normal", x: 484, y: 36, label: "4" },
+        { type: "normal", x: 556, y: 72, label: "5" },
+        { type: "coin", x: 622, y: 112, label: "6" },
+        { type: "normal", x: 669, y: 50, label: "7" },
+        { type: "normal", x: 745, y: 51, label: "8" },
+        { type: "normal", x: 769, y: 120, label: "9" },
+        { type: "angryMob", x: 715, y: 171, label: "10" },
+        { type: "angryMob", x: 747, y: 239, label: "11" },
+        { type: "think", x: 826, y: 233, label: "12" },
+        { type: "normal", x: 844, y: 157, label: "13" },
+        { type: "normal", x: 853, y: 79, label: "14" },
+        { type: "normal", x: 915, y: 44, label: "15" },
+        { type: "coin", x: 947, y: 102, label: "16" },
+        { type: "normal", x: 919, y: 172, label: "17" },
+        { type: "angryMob", x: 952, y: 236, label: "18" },
+        { type: "normal", x: 919, y: 301, label: "19" },
+        { type: "normal", x: 962, y: 362, label: "20" },
+        { type: "coin", x: 938, y: 432, label: "21" },
+        { type: "normal", x: 961, y: 501, label: "22" },
+        { type: "angryMob", x: 898, y: 522, label: "23" },
+        { type: "normal", x: 843, y: 470, label: "24" },
+        { type: "normal", x: 799, y: 524, label: "25" },
+        { type: "coin", x: 725, y: 521, label: "26" },
+        { type: "normal", x: 763, y: 455, label: "27" },
+        { type: "normal", x: 760, y: 379, label: "28" },
+        { type: "coin", x: 735, y: 313, label: "29" },
+        { type: "normal", x: 672, y: 257, label: "30" },
+        { type: "normal", x: 634, y: 186, label: "31" },
+        { type: "normal", x: 570, y: 159, label: "32" },
+        { type: "coin", x: 507, y: 128, label: "33" },
+        { type: "think", x: 425, y: 135, label: "34" },
+        { type: "angryMob", x: 347, y: 124, label: "35" },
+        { type: "normal", x: 268, y: 143, label: "36" },
+        { type: "coin", x: 196, y: 138, label: "37" },
+        { type: "coin", x: 116, y: 160, label: "38" },
+        { type: "normal", x: 52, y: 212, label: "39" },
+        { type: "angryMob", x: 47, y: 282, label: "40" },
+        { type: "normal", x: 40, y: 347, label: "41" },
+        { type: "coin", x: 48, y: 417, label: "42" },
+        { type: "normal", x: 56, y: 484, label: "43" },
+        { type: "normal", x: 124, y: 504, label: "44" },
+        { type: "angryMob", x: 134, y: 430, label: "45" },
+        { type: "normal", x: 113, y: 344, label: "46" },
+        { type: "coin", x: 132, y: 256, label: "47" },
+        { type: "normal", x: 191, y: 211, label: "48" },
+        { type: "normal", x: 269, y: 211, label: "49" },
+        { type: "normal", x: 260, y: 278, label: "50" },
+        { type: "normal", x: 198, y: 295, label: "51" },
+        { type: "coin", x: 195, y: 369, label: "52" },
+        { type: "normal", x: 203, y: 455, label: "53" },
+        { type: "normal", x: 181, y: 525, label: "54" },
+        { type: "angryMob", x: 253, y: 516, label: "55" },
+        { type: "coin", x: 325, y: 524, label: "56" },
+        { type: "normal", x: 394, y: 530, label: "57" },
+        { type: "normal", x: 461, y: 521, label: "58" },
+        { type: "normal", x: 427, y: 463, label: "59" },
+        { type: "normal", x: 359, y: 449, label: "60" },
+        { type: "think", x: 275, y: 426, label: "61" },
+        { type: "normal", x: 277, y: 348, label: "62" },
+        { type: "normal", x: 338, y: 296, label: "63" },
+        { type: "coin", x: 411, y: 302, label: "64" },
+        { type: "normal", x: 470, y: 368, label: "65" },
+        { type: "normal", x: 493, y: 433, label: "66" },
+        { type: "coin", x: 527, y: 498, label: "67" },
+        { type: "normal", x: 593, y: 520, label: "68" },
+        { type: "normal", x: 658, y: 496, label: "69" },
+        { type: "angryMob", x: 697, y: 435, label: "70" },
+        { type: "angryMob", x: 680, y: 360, label: "71" },
+        { type: "angryMob", x: 618, y: 305, label: "72" },
     ];
 
     const TOTAL_SPACES = ARTWORK_SPACES.length + 2;
@@ -143,7 +144,7 @@
     const ALLEY_LENGTH = 3;
     const CUT_IN_LINE_COST = 1;
 
-    var connections = [];
+    let connections = [];
 
     // ============================================
     // HTML ELEMENTS
@@ -326,6 +327,16 @@
             this.color = PLAYER_COLORS[id];
             this.angryMobNextTurn = false;
             this.finished = false;
+            this.character;
+            /*
+            character codes:
+            MA - Marie Antoinette
+            MR - Maximilian Robespierre
+            AB - Anne Boleyn
+            KL - King Louis XVI
+            HH - Headless Horseman
+            QH - Queen of Hearts
+            */
         }
     }
 
@@ -674,12 +685,15 @@
                 player.character = roomPlayer.character;
                 player.socketId = roomPlayer.id;
 
+
                 players.push(player);
             });
         } else {
             // Keep the existing six-player behavior for local testing.
+            const CHARACTER_CODES = ["MR","AB", "KL", "MA", "QH", "HH"];
             for (let i = 0; i < MAX_PLAYERS; i++) {
                 players.push(new Player(i));
+                player.character = CHARACTER_CODES[i];
             }
         }
 
