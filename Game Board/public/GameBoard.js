@@ -665,7 +665,10 @@
             [34, 45],
             [39, 48],
             [44, 53],
-            [51, 60]
+            [51, 60],
+            [1, 36],
+            [2,35],
+            [4,33]
         ];
     }
 
@@ -693,7 +696,7 @@
             const CHARACTER_CODES = ["MR","AB", "KL", "MA", "QH", "HH"];
             for (let i = 0; i < MAX_PLAYERS; i++) {
                 players.push(new Player(i));
-                player.character = CHARACTER_CODES[i];
+                players[i].character = CHARACTER_CODES[i];
             }
         }
 
