@@ -837,27 +837,54 @@ body {
     line-height: 1.5;
 }
 
+/* COIN BUTTON */
+
 .coin-flip-button {
     width: 120px;
     height: 120px;
 
     margin: 18px auto;
-
     padding: 0;
+
     border: none;
     border-radius: 50%;
 
     background: transparent;
     cursor: pointer;
 
-    perspective: 600px;
+    perspective: 800px;
 }
 
-.coin-face {
+.coin-flip-button:disabled {
+    cursor: default;
+}
+
+/* ROTATING COIN CONTAINER */
+
+.coin-inner {
+    position: relative;
+
+    display: block;
+
     width: 100%;
     height: 100%;
 
+    border-radius: 50%;
+
+    transform-style: preserve-3d;
+    transform: rotateY(0deg);
+
+    transition: transform 0.3s ease;
+}
+
+/* BOTH SIDES OF THE COIN */
+
+.coin-side {
+    position: absolute;
+    inset: 0;
+
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 
@@ -872,26 +899,65 @@ body {
     );
 
     color: #70420e;
-    font-family: Georgia, serif;
-    font-size: 30px;
-    font-weight: bold;
 
     box-shadow:
+        inset 0 0 8px rgba(255, 255, 255, 0.4),
         0 5px 0 #704615,
         0 8px 18px rgba(0, 0, 0, 0.5);
 
-    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
-.coin-flip-button:hover:not(:disabled) .coin-face {
+/* FRONT: HEADS */
+
+.coin-front {
+    transform: rotateY(0deg);
+}
+
+/* BACK: DAGGER / TAILS */
+
+.coin-back {
+    transform: rotateY(180deg);
+}
+
+/* COIN SYMBOLS */
+
+.coin-flip-panel .coin-symbol {
+    width: 55px;
+    height: 55px;
+
+    color: #70420e;
+    fill: currentColor;
+}
+
+.coin-flip-panel .dagger-symbol {
+    width: 52px;
+    height: 52px;
+}
+
+/* HEADS AND TAILS LABELS */
+
+.coin-label {
+    margin-top: 2px;
+
+    color: #70420e;
+
+    font-family: Georgia, serif;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+/* HOVER EFFECT */
+
+.coin-flip-button:hover:not(:disabled) .coin-side {
     filter: brightness(1.12);
 }
 
-.coin-flip-button:disabled {
-    cursor: default;
-}
+/* COIN FLIPPING ANIMATION */
 
-.coin-face.flipping {
+.coin-inner.flipping {
     animation: coinFlip 1.2s ease-in-out;
 }
 
@@ -915,6 +981,12 @@ body {
     100% {
         transform: rotateY(1440deg) scale(1);
     }
+}
+
+/* FINAL COIN POSITION */
+
+.coin-inner.show-tails {
+    transform: rotateY(180deg);
 }
 
 .coin-flip-result {

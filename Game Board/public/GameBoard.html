@@ -308,14 +308,71 @@
             Click the coin to see whether you survive!
         </p>
 
-        <button
-            id="flipCoinButton"
-            class="coin-flip-button"
-            type="button"
-            aria-label="Flip the coin"
-        >
-            <span id="coinFace" class="coin-face">?</span>
-        </button>
+       <button
+    id="flipCoinButton"
+    class="coin-flip-button"
+    type="button"
+    aria-label="Flip the coin"
+>
+    <span id="coinFace" class="coin-inner">
+
+        <!-- HEADS: FRONT OF THE COIN -->
+        <span class="coin-side coin-front">
+            <svg
+                class="coin-symbol"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+            >
+                <!-- Head silhouette -->
+                <circle cx="50" cy="30" r="17" fill="currentColor"/>
+                <path
+                    d="M35 45
+                       C28 50 25 59 25 70
+                       L25 84
+                       L75 84
+                       L75 70
+                       C75 59 72 50 65 45
+                       C60 51 40 51 35 45Z"
+                    fill="currentColor"
+                />
+            </svg>
+            <span class="coin-label">HEADS</span>
+        </span>
+
+        <!-- TAILS: BACK OF THE COIN -->
+        <span class="coin-side coin-back">
+            <svg
+                class="coin-symbol dagger-symbol"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+            >
+                <!-- Dagger blade -->
+                <path
+                    d="M50 8 L65 48 L50 58 L35 48 Z"
+                    fill="currentColor"
+                />
+
+                <!-- Dagger handle -->
+                <path
+                    d="M43 55 L57 55 L57 72 L65 78
+                       L65 84 L35 84 L35 78 L43 72 Z"
+                    fill="currentColor"
+                />
+
+                <!-- Handle details -->
+                <path
+                    d="M40 63 L60 63 M40 70 L60 70"
+                    stroke="#f8df9b"
+                    stroke-width="3"
+                />
+            </svg>
+            <span class="coin-label">TAILS</span>
+        </span>
+
+    </span>
+</button>
 
         <p id="coinFlipResult" class="coin-flip-result">
             Click the coin to flip!

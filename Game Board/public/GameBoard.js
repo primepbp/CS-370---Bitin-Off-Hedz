@@ -1038,10 +1038,8 @@
         }
 
         if (coinFace) {
-            coinFace.textContent = "?";
-            coinFace.classList.remove("flipping");
-        }
-
+        coinFace.classList.remove("flipping", "show-tails");
+}
         if (coinFlipResult) {
             coinFlipResult.textContent = "Click the coin to flip!";
         }
@@ -1077,10 +1075,13 @@
         }
 
         if (coinFace) {
-            coinFace.classList.remove("flipping");
-            void coinFace.offsetWidth;
-            coinFace.classList.add("flipping");
-        }
+    coinFace.classList.remove("flipping", "show-tails");
+
+    // Restart the animation from the beginning.
+    void coinFace.offsetWidth;
+
+    coinFace.classList.add("flipping");
+}
 
         if (coinFlipResult) {
             coinFlipResult.textContent = "The coin is flipping...";
@@ -1093,9 +1094,14 @@
             coinFlipInProgress = false;
 
             if (coinFace) {
-                coinFace.classList.remove("flipping");
-                coinFace.textContent = landedHeads ? "H" : "T";
-            }
+    coinFace.classList.remove("flipping");
+
+    // Heads shows the portrait.
+    // Tails rotates the coin to show the dagger.
+    if (!landedHeads) {
+        coinFace.classList.add("show-tails");
+    }
+}
 
             const player = getCurrentPlayer();
 
@@ -1365,9 +1371,8 @@
         }
 
         if (coinFace) {
-            coinFace.textContent = "?";
-            coinFace.classList.remove("flipping");
-        }
+    coinFace.classList.remove("flipping", "show-tails");
+}
 
         if (thinkChoicePanel) {
             thinkChoicePanel.classList.add("hidden");
