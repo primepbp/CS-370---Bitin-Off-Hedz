@@ -11,402 +11,439 @@
 
 <body>
 
-    <main class="game">
+<main class="game">
 
-        <!-- ================================== -->
-        <!-- GAME HEADER -->
-        <!-- ================================== -->
+    <!-- ================================== -->
+    <!-- GAME HEADER -->
+    <!-- ================================== -->
 
-        <header class="game-header">
+    <header class="game-header">
 
-            <div class="title-area">
-                <h1>GET TO THE GUILLOTINE</h1>
-                <p>A Revolutionary Board Game</p>
-            </div>
+        <div class="title-area">
+            <h1>GET TO THE GUILLOTINE</h1>
+            <p>A Revolutionary Board Game</p>
+        </div>
 
-            <nav class="game-menu">
-                <button id="chatButton">CHATROOM</button>
-                <button id="rulesButton">GAME RULES</button>
-                <button id="leaderboardButton">LEADERBOARD</button>
-            </nav>
+        <nav class="game-menu">
+            <button id="chatButton" type="button">CHATROOM</button>
+            <button id="rulesButton" type="button">GAME RULES</button>
+            <button id="leaderboardButton" type="button">LEADERBOARD</button>
+        </nav>
 
-        </header>
-
-
-        <!-- ================================== -->
-        <!-- GAME CHAT PANEL -->
-        <!-- ================================== -->
-
-        <section id="chatPanel" class="chat-panel hidden">
-
-            <div class="chat-header">
-                <h2>GAME CHAT</h2>
-            </div>
-
-            <div id="chatMessages" class="chat-messages">
-                <p class="chat-empty-message">
-                    Welcome! Send a message to your fellow players.
-                </p>
-            </div>
-
-            <form id="chatForm" class="chat-form">
-
-                <input
-                    type="text"
-                    id="chatInput"
-                    placeholder="Type your message..."
-                    maxlength="200"
-                    autocomplete="off"
-                >
-
-                <button type="submit" id="sendChatButton">
-                    SEND
-                </button>
-
-            </form>
-
-        </section>
+    </header>
 
 
+    <!-- ================================== -->
+    <!-- CHATROOM PANEL -->
+    <!-- ================================== -->
 
-        <!-- ================================== -->
-        <!-- GAME RULES PANEL -->
-        <!-- ================================== -->
+    <section id="chatPanel" class="chat-panel hidden">
 
-        <section id="rulesPanel" class="rules-panel hidden">
+        <div class="chat-header">
+            <h2>GAME CHAT</h2>
+        </div>
 
-            <button id="closeRules" class="close-button">
-                CLOSE
-            </button>
-
-            <h2>GAME RULES</h2>
-
-            <p>
-                Roll the dice and travel across revolutionary France.
-                Collect coins, avoid the Angry Mob, and try to reach
-                the Guillotine before everyone else.
+        <div id="chatMessages" class="chat-messages">
+            <p class="chat-empty-message">
+                Welcome! Send a message to your fellow players.
             </p>
+        </div>
 
-            <h3>Movement</h3>
-            <p>
-                Players normally roll two dice and move forward
-                according to their combined result.
-            </p>
-
-            <h3>Coin Spaces</h3>
-            <p>
-                Landing on a coin space rewards the player with
-                additional coins.
-            </p>
-
-            <h3>Angry Mob</h3>
-            <p>
-                Landing on an Angry Mob space means the player
-                must use only one die on their next turn.
-            </p>
-
-            <h3>Think Spaces</h3>
-            <p>
-                Players may choose the safe route or take the
-                Dark Alley shortcut.
-            </p>
-
-            <h3>Reach the Guillotine</h3>
-            <p>
-                The first player to reach the final space wins!
-            </p>
-
-        </section>
-
-
-        <!-- ================================== -->
-        <!-- BOARD AREA -->
-        <!-- ================================== -->
-
-        <section class="board-section">
-
-            <div class="board-wrapper">
-
-                <svg
-                    id="gameBoard"
-                    class="game-board"
-                    viewBox="0 0 1037 584"
-                    preserveAspectRatio="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-
-                    <!-- Your original board artwork -->
-                    <image
-                        href="images/game-board-background.png"
-                        x="0"
-                        y="0"
-                        width="1037"
-                        height="584"
-                        preserveAspectRatio="none"
-                    />
-
-                    <!-- Game mechanic layers -->
-
-                    <g id="lineOfSightLayer"></g>
-
-                    <g id="movementPathLayer"></g>
-
-                    <g id="darkAlleyPathLayer"></g>
-
-                    <g id="spaceLayer"></g>
-
-                    <g id="thinkSpaceLayer"></g>
-
-                    <g id="darkAlleySpaceLayer"></g>
-
-                    <!-- Player characters -->
-                    <g id="playerLayer"></g>
-
-                </svg>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================================== -->
-        <!-- GAME CONTROLS -->
-        <!-- ================================== -->
-
-        <section class="game-controls">
-
-            <!-- Current Player -->
-
-            <div class="current-player-panel">
-
-                <h3>CURRENT PLAYER</h3>
-
-                <p id="currentPlayerDisplay">
-                    Waiting for players...
-                </p>
-
-                <p id="turnMessage">
-                    0 coins
-                </p>
-
-            </div>
-
-
-            <!-- Player List -->
-
-            <div class="player-list-panel">
-
-                <h3>PLAYERS</h3>
-
-                <div id="playerList" class="player-list"></div>
-
-            </div>
-
-
-            <!-- Dice -->
-
-            <div class="dice-panel">
-
-                <h3>DICE</h3>
-
-                <div class="dice-container">
-
-                    <div id="die1" class="die">
-                        —
-                    </div>
-
-                    <div id="die2" class="die">
-                        —
-                    </div>
-
-                </div>
-
-                <p id="diceMode">
-                    TWO DICE
-                </p>
-
-            </div>
-
-
-            <!-- Roll Button -->
-
-            <div class="roll-panel">
-
-                <button id="rollButton">
-                    ROLL DICE
-                </button>
-
-                <p id="gameMessage">
-                    Waiting for the revolution...
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================================== -->
-        <!-- MUSIC CONTROLS -->
-        <!-- ================================== -->
-
-        <section class="music-controls">
-
-            <button id="musicToggle">
-                ♫ Play Music
-            </button>
-
-            <label for="musicVolume">
-                Volume
-            </label>
-
+        <form id="chatForm" class="chat-form">
             <input
-                type="range"
-                id="musicVolume"
-                min="0"
-                max="1"
-                step="0.05"
-                value="0.3"
+                type="text"
+                id="chatInput"
+                placeholder="Type your message..."
+                maxlength="200"
+                autocomplete="off"
             >
 
-            <audio
-                id="backgroundMusic"
-                src="audio/tavern-music.mp3"
-                loop
-            ></audio>
+            <button type="submit" id="sendChatButton">
+                SEND
+            </button>
+        </form>
 
-        </section>
+    </section>
 
 
-        <!-- ================================== -->
-        <!-- THINK SPACE CHOICE -->
-        <!-- ================================== -->
+    <!-- ================================== -->
+    <!-- GAME RULES PANEL -->
+    <!-- ================================== -->
 
-        <section
-            id="thinkChoicePanel"
-            class="choice-panel hidden"
-        >
+    <section id="rulesPanel" class="rules-panel hidden">
 
-            <h2 id="thinkChoiceTitle">
-                Choose Your Route
-            </h2>
+        <button id="closeRules" class="close-button" type="button">
+            CLOSE
+        </button>
 
-            <p id="thinkChoiceDescription">
-                Would you like to take the safe route
-                or risk the Dark Alley shortcut?
+        <h2>GAME RULES</h2>
+
+        <p>
+            Roll the dice and travel across revolutionary France.
+            Collect coins, avoid the Angry Mob, and try to reach
+            the Guillotine before everyone else.
+        </p>
+
+        <h3>Movement</h3>
+        <p>
+            Players normally roll two dice and move forward
+            according to their combined result.
+        </p>
+
+        <h3>Coin Spaces</h3>
+        <p>
+            Landing on a coin space rewards the player with
+            additional coins.
+        </p>
+
+        <h3>Angry Mob</h3>
+        <p>
+            Landing on an Angry Mob space means the player
+            must use only one die on their next turn.
+        </p>
+
+        <h3>Think Spaces</h3>
+        <p>
+            Players may choose the safe route or risk the
+            Dark Alley shortcut. Attempting the Dark Alley
+            requires a coin flip. Heads means survival;
+            tails means dishonorable death.
+        </p>
+
+        <h3>Reach the Guillotine</h3>
+        <p>
+            The first player to reach the final space wins!
+        </p>
+
+    </section>
+
+
+    <!-- ================================== -->
+    <!-- BOARD AREA -->
+    <!-- ================================== -->
+
+    <section class="board-section">
+
+        <div class="board-wrapper">
+
+            <svg
+                id="gameBoard"
+                class="game-board"
+                viewBox="0 0 1037 584"
+                preserveAspectRatio="none"
+                xmlns="http://www.w3.org/2000/svg"
+                role="img"
+                aria-label="Get to the Guillotine game board"
+            >
+
+                <image
+                    href="images/game-board-background.png"
+                    x="0"
+                    y="0"
+                    width="1037"
+                    height="584"
+                    preserveAspectRatio="none"
+                />
+
+                <g id="lineOfSightLayer"></g>
+                <g id="movementPathLayer"></g>
+                <g id="darkAlleyPathLayer"></g>
+                <g id="spaceLayer"></g>
+                <g id="thinkSpaceLayer"></g>
+                <g id="darkAlleySpaceLayer"></g>
+                <g id="playerLayer"></g>
+
+            </svg>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================== -->
+    <!-- GAME CONTROLS -->
+    <!-- ================================== -->
+
+    <section class="game-controls">
+
+        <!-- CURRENT PLAYER -->
+
+        <div class="current-player-panel">
+
+            <h3>CURRENT PLAYER</h3>
+
+            <p id="currentPlayerDisplay">
+                Waiting for players...
             </p>
 
-            <div class="choice-buttons">
+            <p id="turnMessage">
+                0 coins
+            </p>
 
-                <button id="safeRouteButton">
-                    SAFE ROUTE
-                </button>
+        </div>
 
-                <button id="darkAlleyButton">
-                    DARK ALLEY
-                </button>
+
+        <!-- PLAYER LIST -->
+
+        <div class="player-list-panel">
+
+            <h3>PLAYERS</h3>
+
+            <div id="playerList" class="player-list"></div>
+
+        </div>
+
+
+        <!-- DICE -->
+
+        <div class="dice-panel">
+
+            <h3>DICE</h3>
+
+            <div class="dice-container">
+
+                <div id="die1" class="die">—</div>
+                <div id="die2" class="die">—</div>
 
             </div>
 
-        </section>
+            <p id="diceMode">TWO DICE</p>
+
+        </div>
 
 
-        <!-- ================================== -->
-        <!-- PLAYER COLLISION CHOICE -->
-        <!-- ================================== -->
+        <!-- ROLL BUTTON -->
 
-        <section
-            id="playerCollisionPanel"
-            class="choice-panel hidden"
-        >
+        <div class="roll-panel">
 
-            <h2 id="playerCollisionTitle">
-                Another Player!
-            </h2>
-
-            <p id="playerCollisionDescription">
-                What would you like to do?
-            </p>
-
-            <div class="choice-buttons">
-
-                <button id="playerCollisionAttackButton">
-                    ATTACK
-                </button>
-
-                <button id="playerCollisionIgnoreButton">
-                    IGNORE
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================================== -->
-        <!-- CUT IN LINE CHOICE -->
-        <!-- ================================== -->
-
-        <section
-            id="cutInLinePanel"
-            class="choice-panel hidden"
-        >
-
-            <h2> CUT IN LINE </h2>
-
-            <p id="cutInLineTitle">
-                An opportunity has appeared!
-            </p>
-
-            <p id="cutInLineDescription">
-                You may spend a coin to attempt
-                switching positions with another player.
-            </p>
-
-            <div class="choice-buttons">
-
-                <button id="cutInLineAttackButton">
-                    CUT IN LINE
-                </button>
-
-                <button id="cutInLineIgnoreButton">
-                    IGNORE
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================================== -->
-        <!-- GAME OVER -->
-        <!-- ================================== -->
-
-        <section
-            id="gameOverPanel"
-            class="game-over-panel hidden"
-        >
-
-            <h2>THE REVOLUTION IS OVER!</h2>
-
-            <p id="winnerText">
-                A winner has emerged!
-            </p>
-
-            <button id="restartButton">
-                RESTART GAME
+            <button id="rollButton" type="button">
+                ROLL DICE
             </button>
 
-        </section>
+            <p id="gameMessage">
+                Waiting for the revolution...
+            </p>
 
-    </main>
+        </div>
+
+    </section>
 
 
     <!-- ================================== -->
-    <!-- SCRIPTS -->
+    <!-- MUSIC CONTROLS -->
     <!-- ================================== -->
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="GameBoard.js"></script>
+    <section class="music-controls">
+
+        <button id="musicToggle" type="button">
+            ♫ Play Music
+        </button>
+
+        <label for="musicVolume">Volume</label>
+
+        <input
+            type="range"
+            id="musicVolume"
+            min="0"
+            max="1"
+            step="0.05"
+            value="0.3"
+        >
+
+        <audio
+            id="backgroundMusic"
+            src="audio/tavern-music.mp3"
+            loop
+        ></audio>
+
+    </section>
+
+
+    <!-- ================================== -->
+    <!-- THINK SPACE CHOICE -->
+    <!-- ================================== -->
+
+    <section
+        id="thinkChoicePanel"
+        class="choice-panel hidden"
+    >
+
+        <h2 id="thinkChoiceTitle">
+            Choose Your Route
+        </h2>
+
+        <p id="thinkChoiceDescription">
+            Would you like to take the safe route
+            or risk the Dark Alley shortcut?
+        </p>
+
+        <div class="choice-buttons">
+
+            <button id="safeRouteButton" type="button">
+                SAFE ROUTE
+            </button>
+
+            <button id="darkAlleyButton" type="button">
+                DARK ALLEY
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================== -->
+    <!-- DARK ALLEY COIN FLIP -->
+    <!-- ================================== -->
+
+    <section
+        id="darkAlleyFlipPanel"
+        class="choice-panel coin-flip-panel hidden"
+    >
+
+        <h2>THE DARK ALLEY</h2>
+
+        <p>
+            Your fate is in the hands of fortune.
+            Click the coin to see whether you survive!
+        </p>
+
+        <button
+            id="flipCoinButton"
+            class="coin-flip-button"
+            type="button"
+            aria-label="Flip the coin"
+        >
+            <span id="coinFace" class="coin-face">?</span>
+        </button>
+
+        <p id="coinFlipResult" class="coin-flip-result">
+            Click the coin to flip!
+        </p>
+
+    </section>
+
+
+    <!-- ================================== -->
+    <!-- DISHONOR POPUP -->
+    <!-- ================================== -->
+
+    <section
+        id="dishonorPanel"
+        class="dishonor-panel hidden"
+    >
+
+        <h1>DISHONOR</h1>
+
+        <p>
+            You've been stabbed 57 times.
+            Go back to start.
+        </p>
+
+        <button id="dishonorContinueButton" type="button">
+            ACCEPT YOUR FATE
+        </button>
+
+    </section>
+
+
+    <!-- ================================== -->
+    <!-- PLAYER COLLISION CHOICE -->
+    <!-- ================================== -->
+
+    <section
+        id="playerCollisionPanel"
+        class="choice-panel hidden"
+    >
+
+        <h2 id="playerCollisionTitle">
+            Another Player!
+        </h2>
+
+        <p id="playerCollisionDescription">
+            What would you like to do?
+        </p>
+
+        <div class="choice-buttons">
+
+            <button id="playerCollisionAttackButton" type="button">
+                ATTACK
+            </button>
+
+            <button id="playerCollisionIgnoreButton" type="button">
+                IGNORE
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================== -->
+    <!-- CUT IN LINE CHOICE -->
+    <!-- ================================== -->
+
+    <section
+        id="cutInLinePanel"
+        class="choice-panel hidden"
+    >
+
+        <h2>CUT IN LINE</h2>
+
+        <p id="cutInLineTitle">
+            An opportunity has appeared!
+        </p>
+
+        <p id="cutInLineDescription">
+            You may spend a coin to attempt
+            switching positions with another player.
+        </p>
+
+        <div class="choice-buttons">
+
+            <button id="cutInLineAttackButton" type="button">
+                CUT IN LINE
+            </button>
+
+            <button id="cutInLineIgnoreButton" type="button">
+                IGNORE
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================== -->
+    <!-- GAME OVER -->
+    <!-- ================================== -->
+
+    <section
+        id="gameOverPanel"
+        class="game-over-panel hidden"
+    >
+
+        <h2>THE REVOLUTION IS OVER!</h2>
+
+        <p id="winnerText">
+            A winner has emerged!
+        </p>
+
+        <button id="restartButton" type="button">
+            RESTART GAME
+        </button>
+
+    </section>
+
+</main>
+
+
+<!-- ================================== -->
+<!-- SCRIPTS -->
+<!-- ================================== -->
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="GameBoard.js"></script>
 
 </body>
 </html>
