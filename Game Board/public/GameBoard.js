@@ -144,7 +144,7 @@
     const ALLEY_LENGTH = 3;
     const CUT_IN_LINE_COST = 1;
 
-    var connections = [];
+    let connections = [];
 
     // ============================================
     // HTML ELEMENTS
@@ -327,6 +327,16 @@
             this.color = PLAYER_COLORS[id];
             this.angryMobNextTurn = false;
             this.finished = false;
+            this.character;
+            /*
+            character codes:
+            MA - Marie Antoinette
+            MR - Maximilian Robespierre
+            AB - Anne Boleyn
+            KL - King Louis XVI
+            HH - Headless Horseman
+            QH - Queen of Hearts
+            */
         }
     }
 
@@ -675,12 +685,15 @@
                 player.character = roomPlayer.character;
                 player.socketId = roomPlayer.id;
 
+
                 players.push(player);
             });
         } else {
             // Keep the existing six-player behavior for local testing.
+            const CHARACTER_CODES = ["MR","AB", "KL", "MA", "QH", "HH"];
             for (let i = 0; i < MAX_PLAYERS; i++) {
                 players.push(new Player(i));
+                player.character = CHARACTER_CODES[i];
             }
         }
 
