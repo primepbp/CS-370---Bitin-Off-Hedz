@@ -45,81 +45,14 @@
      * G = final destination, position 72.
      *
      * The special spaces are included in the route.
+     * 
+     * Ordering, label, and coordinates of spaces now fixed.
+     * normal
+     * coin
+     * angryMob
+     * think
      */
 
-    const ARTWORK_SPACES = [
-        { type: "normal", x: 266, y: 68, label: "1" },
-        { type: "normal", x: 338, y: 38, label: "2" },
-        { type: "normal", x: 425, y: 68, label: "3" },
-        { type: "normal", x: 501, y: 35, label: "4" },
-        { type: "normal", x: 577, y: 72, label: "5" },
-        { type: "coin", x: 646, y: 114, label: "6" },
-        { type: "normal", x: 694, y: 49, label: "7" },
-        { type: "normal", x: 773, y: 49, label: "8" },
-        { type: "normal", x: 801, y: 122, label: "9" },
-        { type: "angryMob", x: 740, y: 177, label: "10" },
-        { type: "angryMob", x: 778, y: 248, label: "11" },
-        { type: "think", x: 862, y: 242, label: "" },
-        { type: "angryMob", x: 990, y: 246, label: "" },
-        { type: "normal", x: 953, y: 42, label: "15" },
-        { type: "normal", x: 888, y: 80, label: "14" },
-        { type: "normal", x: 878, y: 162, label: "13" },
-        { type: "normal", x: 956, y: 178, label: "17" },
-        { type: "coin", x: 988, y: 106, label: "" },
-        { type: "normal", x: 958, y: 313, label: "19" },
-        { type: "normal", x: 1001, y: 380, label: "20" },
-        { type: "coin", x: 977, y: 454, label: "" },
-        { type: "normal", x: 1001, y: 525, label: "22" },
-        { type: "angryMob", x: 933, y: 548, label: "" },
-        { type: "normal", x: 830, y: 552, label: "25" },
-        { type: "coin", x: 756, y: 550, label: "" },
-        { type: "normal", x: 793, y: 476, label: "27" },
-        { type: "normal", x: 790, y: 398, label: "28" },
-        { type: "coin", x: 767, y: 329, label: "" },
-        { type: "angryMob", x: 707, y: 377, label: "" },
-        { type: "angryMob", x: 727, y: 456, label: "" },
-        { type: "normal", x: 682, y: 520, label: "69" },
-        { type: "normal", x: 615, y: 544, label: "68" },
-        { type: "coin", x: 546, y: 521, label: "" },
-        { type: "normal", x: 510, y: 453, label: "66" },
-        { type: "normal", x: 486, y: 385, label: "65" },
-        { type: "coin", x: 424, y: 310, label: "" },
-        { type: "normal", x: 348, y: 307, label: "63" },
-        { type: "normal", x: 286, y: 365, label: "62" },
-        { type: "think", x: 285, y: 448, label: "" },
-        { type: "normal", x: 372, y: 469, label: "60" },
-        { type: "normal", x: 442, y: 485, label: "59" },
-        { type: "normal", x: 476, y: 548, label: "58" },
-        { type: "normal", x: 405, y: 552, label: "57" },
-        { type: "coin", x: 333, y: 550, label: "" },
-        { type: "angryMob", x: 259, y: 538, label: "" },
-        { type: "normal", x: 184, y: 549, label: "54" },
-        { type: "normal", x: 205, y: 477, label: "53" },
-        { type: "angryMob", x: 133, y: 450, label: "" },
-        { type: "coin", x: 197, y: 389, label: "" },
-        { type: "normal", x: 111, y: 359, label: "46" },
-        { type: "coin", x: 46, y: 435, label: "" },
-        { type: "normal", x: 52, y: 505, label: "43" },
-        { type: "normal", x: 111, y: 526, label: "44" },
-        { type: "normal", x: 34, y: 360, label: "41" },
-        { type: "angryMob", x: 41, y: 292, label: "" },
-        { type: "normal", x: 48, y: 220, label: "39" },
-        { type: "coin", x: 131, y: 263, label: "" },
-        { type: "normal", x: 194, y: 220, label: "48" },
-        { type: "normal", x: 276, y: 218, label: "49" },
-        { type: "normal", x: 267, y: 290, label: "50" },
-        { type: "normal", x: 201, y: 307, label: "51" },
-        { type: "coin", x: 114, y: 163, label: "" },
-        { type: "coin", x: 198, y: 141, label: "" },
-        { type: "normal", x: 275, y: 145, label: "36" },
-        { type: "angryMob", x: 354, y: 126, label: "" },
-        { type: "think", x: 442, y: 136, label: "" },
-        { type: "coin", x: 523, y: 133, label: "" },
-        { type: "normal", x: 590, y: 163, label: "32" },
-        { type: "normal", x: 661, y: 192, label: "31" },
-        { type: "normal", x: 698, y: 267, label: "30" },
-        { type: "angryMob", x: 640, y: 319, label: "" }
-    ];
 
     const TOTAL_SPACES = ARTWORK_SPACES.length + 2;
 
@@ -150,7 +83,7 @@
     const ALLEY_LENGTH = 3;
     const CUT_IN_LINE_COST = 1;
 
-    var connections = [];
+    let connections = [];
 
     // ============================================
     // HTML ELEMENTS
@@ -381,8 +314,8 @@
         // START is separate from the numbered spaces.
         boardSpaces.push({
             number: 0,
-            x: 104,
-            y: 78,
+            x: 110,
+            y: 81,
             type: "start",
             label: "START",
             colorStage: 0
