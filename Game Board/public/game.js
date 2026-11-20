@@ -282,7 +282,7 @@ hostButton.addEventListener(
 
 
         socket.emit(
-            "hostGame",
+            "host-game",
             username
         );
     }
@@ -422,7 +422,7 @@ joinButton.addEventListener(
 
 
         socket.emit(
-            "joinGame",
+            "join-game",
             {
 
                 username:
@@ -572,7 +572,7 @@ characterCards.forEach(
 
 
                 socket.emit(
-                    "selectCharacter",
+                    "select-character",
                     characterNumber
                 );
             }
@@ -871,7 +871,7 @@ startButton.addEventListener(
 
 
         socket.emit(
-            "startGame"
+            "start-game"
         );
     }
 );

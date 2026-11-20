@@ -810,31 +810,11 @@
     }
 
     function rollCurrentPlayer() {
-        if (isMoving || waitingForThinkChoice || gameOver) {
-            return;
-        }
-
-        const player = getCurrentPlayer();
-
-        const oneDieOnly = player.angryMobNextTurn;
-
-        const firstRoll = rollDie();
-        const secondRoll = oneDieOnly ? 0 : rollDie();
-
-        const total = firstRoll + secondRoll;
-
-        die1Display.textContent = firstRoll;
-        die2Display.textContent = oneDieOnly ? "—" : secondRoll;
-
-        // The penalty only affects the next turn.
-        player.angryMobNextTurn = false;
-
-        gameMessage.textContent = oneDieOnly
-            ? `${player.name} rolled ${firstRoll} with one die!`
-            : `${player.name} rolled ${firstRoll} + ${secondRoll} = ${total}!`;
-
-        movePlayer(player, total);
+    if (isMoving || waitingForThinkChoice || gameOver) {
+        return;
     }
+    window.parent.postMessage({ type: "GTTG_ROLL_DICE" }, window.location.origin);
+}
 
     // ============================================
     // MOVE PLAYER
@@ -1714,5 +1694,72 @@
                 "♫ Play Music";
         });
     }
+
+  window.addEventListener("message", event => {
+        if (event.origin !== window.location.origin) return;
+        const data = event.data;
+        if (!data) return;
+
+        // 1. Ignore background state updates while a player is actively walking
+        if (data.type === "GTTG_GAME_START" || data.type === "GTTG_GAME_STATE") {
+            if (isMoving) return; // Keeps the walking animation safe from interruptions!
+
+            if (data.players) {
+                data.players.forEach((serverPlayer, index) => {
+                    if (players[index]) {
+                        players[index].position = serverPlayer.position;
+                        players[index].coins = serverPlayer.coins ?? players[index].coins;
+                    }
+                });
+            }
+
+            if (data.currentPlayerId) {
+                const activeIndex = players.findIndex(p => p.socketId === data.currentPlayerId || p.id === data.currentPlayerId);
+                if (activeIndex !== -1) {
+                    currentPlayerIndex = activeIndex;
+                }
+            }
+
+            drawPlayers();
+            updateUI();
+        }
+
+        // 2. Safely trigger your native movement function
+        if (data.type === "GTTG_DICE_ROLLED") {
+            if (die1Display) die1Display.textContent = data.dice1;
+            if (die2Display) die2Display.textContent = data.dice2;
+            if (gameMessage) {
+                gameMessage.textContent = `${data.playerName} rolled ${data.dice1} + ${data.dice2} = ${data.total}!`;
+            }
+
+            const targetPlayer = players.find(p => p.name === data.playerName);
+            if (targetPlayer) {
+                // Uses your exact original function and interval timer without breaking positions
+                movePlayer(targetPlayer, data.total);
+            }
+        }
+
+        if (data.type === "GTTG_GAME_OVER") {
+            gameOver = true;
+            if (winnerText) winnerText.textContent = `${data.playerName} reached the Guillotine first!`;
+            if (gameOverPanel) gameOverPanel.classList.remove("hidden");
+            if (gameMessage) gameMessage.textContent = `${data.playerName} won the game!`;
+        }
+
+        if (data.type === "GTTG_CHAT_MESSAGE") {
+            const emptyMessage = chatMessages.querySelector(".chat-empty-message");
+            if (emptyMessage) emptyMessage.remove();
+
+            const messageElement = document.createElement("div");
+            messageElement.className = "chat-message";
+            const senderElement = document.createElement("strong");
+            senderElement.textContent = data.name + ": ";
+            const textElement = document.createElement("span");
+            textElement.textContent = data.message;
+            messageElement.append(senderElement, textElement);
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    });
 
 })();

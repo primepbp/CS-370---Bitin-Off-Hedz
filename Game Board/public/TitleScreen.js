@@ -448,5 +448,50 @@ $("leaveLobby").onclick = () => {
         gameBoardFrame.src = "GameBoard.html";
     });
 
+// ============================================
+    // SYNCHRONIZATION BRIDGE (TITLESCREEN <-> SERVER <-> IFRAME)
+    // ============================================
+
+    socket.on("gameStateUpdated", data => {
+        const gameBoardFrame = $("gameBoardFrame");
+        if (gameBoardFrame && gameBoardFrame.contentWindow) {
+            gameBoardFrame.contentWindow.postMessage({
+                type: "GTTG_GAME_STATE",
+                currentPlayerId: data.currentPlayerId,
+                players: data.players
+            }, window.location.origin);
+        }
+    });
+
+    socket.on("diceRolled", data => {
+        const gameBoardFrame = $("gameBoardFrame");
+        if (gameBoardFrame && gameBoardFrame.contentWindow) {
+            gameBoardFrame.contentWindow.postMessage({
+                type: "GTTG_DICE_ROLLED",
+                playerName: data.playerName,
+                dice1: data.dice1,
+                dice2: data.dice2,
+                total: data.total,
+                newPosition: data.newPosition
+            }, window.location.origin);
+        }
+    });
+
+    socket.on("gameOver", data => {
+        const gameBoardFrame = $("gameBoardFrame");
+        if (gameBoardFrame && gameBoardFrame.contentWindow) {
+            gameBoardFrame.contentWindow.postMessage({
+                type: "GTTG_GAME_OVER",
+                playerName: data.playerName
+            }, window.location.origin);
+        }
+    });
+
+    window.addEventListener("message", event => {
+        if (event.origin !== window.location.origin) return;
+        if (event.data?.type === "GTTG_ROLL_DICE") {
+            socket.emit("rollDice");
+        }
+    });
 
 });
