@@ -7,14 +7,14 @@
 
     const MAX_PLAYERS = 6;
 
-    const PLAYER_IMAGES = [
-        "characters/Robespierre.gif",
-        "characters/Anne Bolyne.gif",
-        "characters/King Louis XVI.gif",
-        "characters/Marie Antoinette.gif",
-        "characters/Queen of Hearts.gif",
-        "characters/HeadlessHoreman.png"
-    ];
+    const CHARACTER_IMAGES = {
+        "Marie Antoinette": "characters/Marie%20Antoinette.gif",
+        "Maximilien Robespierre": "characters/Robespierre.gif",
+        "Anne Boleyn": "characters/Anne%20Bolyne.gif",
+        "King Louis XVI": "characters/King%20Louis%20XVI.gif",
+        "Headless Horseman": "characters/HeadlessHoreman.png",
+        "Queen of Hearts": "characters/Queen%20of%20Hearts.gif"
+    };
 
     const BOARD_WIDTH = 1037;
     const BOARD_HEIGHT = 585;
@@ -740,8 +740,15 @@
 
             group.forEach((player, index) => {
                 const offset = offsets[index % offsets.length];
-                const imagePath = PLAYER_IMAGES[player.id];
+                const imagePath = CHARACTER_IMAGES[player.character];
 
+                if (!imagePath) {
+                    console.error(
+                        "Unknown character:",
+                        player.character
+                    );
+                    return;
+                }
                 const characterImage = createSvgElement("image", {
                     x: space.x + offset[0],
                     y: space.y + offset[1],
